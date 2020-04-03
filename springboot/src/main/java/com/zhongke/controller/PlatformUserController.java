@@ -64,11 +64,11 @@ public class PlatformUserController {
         try {
             platformUser.setId(id);
             platformUserService.update(platformUser,id);
-            return new Result(0,"更新用户成功");
+            return new Result(0,"更新成功");
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("PlatformUserController.update(): "+e.getMessage());
-            return new Result(-1,"更新用户失败："+e.getMessage());
+            return new Result(-1,"更新失败："+e.getMessage());
         }
     }
 
@@ -83,11 +83,11 @@ public class PlatformUserController {
     public Result<PlatformUser> findById(@PathVariable int id){
         try {
             PlatformUser platformUser = platformUserService.findById(id);
-            return new Result<PlatformUser>(0,"查询用户成功",platformUser);
+            return new Result<PlatformUser>(0,"查询成功",platformUser);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("PlatformUserController.findById(): "+e.getMessage());
-            return new Result(-1,"查询用户失败："+e.getMessage());
+            return new Result(-1,"查询失败："+e.getMessage());
         }
     }
 

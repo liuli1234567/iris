@@ -40,11 +40,11 @@ public class OrderController {
     public Result<Order> findAll(){
         try {
             List<Order> orders = orderService.findAll();
-            return new Result<>(0,"查询订单列表成功",orders);
+            return new Result<>(0,"查询成功",orders);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("OrderController.findAll(): "+e.getMessage());
-            return new Result<>(-1,"查询订单列表失败："+e.getMessage());
+            return new Result<>(-1,"查询失败："+e.getMessage());
         }
     }
 
@@ -62,11 +62,11 @@ public class OrderController {
                                                    @PathVariable int page, @PathVariable int size){
         try {
             PageInfo<Order> orders = orderService.findOrdersByExample(order,page,size);
-            return new Result<>(0,"通过条件查询订单列表成功",orders);
+            return new Result<>(0,"查询成功",orders);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("OrderController.findOrdersByExample(): "+e.getMessage());
-            return new Result<>(-1,"通过条件查询订单列表失败:"+e.getMessage());
+            return new Result<>(-1,"查询失败:"+e.getMessage());
         }
     }
 }

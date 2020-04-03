@@ -32,11 +32,11 @@ public class MerchantController {
     public Result<Map> getHomeByMerchantId(@RequestParam Integer merchantId, @RequestParam String startTime, @RequestParam String endTime) {
         try {
             Map<String, Object> map = merchantService.getHomeByMerchantId(merchantId, startTime, endTime);
-            return new Result<>(0,"查询商户首页信息成功",map);
+            return new Result<>(0,"查询成功",map);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("MerchantController.getHomeByMerchantId(): "+e.getMessage());
-            return new Result<>(-1,"查询商户首页信息失败："+e.getMessage());
+            return new Result<>(-1,"查询失败："+e.getMessage());
         }
 
     }

@@ -51,11 +51,11 @@ public class DeviceController {
     public Result<List<Device>> devices(@RequestBody(required = false) Device device, @PathVariable int page, @PathVariable int size){
         try {
             PageInfo<Device> devices = deviceService.devices(device,page,size);
-            return new Result<>(0,"查询设备列表成功",devices);
+            return new Result<>(0,"查询成功",devices);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("DeviceController.devices(): "+e.getMessage());
-            return new Result<>(-1,"查询设备列表失败:"+e.getMessage());
+            return new Result<>(-1,"查询失败:"+e.getMessage());
         }
     }
 

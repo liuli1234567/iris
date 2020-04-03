@@ -1,0 +1,32 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhongke.mapper.SvRecordMapper">
+
+    <select id="svRecords" resultType="com.zhongke.pojo.SvRecord" parameterType="com.zhongke.pojo.SvRecord">
+        select * from zk_sv_record
+        <where>
+            <if test="tel != null and tel != ''">
+                and tel = #{tel}
+            </if>
+            <if test="type != null">
+                and type = #{type}
+            </if>
+            <if test="source != null">
+                and source = #{source}
+            </if>
+            <if test="storeName != null and storeName != ''">
+                and store_name = #{storeName}
+            </if>
+            <if test="payWay != null">
+                and pay_way = #{payWay}
+            </if>
+            <if test="startTime != null and startTime != ''">
+                and createtime &gt;= #{startTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and createtime &lt;= #{endTime}
+            </if>
+        </where>
+    </select>
+</mapper>
