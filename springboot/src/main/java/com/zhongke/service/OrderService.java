@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.zhongke.pojo.Order;
 
 import java.util.List;
+import java.util.Map;
 
 public interface OrderService {
     /**
@@ -16,7 +17,7 @@ public interface OrderService {
     List<Order> findAll();
 
     /**
-     * @Description 通过条件查询订单列表并分页
+     * @Description 查询设备订单列表
      * @author liuli
      * @date 2020/4/1 10:24
      * @param order
@@ -26,13 +27,13 @@ public interface OrderService {
      **/
     PageInfo<Order> findOrdersByExample(Order order, int page, int size);
 
-    /**
-     * @Description 根据设备id查询订单列表
-     * @author liuli
-     * @date 2020/4/1 10:34
-     * @param deviceId
-     * @return java.util.List<com.zhongke.pojo.Order>
-     **/
-    List<Order> findOrdersByDeviceId(Integer deviceId);
 
+    /**
+     * @Description 统计设备订单
+     * @author 一只逆袭的程序猿
+     * @date 2020/4/6 15:52
+     * @param order
+     * @return java.util.Map
+     **/
+    Map findOrdersCount(Order order);
 }

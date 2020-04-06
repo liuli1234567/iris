@@ -1,0 +1,20 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhongke.mapper.DestoryJamMapper">
+
+    <select id="destoryJams" parameterType="com.zhongke.pojo.DestoryJam" resultType="com.zhongke.pojo.DestoryJam">
+        select * from zk_destory_jam
+        <where>
+            <if test="numName != null and numName != ''">
+                and (jam_id = #{numName} or jam_name = #{numName})
+            </if>
+            <if test="startTime != null and startTime != ''">
+                and createtime &gt;= #{startTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and createtime &lt;= #{endTime}
+            </if>
+        </where>
+    </select>
+</mapper>

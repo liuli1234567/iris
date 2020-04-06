@@ -50,7 +50,7 @@ public class Jam implements Serializable {
     private Date claiStartTime;
     @ApiModelProperty(value = "可领取结束时间",required = false)
     @Column(name = "clai_end_time")
-    private Integer claiEndTime;
+    private Date claiEndTime;
     @ApiModelProperty(value = "发行数量",required = false)
     @Column(name = "num")
     private Integer num;
@@ -93,6 +93,28 @@ public class Jam implements Serializable {
     @ApiModelProperty(value = "更新日期",required = false)
     @Column(name = "createtime")
     private Date createTime;
+
+    @ApiModelProperty(value = "活动状态",required = false)
+    @Transient
+    private Integer status;
+    @Transient
+    private Integer receiveNum;
+
+    public Integer getReceiveNum() {
+        return receiveNum;
+    }
+
+    public void setReceiveNum(Integer receiveNum) {
+        this.receiveNum = receiveNum;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
     public Integer getId() {
         return id;
@@ -166,11 +188,11 @@ public class Jam implements Serializable {
         this.claiStartTime = claiStartTime;
     }
 
-    public Integer getClaiEndTime() {
+    public Date getClaiEndTime() {
         return claiEndTime;
     }
 
-    public void setClaiEndTime(Integer claiEndTime) {
+    public void setClaiEndTime(Date claiEndTime) {
         this.claiEndTime = claiEndTime;
     }
 

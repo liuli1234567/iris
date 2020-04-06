@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName OrderController
@@ -49,7 +50,7 @@ public class OrderController {
     }
 
     /**
-     * @Description 通过条件查询订单列表并分页
+     * @Description 查询设备订单列表
      * @author liuli
      * @date 2020/4/1 10:24
      * @param order
@@ -58,7 +59,7 @@ public class OrderController {
      * @return com.zhongke.entity.Result<java.util.List<com.zhongke.pojo.Order>>
      **/
     @PostMapping("/findOrdersByExample/{page}/{size}")
-    public Result<List<Order>> findOrdersByExample(@RequestBody(required = false) Order order,
+    public Result<PageInfo> findOrdersByExample(@RequestBody Order order,
                                                    @PathVariable int page, @PathVariable int size){
         try {
             PageInfo<Order> orders = orderService.findOrdersByExample(order,page,size);
@@ -66,6 +67,25 @@ public class OrderController {
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("OrderController.findOrdersByExample(): "+e.getMessage());
+            return new Result<>(-1,"查询失败:"+e.getMessage());
+        }
+    }
+
+    /**
+     * @Description 统计设备订单
+     * @author 一只逆袭的程序猿
+     * @date 2020/4/6 15:51
+     * @param order
+     * @return com.zhongke.entity.Result<java.util.Map>
+     **/
+    @PostMapping("/findOrdersCount")
+    public Result<Map> findOrdersCount(@RequestBody Order order){
+        try {
+            Map map = orderService.findOrdersCount(order);
+            return new Result<>(0,"查询成功",map);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("OrderController.findOrdersCount(): "+e.getMessage());
             return new Result<>(-1,"查询失败:"+e.getMessage());
         }
     }

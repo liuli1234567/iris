@@ -21,6 +21,9 @@
             <if test="payWay != null">
                 and pay_way = #{payWay}
             </if>
+            <if test="order_number != null">
+                and order_number = #{orderNumber}
+            </if>
             <if test="startTime != null and startTime != ''">
                 and createtime &gt;= #{startTime}
             </if>

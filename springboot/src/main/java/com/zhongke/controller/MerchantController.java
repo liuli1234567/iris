@@ -31,7 +31,7 @@ public class MerchantController {
     @GetMapping("/getHomeByMerchantId")
     public Result<Map> getHomeByMerchantId(@RequestParam Integer merchantId, @RequestParam String startTime, @RequestParam String endTime) {
         try {
-            Map<String, Object> map = merchantService.getHomeByMerchantId(merchantId, startTime, endTime);
+            Map<String, Object> map = merchantService.getHomeByMerchantId(merchantId, startTime+" 00:00:00", endTime+" 23:59:59");
             return new Result<>(0,"查询成功",map);
         } catch (Exception e) {
             e.printStackTrace();

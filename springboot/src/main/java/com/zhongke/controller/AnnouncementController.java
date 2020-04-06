@@ -43,7 +43,7 @@ public class AnnouncementController {
     public Result<PageInfo> announs(@RequestParam(value = "title",required = false) String title, @RequestParam(value = "startTime",required = false)
             String startTime, @RequestParam(value = "endTime",required = false) String endTime, @PathVariable("page") int page,@PathVariable("size") int size){
         try {
-            PageInfo<Announcement> announcements = announcementService.announs(title,startTime,endTime,page,size);
+            PageInfo<Announcement> announcements = announcementService.announs(title,startTime+" 00:00:00",endTime+" 00:00:00",page,size);
             return new Result<>(0,"查询成功",announcements);
         } catch (Exception e) {
             e.printStackTrace();

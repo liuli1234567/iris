@@ -33,21 +33,23 @@ public class Order implements Serializable {
     private BigDecimal actuallyPaid; // 实付金额
     @Column(name = "discount")
     private BigDecimal discount; // 优惠金额
-    @Column(name = "goods_id")
-    private Integer goodId; // 商品id
+    @Column(name = "goods_ids")
+    private String goodIds; // 商品id集合
     @Column(name = "device_id")
     private Integer deviceId; // 设备id
+    @Column(name = "member_id")
+    private Integer memberId; // 会员id
     @Column(name = "cashier_id")
     private Integer cashierId; // 收银员id
+    @Column(name = "cashier_name")
+    private Integer cashierName; // 收银员名字
+    @Column(name = "store_name")
+    private String storeName; // 名店名称
     @Column(name = "createtime")
     private Date createTime; // 创建时间
     @Column(name = "pay_time")
     private Date payTime; // 支付时间
 
-    @Transient
-    private String storeName; // 门店名称
-    @Transient
-    private String cashierName; // 收银员名称
     @Transient
     private String startTime; // 起始时间
     @Transient
@@ -93,6 +95,14 @@ public class Order implements Serializable {
         this.payMethod = payMethod;
     }
 
+    public String getPayAisle() {
+        return payAisle;
+    }
+
+    public void setPayAisle(String payAisle) {
+        this.payAisle = payAisle;
+    }
+
     public BigDecimal getActuallyPaid() {
         return actuallyPaid;
     }
@@ -109,12 +119,52 @@ public class Order implements Serializable {
         this.discount = discount;
     }
 
+    public String getGoodIds() {
+        return goodIds;
+    }
+
+    public void setGoodIds(String goodIds) {
+        this.goodIds = goodIds;
+    }
+
     public Integer getDeviceId() {
         return deviceId;
     }
 
     public void setDeviceId(Integer deviceId) {
         this.deviceId = deviceId;
+    }
+
+    public Integer getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(Integer memberId) {
+        this.memberId = memberId;
+    }
+
+    public Integer getCashierId() {
+        return cashierId;
+    }
+
+    public void setCashierId(Integer cashierId) {
+        this.cashierId = cashierId;
+    }
+
+    public Integer getCashierName() {
+        return cashierName;
+    }
+
+    public void setCashierName(Integer cashierName) {
+        this.cashierName = cashierName;
+    }
+
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
     }
 
     public Date getCreateTime() {
@@ -133,46 +183,6 @@ public class Order implements Serializable {
         this.payTime = payTime;
     }
 
-    public String getPayAisle() {
-        return payAisle;
-    }
-
-    public void setPayAisle(String payAisle) {
-        this.payAisle = payAisle;
-    }
-
-    public Integer getGoodId() {
-        return goodId;
-    }
-
-    public void setGoodId(Integer goodId) {
-        this.goodId = goodId;
-    }
-
-    public Integer getCashierId() {
-        return cashierId;
-    }
-
-    public void setCashierId(Integer cashierId) {
-        this.cashierId = cashierId;
-    }
-
-    public String getStoreName() {
-        return storeName;
-    }
-
-    public void setStoreName(String storeName) {
-        this.storeName = storeName;
-    }
-
-    public String getCashierName() {
-        return cashierName;
-    }
-
-    public void setCashierName(String cashierName) {
-        this.cashierName = cashierName;
-    }
-
     public String getStartTime() {
         return startTime;
     }
@@ -188,5 +198,4 @@ public class Order implements Serializable {
     public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
-
 }
