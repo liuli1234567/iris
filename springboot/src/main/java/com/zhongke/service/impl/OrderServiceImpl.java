@@ -2,14 +2,8 @@ package com.zhongke.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.zhongke.mapper.CashierMapper;
-import com.zhongke.mapper.DeviceMapper;
-import com.zhongke.mapper.OrderMapper;
-import com.zhongke.mapper.StoreMapper;
-import com.zhongke.pojo.Cashier;
-import com.zhongke.pojo.Device;
-import com.zhongke.pojo.Order;
-import com.zhongke.pojo.Store;
+import com.zhongke.mapper.*;
+import com.zhongke.pojo.*;
 import com.zhongke.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,10 +28,10 @@ public class OrderServiceImpl implements OrderService {
     private OrderMapper orderMapper;
 
     @Autowired(required = false)
-    private StoreMapper storeMapper;
+    private MemberMapper memberMapper;
 
     @Autowired(required = false)
-    private DeviceMapper deviceMapper;
+    private MemberGradeMapper memberGradeMapper;
 
     @Autowired(required = false)
     private CashierMapper cashierMapper;
@@ -109,5 +103,35 @@ public class OrderServiceImpl implements OrderService {
         map.put("realMoney",realMoney); // 顾客实付
         map.put("discountMoney",discountMoney); // 优惠
         return map;
+    }
+
+    @Override
+    public PageInfo<Order> findSpuOrders(String storeOrOrder, String startTime, String endTime, String payMethod, int page, int size) {
+        PageHelper.startPage(page,size);
+        List<Order> orders = orderMapper.findSpuOrders(storeOrOrder,startTime,endTime,payMethod);
+        return new PageInfo<>(orders);
+    }
+
+    @Override
+    public Map details(String orderId) {
+        HashMap<String, Object> map = new HashMap<>();
+        Order order = orderMapper.findOne(orderId);
+        if (order != null) {
+            map.put("storeName",order.getStoreName());// 商店名称
+            map.put("orderId",order.getOrderId()); // 订单号
+            map.put("payTime",order.getPayTime()); // 支付时间
+            map.put("payMethod",order.getPayMethod()); // 支付方式
+            Member member = memberMapper.selectByPrimaryKey(order.getMemberId());
+            if (member != null) {
+                map.put("image",member.getImage()); // 会员头像
+                map.put("nickName",member.getNickName()); // 会员昵称
+                MemberGrade memberGrade = memberGradeMapper.selectByPrimaryKey(member.getGradeId());
+                if (memberGrade != null) {
+                    map.put("memberGradeName",memberGrade.getName()); // 会员等级名称
+                }
+            }
+        }
+
+        return null;
     }
 }

@@ -16,7 +16,7 @@ import java.util.Date;
  * @Version 1.0
  **/
 @ApiModel(value = "SvRule",description = "会员储值规则实体类")
-@Table(name = "zk_sv_rules")
+@Table(name = "zk_sv_rule")
 public class SvRule implements Serializable {
 
     @ApiModelProperty(value = "储值规则id",required = false)

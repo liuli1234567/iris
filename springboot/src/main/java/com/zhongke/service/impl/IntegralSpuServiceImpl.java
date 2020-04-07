@@ -32,8 +32,8 @@ public class IntegralSpuServiceImpl implements IntegralSpuService {
         Example example = new Example(IntegralSpu.class);
         Example.Criteria criteria = example.createCriteria();
         if (integralSpu != null) {
-            if (!StringUtils.isEmpty(integralSpu.getSpuName())) {
-                criteria.andEqualTo(integralSpu.getSpuName());
+            if (!StringUtils.isEmpty(integralSpu.getName())) {
+                criteria.andEqualTo(integralSpu.getName());
             }
         }
         List<IntegralSpu> spus = integralSpuMapper.selectByExample(example);

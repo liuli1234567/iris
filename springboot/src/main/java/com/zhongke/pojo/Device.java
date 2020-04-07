@@ -19,10 +19,10 @@ public class Device implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id; // 设备id
-    @Column(name = "serial_number")
-    private String serialNumber; // 序列号
-    @Column(name = "device_number")
-    private String deviceNumber; // 设备号
+    @Column(name = "serial_no")
+    private String serialNo; // 序列号
+    @Column(name = "device_no")
+    private String deviceNo; // 设备号
     @Column(name = "equipment_type")
     private String equipmentType; // 设备类型
     @Column(name = "store_id")
@@ -43,32 +43,24 @@ public class Device implements Serializable {
         return id;
     }
 
-    public Integer getStoreId() {
-        return storeId;
-    }
-
-    public void setStoreId(Integer storeId) {
-        this.storeId = storeId;
-    }
-
     public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getSerialNumber() {
-        return serialNumber;
+    public String getSerialNo() {
+        return serialNo;
     }
 
-    public void setSerialNumber(String serialNumber) {
-        this.serialNumber = serialNumber;
+    public void setSerialNo(String serialNo) {
+        this.serialNo = serialNo;
     }
 
-    public String getDeviceNumber() {
-        return deviceNumber;
+    public String getDeviceNo() {
+        return deviceNo;
     }
 
-    public void setDeviceNumber(String deviceNumber) {
-        this.deviceNumber = deviceNumber;
+    public void setDeviceNo(String deviceNo) {
+        this.deviceNo = deviceNo;
     }
 
     public String getEquipmentType() {
@@ -79,6 +71,21 @@ public class Device implements Serializable {
         this.equipmentType = equipmentType;
     }
 
+    public Integer getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(Integer storeId) {
+        this.storeId = storeId;
+    }
+
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
+    }
 
     public Integer getMode() {
         return mode;
@@ -94,14 +101,6 @@ public class Device implements Serializable {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
-    }
-
-    public String getStoreName() {
-        return storeName;
-    }
-
-    public void setStoreName(String storeName) {
-        this.storeName = storeName;
     }
 
     public Integer getSuccessNum() {

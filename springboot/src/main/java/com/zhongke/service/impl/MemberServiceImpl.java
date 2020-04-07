@@ -39,8 +39,8 @@ public class MemberServiceImpl implements MemberService {
         Example example = new Example(Member.class);
         Example.Criteria criteria = example.createCriteria();
         if (member != null) {
-            if (!StringUtils.isEmpty(member.getMemNum())){
-                criteria.andEqualTo("memNum",member.getMemNum());
+            if (!StringUtils.isEmpty(member.getMemNo())){
+                criteria.andEqualTo("memNum",member.getMemNo());
             }
             if (!StringUtils.isEmpty(member.getTel())){
                 criteria.andEqualTo("tel",member.getTel());

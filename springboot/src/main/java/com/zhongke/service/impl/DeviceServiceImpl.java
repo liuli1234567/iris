@@ -75,12 +75,12 @@ public class DeviceServiceImpl implements DeviceService {
                 criteria.andEqualTo("id",device.getId());
             }
             // 设备序列号
-            if (!StringUtils.isEmpty(device.getSerialNumber())){
-                criteria.andEqualTo("serialNumber",device.getSerialNumber());
+            if (!StringUtils.isEmpty(device.getSerialNo())){
+                criteria.andEqualTo("serialNumber",device.getSerialNo());
             }
             // 设备号
-            if (!StringUtils.isEmpty(device.getDeviceNumber())){
-                criteria.andEqualTo("deviceNumber",device.getDeviceNumber());
+            if (!StringUtils.isEmpty(device.getDeviceNo())){
+                criteria.andEqualTo("deviceNumber",device.getDeviceNo());
             }
             // 设备类型
             if (!StringUtils.isEmpty(device.getEquipmentType())){

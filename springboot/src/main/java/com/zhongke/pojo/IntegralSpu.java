@@ -18,23 +18,20 @@ import java.util.Date;
 @Api(value = "积分商品实体类")
 @Table(name = "zk_integral_spu")
 public class IntegralSpu implements Serializable {
-    @ApiModelProperty(value = "id",required = false)
+    @ApiModelProperty(value = "积分商品id",required = false)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-    @ApiModelProperty(value = "商品id",required = false)
-    @Column(name = "spu_id")
-    private Integer spuId;
-    @ApiModelProperty(value = "商品名称",required = false)
-    @Column(name = "spu_name")
-    private String spuName;
+    @ApiModelProperty(value = "积分商品名称",required = false)
+    @Column(name = "name")
+    private String name;
     @ApiModelProperty(value = "商品价格",required = false)
-    @Column(name = "spu_price")
-    private BigDecimal spuPrice;
+    @Column(name = "price")
+    private BigDecimal price;
     @ApiModelProperty(value = "商品图片url",required = false)
-    @Column(name = "spu_image")
-    private String spuImage;
+    @Column(name = "image")
+    private String image;
     @ApiModelProperty(value = "商品数量",required = false)
     @Column(name = "num")
     private Integer num;
@@ -67,22 +64,6 @@ public class IntegralSpu implements Serializable {
     @Transient
     private Integer status;
 
-    public BigDecimal getSpuPrice() {
-        return spuPrice;
-    }
-
-    public void setSpuPrice(BigDecimal spuPrice) {
-        this.spuPrice = spuPrice;
-    }
-
-    public String getSpuImage() {
-        return spuImage;
-    }
-
-    public void setSpuImage(String spuImage) {
-        this.spuImage = spuImage;
-    }
-
     public Integer getId() {
         return id;
     }
@@ -91,20 +72,28 @@ public class IntegralSpu implements Serializable {
         this.id = id;
     }
 
-    public Integer getSpuId() {
-        return spuId;
+    public String getName() {
+        return name;
     }
 
-    public void setSpuId(Integer spuId) {
-        this.spuId = spuId;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getSpuName() {
-        return spuName;
+    public BigDecimal getPrice() {
+        return price;
     }
 
-    public void setSpuName(String spuName) {
-        this.spuName = spuName;
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public Integer getNum() {

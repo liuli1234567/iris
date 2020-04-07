@@ -89,4 +89,51 @@ public class OrderController {
             return new Result<>(-1,"查询失败:"+e.getMessage());
         }
     }
+
+    /**
+     * @Description 查询商品订单集合
+     * @author liuli
+     * @date 2020/4/7 16:01
+     * @param storeOrOrder 门店名称或者订单号
+     * @param startTime
+     * @param endTime
+     * @param payMethod 支付方式
+     * @param page
+     * @param size
+     * @return com.zhongke.entity.Result<com.github.pagehelper.PageInfo>
+     **/
+    @GetMapping("/findOrdersByExample/{page}/{size}")
+    public Result<PageInfo> findSpuOrders(@RequestParam(required = false) String storeOrOrder,
+                                                @RequestParam(required = false) String startTime,
+                                                @RequestParam(required = false) String endTime,
+                                                @RequestParam(required = false) String payMethod,
+                                                @PathVariable int page, @PathVariable int size){
+        try {
+            PageInfo<Order> orders = orderService.findSpuOrders(storeOrOrder,startTime,endTime,payMethod,page,size);
+            return new Result<>(0,"查询成功",orders);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("OrderController.findSpuOrders(): "+e.getMessage());
+            return new Result<>(-1,"查询失败:"+e.getMessage());
+        }
+    }
+
+    /**
+     * @Description 查询订单详情
+     * @author liuli
+     * @date 2020/4/7 17:46
+     * @param orderId
+     * @return com.zhongke.entity.Result<java.util.Map>
+     **/
+    @GetMapping("/details")
+    public Result<Map> details(@RequestParam String orderId){
+        try {
+            Map map = orderService.details(orderId);
+            return new Result<>(0,"查询成功",map);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("OrderController.details(): "+e.getMessage());
+            return new Result<>(-1,"查询失败:"+e.getMessage());
+        }
+    }
 }

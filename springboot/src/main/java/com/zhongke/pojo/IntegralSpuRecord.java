@@ -16,7 +16,7 @@ import java.util.Date;
  * @return
  **/
 @Api(value = "积分商品兑换记录实体类")
-@Table(name = "zk_integral_spu")
+@Table(name = "zk_integral_spu_record")
 public class IntegralSpuRecord implements Serializable {
     @ApiModelProperty(value = "id",required = false)
     @Id

@@ -18,7 +18,7 @@
     </select>
 
     <select id="findOrderNum" parameterType="order" resultType="integer">
-        select count(*) from zk_order
+        select count(id) from zk_order
         <where>
             <if test="deviceId != null">
                 and device_id = #{deviceId}
@@ -99,6 +99,27 @@
         <if test="endTime != null and endTime != ''">
             and createtime &lt;= #{endTime}
         </if>
+    </select>
+
+    <select id="findSpuOrders" resultType="order">
+        select store_name,order_id,pay_time,order_amount,actually_paid,pay_method from order where status = 1
+        <if test="storeOrOrder != null and storeOrOrder != '' ">
+            and (store_name = #{storeOrOrder} or order_id = #{storeOrOrder})
+        </if>
+        <if test="startTime != null and startTime != ''">
+            and pay_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and pay_time &lt;= #{endTime}
+        </if>
+        <if test="payMethod != null and payMethod != ''">
+            and payMethod = #{payMethod}
+        </if>
+
+    </select>
+
+    <select id="findOne" parameterType="string" resultType="order">
+        select store_name,order_id,pay_time,pay_method,member_id from order
     </select>
 
 </mapper>

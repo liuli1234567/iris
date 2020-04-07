@@ -14,7 +14,8 @@ import java.util.Date;
  * @CreateDate 2020/4/4
  * @Version 2.1
  **/
-@Api(value = "核销卡卷实体类")
+@Api(value = "积分记录实体类")
+@Table(name = "zk_integral_record")
 public class IntegralRecord implements Serializable {
     @ApiModelProperty(value = "id",required = false)
     @Id

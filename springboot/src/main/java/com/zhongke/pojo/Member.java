@@ -11,7 +11,7 @@ import java.util.Date;
 /**
  * @ClassName Member
  * @Description 会员
- * @Author 一只逆袭的程序猿
+ * @Author liuli
  * @CreateDate 2020/4/4
  * @Version 2.1
  **/
@@ -23,24 +23,30 @@ public class Member implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-    @ApiModelProperty(value = "会员卡号",required = false)
-    @Column(name = "memNum")
-    private String memNum;
+    @ApiModelProperty(value = "会员号",required = false)
+    @Column(name = "mem_no")
+    private String memNo;
     @ApiModelProperty(value = "姓名",required = false)
     @Column(name = "name")
     private String name;
+    @ApiModelProperty(value = "昵称",required = false)
+    @Column(name = "nick_name")
+    private String nickName;
+    @ApiModelProperty(value = "头像",required = false)
+    @Column(name = "image")
+    private String image;
     @ApiModelProperty(value = "性别",required = false)
     @Column(name = "sex")
     private String sex;
     @ApiModelProperty(value = "生日",required = false)
     @Column(name = "birthday")
-    private Date birthday;
+    private String birthday;
     @ApiModelProperty(value = "手机号",required = false)
     @Column(name = "tel")
     private String tel;
     @ApiModelProperty(value = "卡号",required = false)
-    @Column(name = "card_num")
-    private String cardNum;
+    @Column(name = "card_no")
+    private String cardNo;
     @ApiModelProperty(value = "余额",required = false)
     @Column(name = "card_money")
     private BigDecimal cardMoney;
@@ -66,12 +72,20 @@ public class Member implements Serializable {
     @Transient
     private BigDecimal lastConsum;
 
-    public Date getBirthday() {
-        return birthday;
+    public String getNickName() {
+        return nickName;
     }
 
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public Integer getId() {
@@ -82,12 +96,12 @@ public class Member implements Serializable {
         this.id = id;
     }
 
-    public String getMemNum() {
-        return memNum;
+    public String getMemNo() {
+        return memNo;
     }
 
-    public void setMemNum(String memNum) {
-        this.memNum = memNum;
+    public void setMemNo(String memNo) {
+        this.memNo = memNo;
     }
 
     public String getName() {
@@ -106,6 +120,14 @@ public class Member implements Serializable {
         this.sex = sex;
     }
 
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+    }
+
     public String getTel() {
         return tel;
     }
@@ -114,12 +136,12 @@ public class Member implements Serializable {
         this.tel = tel;
     }
 
-    public String getCardNum() {
-        return cardNum;
+    public String getCardNo() {
+        return cardNo;
     }
 
-    public void setCardNum(String cardNum) {
-        this.cardNum = cardNum;
+    public void setCardNo(String cardNo) {
+        this.cardNo = cardNo;
     }
 
     public BigDecimal getCardMoney() {

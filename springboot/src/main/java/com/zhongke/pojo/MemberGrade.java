@@ -16,6 +16,7 @@ import java.util.Date;
  * @Version 2.1
  **/
 @Api(value = "会员等级")
+@Table(name = "zk_member_grade")
 public class MemberGrade implements Serializable {
     @ApiModelProperty(value = "id",required = false)
     @Id
@@ -46,9 +47,20 @@ public class MemberGrade implements Serializable {
     @ApiModelProperty(value = "商户id",required = false)
     @Column(name = "merchant_id")
     private Integer merchantId;
+    @ApiModelProperty(value = "更新时间",required = false)
+    @Column(name = "updatetime")
+    private Date updateTime;
     @ApiModelProperty(value = "创建时间",required = false)
     @Column(name = "createtime")
     private Date createTime;
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
 
     public Integer getId() {
         return id;

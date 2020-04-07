@@ -59,4 +59,18 @@ public interface OrderMapper extends Mapper<Order> {
      * @return int
      **/
     Integer discountMoney(Order order);
+
+    /**
+     * @Description 查询商品订单列表
+     * @author liuli
+     * @date 2020/4/7 16:04
+     * @param storeOrOrder 门店名称或订单号
+     * @param startTime
+     * @param endTime
+     * @param payMethod 支付方式
+     * @return com.github.pagehelper.PageInfo<com.zhongke.pojo.Order>
+     **/
+    List<Order> findSpuOrders(@Param("storeOrOrder") String storeOrOrder, @Param("startTime") String startTime, @Param("endTime") String endTime, @Param("payMethod") String payMethod);
+
+    Order findOne(String orderId);
 }

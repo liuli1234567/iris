@@ -33,8 +33,10 @@ public class Order implements Serializable {
     private BigDecimal actuallyPaid; // 实付金额
     @Column(name = "discount")
     private BigDecimal discount; // 优惠金额
-    @Column(name = "goods_ids")
-    private String goodIds; // 商品id集合
+    @Column(name = "jam_id")
+    private Integer jamId; // 优惠卷id
+    @Column(name = "full_rule_id")
+    private Integer fullRuleId; // 满减规则id
     @Column(name = "device_id")
     private Integer deviceId; // 设备id
     @Column(name = "member_id")
@@ -119,12 +121,20 @@ public class Order implements Serializable {
         this.discount = discount;
     }
 
-    public String getGoodIds() {
-        return goodIds;
+    public Integer getJamId() {
+        return jamId;
     }
 
-    public void setGoodIds(String goodIds) {
-        this.goodIds = goodIds;
+    public void setJamId(Integer jamId) {
+        this.jamId = jamId;
+    }
+
+    public Integer getFullRuleId() {
+        return fullRuleId;
+    }
+
+    public void setFullRuleId(Integer fullRuleId) {
+        this.fullRuleId = fullRuleId;
     }
 
     public Integer getDeviceId() {
