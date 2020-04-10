@@ -6,6 +6,8 @@ import com.zhongke.service.MemberCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @ClassName MemberCardServiceImpl
  * @Description 商户会员卡
@@ -20,8 +22,8 @@ public class MemberCardServiceImpl implements MemberCardService {
     private MemberCardMapper memberCardMapper;
 
     @Override
-    public MemberCard find() {
-        return memberCardMapper.selectAll().get(0);
+    public List<MemberCard> find() {
+        return memberCardMapper.selectAll();
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.zhongke.service;
 
 import com.github.pagehelper.PageInfo;
 import com.zhongke.pojo.Jam;
+import com.zhongke.pojo.Store;
 
 public interface JamService {
 

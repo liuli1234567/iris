@@ -6,6 +6,8 @@ import com.zhongke.service.AlipayMemberCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @ClassName AlipayMemberCardServiceImpl
  * @Description 支付宝会员卡
@@ -20,8 +22,8 @@ public class AlipayMemberCardServiceImpl implements AlipayMemberCardService {
     private AlipayMemberCardMapper alipayMemberCardMapper;
 
     @Override
-    public AlipayMemberCard find() {
-        return alipayMemberCardMapper.selectAll().get(0);
+    public List<AlipayMemberCard> find() {
+        return alipayMemberCardMapper.selectAll();
     }
 
     @Override

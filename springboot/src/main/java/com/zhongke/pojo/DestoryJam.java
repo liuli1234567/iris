@@ -1,6 +1,7 @@
 package com.zhongke.pojo;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import sun.awt.SunHints;
 
@@ -15,7 +16,7 @@ import java.util.Date;
  * @CreateDate 2020/4/4
  * @Version 2.1
  **/
-@Api(value = "核销卡卷实体类")
+@ApiModel(value = "DestoryJam",description = "核销卡卷实体类")
 @Table(name = "zk_destory_jam")
 public class DestoryJam implements Serializable {
     @ApiModelProperty(value = "id",required = false)

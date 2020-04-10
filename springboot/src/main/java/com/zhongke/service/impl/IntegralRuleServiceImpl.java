@@ -6,6 +6,8 @@ import com.zhongke.service.IntegralRuleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @ClassName IntegralRuleServiceImpl
  * @Description 积分规则
@@ -20,8 +22,8 @@ public class IntegralRuleServiceImpl implements IntegralRuleService {
     private IntegralRuleMapper integralRuleMapper;
 
     @Override
-    public IntegralRule find() {
-        return integralRuleMapper.selectAll().get(0);
+    public List<IntegralRule> find() {
+        return integralRuleMapper.selectAll();
     }
 
     @Override

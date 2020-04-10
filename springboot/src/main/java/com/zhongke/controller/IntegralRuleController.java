@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @ClassName IntegralRuleController
  * @Description 积分规则
@@ -30,10 +32,10 @@ public class IntegralRuleController {
     private IntegralRuleService integralRuleService;
 
     @GetMapping("/find")
-    public Result<IntegralRule> find(){
+    public Result<List<IntegralRule>> find(){
         try {
-            IntegralRule integralRule = integralRuleService.find();
-            return new Result<>(0,"查找成功",integralRule);
+            List<IntegralRule> integralRules = integralRuleService.find();
+            return new Result<>(0,"查找成功",integralRules);
         } catch (Exception e) {
             e.printStackTrace();
             log.error("IntegralRuleController.find(): "+e.getMessage());

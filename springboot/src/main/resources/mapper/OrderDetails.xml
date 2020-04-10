@@ -1,0 +1,11 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhongke.mapper.OrderDetailsMapper">
+
+    <select id="orderDetails" resultType="orderDetails" parameterType="string">
+
+        select spu_id,spu_num from zk_order_details where order_id = #{orderId}
+
+    </select>
+</mapper>

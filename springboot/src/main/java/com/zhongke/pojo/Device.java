@@ -1,5 +1,7 @@
 package com.zhongke.pojo;
 
+import io.swagger.annotations.ApiModel;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -12,6 +14,7 @@ import java.util.Date;
  * @Date 2020/3/31 11:11
  * @Version 1.0
  **/
+@ApiModel(value = "Device",description = "设备")
 @Table(name = "zk_device")
 public class Device implements Serializable {
 

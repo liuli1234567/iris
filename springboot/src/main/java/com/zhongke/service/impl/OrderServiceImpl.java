@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
+import javax.sound.midi.Soundbank;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -34,7 +36,10 @@ public class OrderServiceImpl implements OrderService {
     private MemberGradeMapper memberGradeMapper;
 
     @Autowired(required = false)
-    private CashierMapper cashierMapper;
+    private OrderDetailsMapper orderDetailsMapper;
+
+    @Autowired(required = false)
+    private SpuMapper spuMapper;
 
     /**
      * @Description 查询全部订单
@@ -121,6 +126,9 @@ public class OrderServiceImpl implements OrderService {
             map.put("orderId",order.getOrderId()); // 订单号
             map.put("payTime",order.getPayTime()); // 支付时间
             map.put("payMethod",order.getPayMethod()); // 支付方式
+            map.put("orderAmount",order.getOrderAmount()); // 订单总金额
+            map.put("discount",order.getDiscount()); // 优惠金额
+            map.put("actuallyPaid",order.getActuallyPaid()); // 实付金额
             Member member = memberMapper.selectByPrimaryKey(order.getMemberId());
             if (member != null) {
                 map.put("image",member.getImage()); // 会员头像
@@ -131,7 +139,18 @@ public class OrderServiceImpl implements OrderService {
                 }
             }
         }
-
-        return null;
+        List<OrderDetails> orderDetails = orderDetailsMapper.orderDetails(orderId);
+        ArrayList<Spu> spus = new ArrayList<>();
+        if (orderDetails != null && orderDetails.size()>0) {
+            for (OrderDetails orderDetail : orderDetails) {
+                Spu spu = spuMapper.selectBySpuId(orderDetail.getSpuId());
+                if (spu != null) {
+                    spu.setSpuSum(spu.getPrice().multiply(new BigDecimal(orderDetail.getSpuNum())));
+                }
+                spus.add(spu);
+            }
+        }
+        map.put("spus",spus);
+        return map;
     }
 }

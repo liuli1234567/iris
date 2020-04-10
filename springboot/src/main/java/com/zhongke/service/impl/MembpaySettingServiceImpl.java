@@ -6,6 +6,8 @@ import com.zhongke.service.MembpaySettingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @ClassName MembpaySettingServiceImpl
  * @Description 会员支付设置
@@ -20,8 +22,8 @@ public class MembpaySettingServiceImpl implements MembpaySettingService {
     private MembpaySettingMapper membpaySettingMapper;
 
     @Override
-    public MembpaySetting find() {
-        return membpaySettingMapper.selectAll().get(0);
+    public List<MembpaySetting> find() {
+        return membpaySettingMapper.selectAll();
     }
 
     @Override

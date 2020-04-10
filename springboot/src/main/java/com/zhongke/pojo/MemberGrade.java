@@ -1,6 +1,7 @@
 package com.zhongke.pojo;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
@@ -15,7 +16,7 @@ import java.util.Date;
  * @CreateDate 2020/4/4
  * @Version 2.1
  **/
-@Api(value = "会员等级")
+@ApiModel(value = "MemberGrade",description = "会员等级")
 @Table(name = "zk_member_grade")
 public class MemberGrade implements Serializable {
     @ApiModelProperty(value = "id",required = false)
@@ -37,7 +38,7 @@ public class MemberGrade implements Serializable {
     private BigDecimal rechargeMoney;
     @ApiModelProperty(value = "消费折扣",required = false)
     @Column(name = "consum_discount")
-    private double consumDiscount;
+    private Double consumDiscount;
     @ApiModelProperty(value = "赠送金额",required = false)
     @Column(name = "give_money")
     private BigDecimal giveMoney;
@@ -102,11 +103,11 @@ public class MemberGrade implements Serializable {
         this.rechargeMoney = rechargeMoney;
     }
 
-    public double getConsumDiscount() {
+    public Double getConsumDiscount() {
         return consumDiscount;
     }
 
-    public void setConsumDiscount(double consumDiscount) {
+    public void setConsumDiscount(Double consumDiscount) {
         this.consumDiscount = consumDiscount;
     }
 

@@ -1,6 +1,7 @@
 package com.zhongke.pojo;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
@@ -15,7 +16,7 @@ import java.util.Date;
  * @param
  * @return
  **/
-@Api(value = "积分规则实体类")
+@ApiModel(value = "IntegralRule",description = "积分规则实体类")
 @Table(name = "zk_integral_rule")
 public class IntegralRule implements Serializable {
     @ApiModelProperty(value = "id",required = false)

@@ -2,8 +2,10 @@ package com.zhongke.service;
 
 import com.zhongke.pojo.MemberCard;
 
+import java.util.List;
+
 public interface MemberCardService {
-    MemberCard find();
+    List<MemberCard> find();
 
     void add(MemberCard memberCard);
 

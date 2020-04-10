@@ -1,0 +1,20 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhongke.mapper.SpuMapper">
+
+    <select id="selectBySpuId" resultType="spu" parameterType="long">
+
+        select image,name,price,num from zk_spu where order_id = #{orderId}
+
+    </select>
+
+    <select id="findByNameOrNo" parameterType="string" resultType="spu">
+        select * from zk_spu
+        <where>
+            <if test="nameOrNo != null and nameOrNo != ''">
+                and name = #{nameOrNo} or no = #{nameOrNo}
+            </if>
+        </where>
+    </select>
+</mapper>

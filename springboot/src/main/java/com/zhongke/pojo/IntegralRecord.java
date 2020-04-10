@@ -1,6 +1,7 @@
 package com.zhongke.pojo;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
@@ -14,7 +15,7 @@ import java.util.Date;
  * @CreateDate 2020/4/4
  * @Version 2.1
  **/
-@Api(value = "积分记录实体类")
+@ApiModel(value = "IntegralRecord",description = "积分记录实体类")
 @Table(name = "zk_integral_record")
 public class IntegralRecord implements Serializable {
     @ApiModelProperty(value = "id",required = false)

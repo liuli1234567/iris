@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @ClassName AlipayMemberCardController
  * @Description 支付宝会员卡
@@ -29,10 +31,10 @@ public class AlipayMemberCardController {
     private AlipayMemberCardService alipayMemberCardService;
 
     @GetMapping("/find")
-    public Result<MemberCard> find(){
+    public Result<List<AlipayMemberCard>> find(){
         try {
-            AlipayMemberCard alipayMemberCard = alipayMemberCardService.find();
-            return new Result<>(0,"查询成功",alipayMemberCard);
+            List<AlipayMemberCard> alipayMemberCards = alipayMemberCardService.find();
+            return new Result<>(0,"查询成功",alipayMemberCards);
         } catch (Exception e) {
             e.printStackTrace();
             log.error("AlipayMemberCardController.find(): "+e.getMessage());

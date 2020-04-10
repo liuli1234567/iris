@@ -1,6 +1,7 @@
 package com.zhongke.pojo;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
@@ -15,7 +16,7 @@ import java.util.Date;
  * @CreateDate 2020/4/7
  * @Version 2.1
  **/
-@Api(value = "满减规则实体类")
+@ApiModel(value = "FullRule",description = "满减规则实体类")
 @Table(name = "zk_full_rule")
 public class FullRule implements Serializable {
     @ApiModelProperty(value = "id",required = false)

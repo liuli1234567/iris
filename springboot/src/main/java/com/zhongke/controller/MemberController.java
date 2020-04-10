@@ -9,6 +9,7 @@ import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -60,7 +61,8 @@ public class MemberController {
      * @param id
      * @return com.zhongke.entity.Result<com.zhongke.pojo.Member>
      **/
-    @PostMapping("/findById/{id}")
+    @GetMapping("/findById/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Result<Member> findById(@PathVariable int id){
         try {
             Member member = memberService.findById(id);

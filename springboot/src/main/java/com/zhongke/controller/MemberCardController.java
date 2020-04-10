@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @ClassName MemberCardController
  * @Description 商户会员卡相关
@@ -30,10 +32,10 @@ public class MemberCardController {
     private MemberCardService memberCardService;
 
     @GetMapping("/find")
-    public Result<MemberCard> find(){
+    public Result<List<MemberCard>> find(){
         try {
-            MemberCard memberCard = memberCardService.find();
-            return new Result<>(0,"查询成功",memberCard);
+            List<MemberCard> memberCards = memberCardService.find();
+            return new Result<>(0,"查询成功",memberCards);
         } catch (Exception e) {
             e.printStackTrace();
             log.error("MemberCardController.find(): "+e.getMessage());

@@ -1,5 +1,7 @@
 package com.zhongke.pojo;
 
+import io.swagger.annotations.ApiModel;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -11,6 +13,7 @@ import java.util.Date;
  * @Date 2020/4/1 16:59
  * @Version 1.0
  **/
+@ApiModel(value = "Merchant",description = "商户")
 @Table(name = "zk_merchant")
 public class Merchant implements Serializable {
 

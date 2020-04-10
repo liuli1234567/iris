@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @ClassName MembpaySettingController
  * @Description 会员支付设置
@@ -30,10 +32,10 @@ public class MembpaySettingController {
     private MembpaySettingService membpaySettingService;
 
     @GetMapping("/find")
-    public Result<MembpaySetting> find(){
+    public Result<List<MembpaySetting>> find(){
         try {
-            MembpaySetting membpaySetting = membpaySettingService.find();
-            return new Result<>(0,"查询成功",membpaySetting);
+            List<MembpaySetting> membpaySettings = membpaySettingService.find();
+            return new Result<>(0,"查询成功",membpaySettings);
         } catch (Exception e) {
             e.printStackTrace();
             log.error("MembpaySettingController.find(): "+e.getMessage());

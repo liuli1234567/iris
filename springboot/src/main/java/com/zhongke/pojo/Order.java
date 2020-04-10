@@ -1,5 +1,7 @@
 package com.zhongke.pojo;
 
+import io.swagger.annotations.ApiModel;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -12,6 +14,7 @@ import java.util.Date;
  * @Date 2020/3/31 16:57
  * @Version 1.0
  **/
+@ApiModel(value = "Order",description = "订单")
 @Table(name = "zk_order")
 public class Order implements Serializable {
 
@@ -33,6 +36,8 @@ public class Order implements Serializable {
     private BigDecimal actuallyPaid; // 实付金额
     @Column(name = "discount")
     private BigDecimal discount; // 优惠金额
+    @Column(name = "spu_ids")
+    private String spuIds; // 商品id集合
     @Column(name = "jam_id")
     private Integer jamId; // 优惠卷id
     @Column(name = "full_rule_id")
@@ -56,6 +61,14 @@ public class Order implements Serializable {
     private String startTime; // 起始时间
     @Transient
     private String endTime; // 结束时间
+
+    public String getSpuIds() {
+        return spuIds;
+    }
+
+    public void setSpuIds(String spuIds) {
+        this.spuIds = spuIds;
+    }
 
     public Integer getId() {
         return id;

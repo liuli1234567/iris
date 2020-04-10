@@ -1,6 +1,7 @@
 package com.zhongke.pojo;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
@@ -15,7 +16,7 @@ import java.util.Date;
  * @CreateDate 2020/4/4
  * @Version 2.1
  **/
-@Api(value = "会员实体类")
+@ApiModel(value = "Member",description = "会员实体类")
 @Table(name = "zk_member")
 public class Member implements Serializable {
     @ApiModelProperty(value = "id",required = false)
