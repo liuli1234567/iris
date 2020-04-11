@@ -27,8 +27,9 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         List<GrantedAuthority> list = new ArrayList<>();
-        list.add(new SimpleGrantedAuthority("ADMIN"));
-        User user = new User(username, "123456", list);
+        list.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        list.add(new SimpleGrantedAuthority("add"));
+        User user = new User(username, passwordEncoder.encode("123"), list);
         return user;
     }
 }

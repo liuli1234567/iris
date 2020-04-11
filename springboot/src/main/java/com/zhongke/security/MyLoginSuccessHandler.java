@@ -1,5 +1,4 @@
 package com.zhongke.security;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,13 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-/**
- * @ClassName MyLoginSuccessHandler
- * @Description
- * @Author liuli
- * @Date 2020/4/10 16:19
- * @Version 1.0
- **/
 @Component("myLoginSuccessHandler")
 public class MyLoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -41,4 +33,3 @@ public class MyLoginSuccessHandler extends SavedRequestAwareAuthenticationSucces
 
     }
 }
-

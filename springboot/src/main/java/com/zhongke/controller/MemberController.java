@@ -62,7 +62,7 @@ public class MemberController {
      * @return com.zhongke.entity.Result<com.zhongke.pojo.Member>
      **/
     @GetMapping("/findById/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')and hasAuthority('add')")
     public Result<Member> findById(@PathVariable int id){
         try {
             Member member = memberService.findById(id);
