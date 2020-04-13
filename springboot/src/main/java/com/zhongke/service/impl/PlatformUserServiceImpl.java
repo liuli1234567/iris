@@ -40,6 +40,11 @@ public class PlatformUserServiceImpl implements PlatformUserService {
         return platformUserMapper.selectByPrimaryKey(id);
     }
 
+    @Override
+    public PlatformUser findByPlatformUserName(String platformUserName) {
+        return platformUserMapper.findByPlatformUserName(platformUserName);
+    }
+
     /**
      * @Description 构建搜索条件
      * @author liuli
@@ -75,10 +80,6 @@ public class PlatformUserServiceImpl implements PlatformUserService {
             if (!StringUtils.isEmpty(platformUser.getSex())){
                 criteria.andEqualTo("sex",platformUser.getSex());
             }
-            // 角色
-            if (!StringUtils.isEmpty(platformUser.getRole())){
-                criteria.andEqualTo("role",platformUser.getRole());
-            }
             // 状态（y 启用 n 禁用）
             if (!StringUtils.isEmpty(platformUser.getStatus())){
                 criteria.andEqualTo("status",platformUser.getStatus());
@@ -98,4 +99,6 @@ public class PlatformUserServiceImpl implements PlatformUserService {
         }
         return example;
     }
+
+
 }

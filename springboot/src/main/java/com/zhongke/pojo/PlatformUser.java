@@ -6,10 +6,12 @@ import io.swagger.annotations.ApiModelProperty;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @ClassName PlatformUser
- * @Description 公告实体类
+ * @Description 平台用户实体类
  * @Author liuli
  * @Date 2020/4/1 11:33
  * @Version 1.0
@@ -37,9 +39,6 @@ public class PlatformUser implements Serializable {
     @ApiModelProperty(value = "性别",required = false)
     @Column(name = "sex")
     private String sex;
-    @ApiModelProperty(value = "角色",required = false)
-    @Column(name = "role")
-    private String role;
     @ApiModelProperty(value = "状态",required = false)
     @Column(name = "status")
     private String status;
@@ -50,8 +49,31 @@ public class PlatformUser implements Serializable {
     @Column(name = "image")
     private String image;
     @ApiModelProperty(value = "更新时间",required = false)
+    @Column(name = "updatetime")
+    private Date updatetime;
+    @ApiModelProperty(value = "注册时间",required = false)
     @Column(name = "createtime")
     private Date createTime;
+
+    @Transient
+    @ApiModelProperty(value = "角色集合",required = false)
+    private Set<Role> roles = new HashSet<Role>(0);
+
+    public Date getUpdatetime() {
+        return updatetime;
+    }
+
+    public void setUpdatetime(Date updatetime) {
+        this.updatetime = updatetime;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
 
     public String getNickname() {
         return nickname;
@@ -107,14 +129,6 @@ public class PlatformUser implements Serializable {
 
     public void setSex(String sex) {
         this.sex = sex;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 
     public String getStatus() {

@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @ClassName Order
@@ -56,6 +57,17 @@ public class Order implements Serializable {
     private Date createTime; // 创建时间
     @Column(name = "pay_time")
     private Date payTime; // 支付时间
+
+    @Transient
+    private List<Spu> spus; // 商品集合
+
+    public List<Spu> getSpus() {
+        return spus;
+    }
+
+    public void setSpus(List<Spu> spus) {
+        this.spus = spus;
+    }
 
     @Transient
     private String startTime; // 起始时间

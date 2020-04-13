@@ -73,4 +73,30 @@ public interface OrderMapper extends Mapper<Order> {
     List<Order> findSpuOrders(@Param("storeOrOrder") String storeOrOrder, @Param("startTime") String startTime, @Param("endTime") String endTime, @Param("payMethod") String payMethod);
 
     Order findOne(String orderId);
+
+    /**
+     * @Description
+     * @author liuli
+     * @date 2020/4/13 15:55
+     * @param payStartTime
+     * @param payEndTime
+     * @return java.math.BigDecimal
+     **/
+    BigDecimal merchantPaidMoney(String payStartTime, String payEndTime);
+
+    BigDecimal retreatMoney(String payStartTime, String payEndTime);
+
+    BigDecimal actuallyPaidMoney(String payStartTime, String payEndTime);
+
+    Integer orderTotal(String payStartTime, String payEndTime);
+
+    BigDecimal orderTotalMoney(String payStartTime, String payEndTime);
+
+    BigDecimal merchantDiscount(String payStartTime, String payEndTime);
+
+    BigDecimal otherDiscount(String payStartTime, String payEndTime);
+
+    Integer refundOrderCount(String payStartTime, String payEndTime);
+
+    BigDecimal refundOrderMoney(String payStartTime, String payEndTime);
 }

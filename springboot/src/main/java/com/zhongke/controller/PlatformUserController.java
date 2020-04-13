@@ -10,6 +10,7 @@ import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -91,4 +92,17 @@ public class PlatformUserController {
         }
     }
 
+    //获取当前登录用户的账号名
+    @RequestMapping("/getName")
+    public Result getUsername()throws Exception{
+        try{
+            org.springframework.security.core.userdetails.User user =
+                    (org.springframework.security.core.userdetails.User)
+                            SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            return new Result(0,"获取成功",user.getUsername());
+        }catch (Exception e){
+            logger.error("PlatformUserController.getUsername(): "+e.getMessage());
+            return new Result(-1,"获取失败");
+        }
+    }
 }

@@ -1,0 +1,13 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhongke.mapper.PlatformUserMapper">
+    <select id="findByPlatformUserName" parameterType="string" resultMap="platformUserMap">
+        select p.* from zk_platform_user p where name = #{platformUserName}
+
+    </select>
+    <resultMap id="platformUserMap" type="com.zhongke.pojo.PlatformUser">
+        <id column="id" property="id"></id>
+        <collection property="roles" column="id" select="com.zhongke.mapper.RoleMapper.findRolesByPlatformUserId"></collection>
+    </resultMap>
+</mapper>

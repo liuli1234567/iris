@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @ClassName Store
@@ -73,6 +74,18 @@ public class Store implements Serializable {
     @ApiModelProperty(value = "创建时间",required = false)
     @Column(name = "createtime")
     private Date createTime;
+
+    @Transient
+    @ApiModelProperty(value = "设备集合",required = false)
+    private List<Device> devices;
+
+    public List<Device> getDevices() {
+        return devices;
+    }
+
+    public void setDevices(List<Device> devices) {
+        this.devices = devices;
+    }
 
     public Integer getMerchantId() {
         return merchantId;

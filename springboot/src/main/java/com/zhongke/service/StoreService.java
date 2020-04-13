@@ -12,4 +12,6 @@ public interface StoreService {
     void update(Store store);
 
     Store findById(int id);
+
+
 }

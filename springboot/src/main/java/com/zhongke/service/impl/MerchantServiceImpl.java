@@ -108,4 +108,9 @@ public class MerchantServiceImpl implements MerchantService {
         }
         return null;
     }
+
+    @Override
+    public Store findByMerchantId(int merchantId) {
+        return null;
+    }
 }

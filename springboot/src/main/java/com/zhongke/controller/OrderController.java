@@ -73,7 +73,7 @@ public class OrderController {
 
     /**
      * @Description 统计设备订单
-     * @author 一只逆袭的程序猿
+     * @author liuli
      * @date 2020/4/6 15:51
      * @param order
      * @return com.zhongke.entity.Result<java.util.Map>
@@ -133,6 +133,26 @@ public class OrderController {
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("OrderController.details(): "+e.getMessage());
+            return new Result<>(-1,"查询失败:"+e.getMessage());
+        }
+    }
+
+    /**
+     * @Description 查询流水概览
+     * @author liuli
+     * @date 2020/4/13 14:36
+     * @param payStartTime
+     * @param payEndTime
+     * @return com.zhongke.entity.Result<java.util.Map>
+     **/
+    @GetMapping("/transactionOverview")
+    public Result<Map> transactionOverview(String payStartTime,String payEndTime){
+        try {
+            Map map = orderService.transactionOverview(payStartTime,payEndTime);
+            return new Result<>(0,"查询成功",map);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("OrderController.transactionOverview(): "+e.getMessage());
             return new Result<>(-1,"查询失败:"+e.getMessage());
         }
     }

@@ -35,4 +35,13 @@ public interface PlatformUserService {
      * @return void
      **/
     PlatformUser findById(int id);
+
+    /**
+     * @Description 查询平台用户拥有的权限信息
+     * @author liuli
+     * @date 2020/4/13 15:22
+     * @param platformUserName
+     * @return com.zhongke.pojo.PlatformUser
+     **/
+    PlatformUser findByPlatformUserName(String platformUserName);
 }

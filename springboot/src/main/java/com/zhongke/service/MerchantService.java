@@ -1,5 +1,8 @@
 package com.zhongke.service;
 
+import com.zhongke.pojo.Merchant;
+import com.zhongke.pojo.Store;
+
 import java.util.Date;
 import java.util.Map;
 
@@ -15,6 +18,16 @@ public interface MerchantService {
      * @return java.util.Map<java.lang.String,java.lang.Object>
      **/
     Map<String,Object> getHomeByMerchantId(Integer merchantId, String startTime, String endTime);
+
+    /**
+     * @Description 查询商户拥有的订单信息
+     * @author liuli
+     * @date 2020/4/13 18:17
+     * @param merchantId
+     * @return com.zhongke.pojo.Store
+     **/
+    Store findByMerchantId(int merchantId);
+
 
 }
 

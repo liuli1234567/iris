@@ -6,6 +6,7 @@ import com.zhongke.mapper.*;
 import com.zhongke.pojo.*;
 import com.zhongke.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
@@ -40,6 +41,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired(required = false)
     private SpuMapper spuMapper;
+
+    @Autowired(required = false)
+    private PlatformUserMapper platformUserMapper;
 
     /**
      * @Description 查询全部订单
@@ -151,6 +155,42 @@ public class OrderServiceImpl implements OrderService {
             }
         }
         map.put("spus",spus);
+        return map;
+    }
+
+    @Override
+    public Map transactionOverview(String payStartTime, String payEndTime) {
+        // 获取当前登录用户的账户名
+        org.springframework.security.core.userdetails.User user =
+                (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (user != null) {
+            PlatformUser platformUser = new PlatformUser();
+            platformUser.setName(user.getUsername());
+            PlatformUser platformUser1 = platformUserMapper.selectOne(platformUser);
+            if (platformUser1 != null) {
+                
+            }
+        }
+        BigDecimal merchantPaidMoney = orderMapper.merchantPaidMoney(payStartTime,payEndTime); // 商户实收总金额
+        BigDecimal retreatMoney = orderMapper.retreatMoney(payStartTime,payEndTime); // 商户实退总金额
+        BigDecimal actuallyPaidMoney = orderMapper.actuallyPaidMoney(payStartTime,payEndTime); // 顾客实付金额
+        Integer orderTotal = orderMapper.orderTotal(payStartTime,payEndTime); // 支付成功订单总数
+        BigDecimal orderTotalMoney = orderMapper.orderTotalMoney(payStartTime,payEndTime); // 支付成功订单总金额
+        BigDecimal merchantDiscount = orderMapper.merchantDiscount(payStartTime,payEndTime); // 商家优惠总金额
+        BigDecimal otherDiscount = orderMapper.otherDiscount(payStartTime,payEndTime); // 其他方优惠总金额
+        Integer refundOrderCount = orderMapper.refundOrderCount(payStartTime,payEndTime); // 退款订单总数
+        BigDecimal refundOrderMoney = orderMapper.refundOrderMoney(payStartTime,payEndTime); // 退款订单总金额
+        Map<String, Object> map = new HashMap<>();
+        map.put("merchantPaidMoney",merchantPaidMoney);
+        map.put("retreatMoney",retreatMoney);
+        map.put("actualRevenue",merchantPaidMoney.subtract(retreatMoney)); // 商户实际营收（实收-实退）
+        map.put("actuallyPaidMoney",actuallyPaidMoney);
+        map.put("orderTotal",orderTotal);
+        map.put("orderTotalMoney",orderTotalMoney);
+        map.put("merchantDiscount",merchantDiscount);
+        map.put("otherDiscount",otherDiscount);
+        map.put("refundOrderCount",refundOrderCount);
+        map.put("refundOrderMoney",refundOrderMoney);
         return map;
     }
 }

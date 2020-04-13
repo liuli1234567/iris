@@ -1,0 +1,21 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhongke.mapper.MerchantMapper">
+    <select id="findByMerchantName" resultType="merchant" resultMap="merchantMap">
+        select m.* from zk_merchant m where name = #{merchantName}
+
+    </select>
+    <resultMap id="merchantMap" type="com.zhongke.pojo.Merchant">
+        <id column="id" property="id"></id>
+        <collection property="roles" column="id" select="com.zhongke.mapper.findRolesByMerchantId"></collection>
+    </resultMap>
+
+    <select id="findByMerchantId" parameterType="int" resultMap="merchantMap">
+        select m.* from zk_merchant m where id = #{merchantId}
+    </select>
+    <resultMap id="merchantMap" type="com.zhongke.pojo.Merchant">
+        <id column="id" property="id"></id>
+        <collection property="stores" column="id" select="com.zhongke.mapper.StoreMapper.findByMerchantId"></collection>
+    </resultMap>
+</mapper>

@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @ClassName Device
@@ -38,9 +39,20 @@ public class Device implements Serializable {
     private Date createTime;
 
     @Transient
+    private List<Order> orders; // 订单集合
+
+    @Transient
     private Integer successNum; // 交易成功笔数
     @Transient
     private BigDecimal money; // 交易金额
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
 
     public Integer getId() {
         return id;

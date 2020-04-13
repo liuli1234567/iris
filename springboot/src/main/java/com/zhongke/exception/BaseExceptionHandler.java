@@ -31,7 +31,7 @@ public class BaseExceptionHandler {
     @ResponseBody
     public Result error(Exception e){
         e.printStackTrace();
-        logger.error("BaseExceptionHandler.error(): "+e.getMessage());
-        return new Result(-1,"系统忙，请稍后再试: "+e.getMessage());
+        logger.error(e.getMessage());
+        return new Result(-1,"系统忙，请稍后再试: ");
     }
 }

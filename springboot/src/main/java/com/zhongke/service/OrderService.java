@@ -59,4 +59,14 @@ public interface OrderService {
      * @return java.util.Map
      **/
     Map details(String orderId);
+
+    /**
+     * @Description 查询流水概览
+     * @author liuli
+     * @date 2020/4/13 14:36
+     * @param payStartTime
+     * @param payEndTime
+     * @return java.util.Map
+     **/
+    Map transactionOverview(String payStartTime, String payEndTime);
 }
