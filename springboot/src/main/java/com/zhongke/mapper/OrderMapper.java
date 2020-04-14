@@ -17,7 +17,7 @@ public interface OrderMapper extends Mapper<Order> {
 
     /**
      * @Description 订单总数
-     * @author 一只逆袭的程序猿
+     * @author liuli
      * @date 2020/4/6 16:07
      * @param order
      * @return int
@@ -26,7 +26,7 @@ public interface OrderMapper extends Mapper<Order> {
 
     /**
      * @Description 订单总金额
-     * @author 一只逆袭的程序猿
+     * @author liuli
      * @date 2020/4/6 16:07
      * @param order
      * @return int
@@ -35,7 +35,7 @@ public interface OrderMapper extends Mapper<Order> {
 
     /**
      * @Description 退款总金额
-     * @author 一只逆袭的程序猿
+     * @author liuli
      * @date 2020/4/6 16:08
      * @param order
      * @return int
@@ -44,7 +44,7 @@ public interface OrderMapper extends Mapper<Order> {
 
     /**
      * @Description 顾客实付
-     * @author 一只逆袭的程序猿
+     * @author liuli
      * @date 2020/4/6 16:08
      * @param order
      * @return int
@@ -53,7 +53,7 @@ public interface OrderMapper extends Mapper<Order> {
 
     /**
      * @Description 优惠
-     * @author 一只逆袭的程序猿
+     * @author liuli
      * @date 2020/4/6 16:08
      * @param order
      * @return int
@@ -74,29 +74,126 @@ public interface OrderMapper extends Mapper<Order> {
 
     Order findOne(String orderId);
 
+    List<Order> findOrdersByDeviceId(int deviceId);
+
     /**
-     * @Description
+     * @Description 商户实收总金额
      * @author liuli
-     * @date 2020/4/13 15:55
+     * @date 2020/4/14 10:25
      * @param payStartTime
      * @param payEndTime
+     * @param deviceId
      * @return java.math.BigDecimal
      **/
-    BigDecimal merchantPaidMoney(String payStartTime, String payEndTime);
+    BigDecimal merchantPaidMoney(@Param("payStartTime") String payStartTime, @Param("payEndTime") String payEndTime,@Param("deviceId") int deviceId);
 
-    BigDecimal retreatMoney(String payStartTime, String payEndTime);
+    /**
+     * @Description 商户实退总金额
+     * @author liuli
+     * @date 2020/4/14 10:25
+     * @param payStartTime
+     * @param payEndTime
+     * @param deviceId
+     * @return java.math.BigDecimal
+     **/
+    BigDecimal retreatMoney(@Param("payStartTime") String payStartTime, @Param("payEndTime") String payEndTime,@Param("deviceId") int deviceId);
 
-    BigDecimal actuallyPaidMoney(String payStartTime, String payEndTime);
+    /**
+     * @Description 顾客实付金额
+     * @author liuli
+     * @date 2020/4/14 10:25
+     * @param payStartTime
+     * @param payEndTime
+     * @param deviceId
+     * @return java.math.BigDecimal
+     **/
+    BigDecimal actuallyPaidMoney(@Param("payStartTime") String payStartTime, @Param("payEndTime") String payEndTime,@Param("deviceId") int deviceId);
 
-    Integer orderTotal(String payStartTime, String payEndTime);
+    /**
+     * @Description 支付成功订单总数
+     * @author liuli
+     * @date 2020/4/14 10:25
+     * @param payStartTime
+     * @param payEndTime
+     * @param deviceId
+     * @return java.lang.Integer
+     **/
+    Integer orderTotal(@Param("payStartTime") String payStartTime, @Param("payEndTime") String payEndTime,@Param("deviceId") int deviceId);
 
-    BigDecimal orderTotalMoney(String payStartTime, String payEndTime);
+    /**
+     * @Description 支付成功订单总金额
+     * @author liuli
+     * @date 2020/4/14 10:25
+     * @param payStartTime
+     * @param payEndTime
+     * @param deviceId
+     * @return java.math.BigDecimal
+     **/
+    BigDecimal orderTotalMoney(@Param("payStartTime") String payStartTime, @Param("payEndTime") String payEndTime,@Param("deviceId") int deviceId);
 
-    BigDecimal merchantDiscount(String payStartTime, String payEndTime);
+    /**
+     * @Description 商家优惠总金额
+     * @author liuli
+     * @date 2020/4/14 10:25
+     * @param payStartTime
+     * @param payEndTime
+     * @param deviceId
+     * @return java.math.BigDecimal
+     **/
+    BigDecimal merchantDiscount(@Param("payStartTime") String payStartTime, @Param("payEndTime") String payEndTime,@Param("deviceId") int deviceId);
 
-    BigDecimal otherDiscount(String payStartTime, String payEndTime);
+    /**
+     * @Description 其他方优惠总金额
+     * @author liuli
+     * @date 2020/4/14 10:26
+     * @param payStartTime
+     * @param payEndTime
+     * @param deviceId
+     * @return java.math.BigDecimal
+     **//*
+    BigDecimal otherDiscount(String payStartTime, String payEndTime,int deviceId);*/
 
-    Integer refundOrderCount(String payStartTime, String payEndTime);
+    /**
+     * @Description 退款订单总数
+     * @author liuli
+     * @date 2020/4/14 10:26
+     * @param payStartTime
+     * @param payEndTime
+     * @param deviceId
+     * @return java.lang.Integer
+     **/
+    Integer refundOrderCount(@Param("payStartTime") String payStartTime, @Param("payEndTime") String payEndTime,@Param("deviceId") int deviceId);
 
-    BigDecimal refundOrderMoney(String payStartTime, String payEndTime);
+    /**
+     * @Description 退款订单总金额
+     * @author liuli
+     * @date 2020/4/14 10:26
+     * @param payStartTime
+     * @param payEndTime
+     * @param deviceId
+     * @return java.math.BigDecimal
+     **/
+    BigDecimal refundOrderMoney(@Param("payStartTime") String payStartTime, @Param("payEndTime") String payEndTime,@Param("deviceId") int deviceId);
+
+    /**
+     * @Description 有效订单数量
+     * @author liuli
+     * @date 2020/4/14 14:43
+     * @param payStartTime
+     * @param payEndTime
+     * @param deviceId
+     * @return java.lang.Integer
+     **/
+    Integer effectiveOrderNum(@Param("payStartTime") String payStartTime, @Param("payEndTime") String payEndTime,@Param("deviceId") int deviceId);
+
+    /**
+     * @Description 有效订单总金额
+     * @author liuli
+     * @date 2020/4/14 14:44
+     * @param payStartTime
+     * @param payEndTime
+     * @param deviceId
+     * @return java.math.BigDecimal
+     **/
+    BigDecimal effectiveOrderMoney(@Param("payStartTime") String payStartTime, @Param("payEndTime") String payEndTime,@Param("deviceId") int deviceId);
 }

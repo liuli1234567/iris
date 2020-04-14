@@ -11,11 +11,11 @@
         <collection property="roles" column="id" select="com.zhongke.mapper.findRolesByMerchantId"></collection>
     </resultMap>
 
-    <select id="findByMerchantId" parameterType="int" resultMap="merchantMap">
+    <!--<select id="findByMerchantId" parameterType="int" resultMap="merchantMap">
         select m.* from zk_merchant m where id = #{merchantId}
     </select>
     <resultMap id="merchantMap" type="com.zhongke.pojo.Merchant">
         <id column="id" property="id"></id>
         <collection property="stores" column="id" select="com.zhongke.mapper.StoreMapper.findByMerchantId"></collection>
-    </resultMap>
+    </resultMap>-->
 </mapper>

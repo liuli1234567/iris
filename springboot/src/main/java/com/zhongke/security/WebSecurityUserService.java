@@ -49,6 +49,7 @@ public class WebSecurityUserService implements UserDetailsService {
             }
         }
         //User user = new User(merchantName, passwordEncoder.encode("123"), list);
-        return new User(platformUserName, platformUser.getPassword(), list);
+        //return new User(platformUserName, platformUser.getPassword(), list);
+        return new User(platformUserName, passwordEncoder.encode(platformUser.getPassword()), list);
     }
 }

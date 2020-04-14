@@ -52,7 +52,7 @@ public class Order implements Serializable {
     @Column(name = "cashier_name")
     private Integer cashierName; // 收银员名字
     @Column(name = "store_name")
-    private String storeName; // 名店名称
+    private String storeName; // 门店名称
     @Column(name = "createtime")
     private Date createTime; // 创建时间
     @Column(name = "pay_time")

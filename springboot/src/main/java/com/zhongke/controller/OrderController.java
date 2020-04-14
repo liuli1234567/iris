@@ -138,21 +138,56 @@ public class OrderController {
     }
 
     /**
-     * @Description 查询流水概览
+     * @Description 查询商户流水概览
      * @author liuli
      * @date 2020/4/13 14:36
      * @param payStartTime
      * @param payEndTime
      * @return com.zhongke.entity.Result<java.util.Map>
      **/
-    @GetMapping("/transactionOverview")
-    public Result<Map> transactionOverview(String payStartTime,String payEndTime){
+    @GetMapping("/merchant_transactionOverview")
+    public Result<Map> merchant_transactionOverview(String payStartTime,String payEndTime){
         try {
-            Map map = orderService.transactionOverview(payStartTime,payEndTime);
+            Map map = orderService.merchant_transactionOverview(payStartTime,payEndTime);
             return new Result<>(0,"查询成功",map);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("OrderController.transactionOverview(): "+e.getMessage());
+            logger.error("OrderController.merchant_transactionOverview(): "+e.getMessage());
+            return new Result<>(-1,"查询失败:"+e.getMessage());
+        }
+    }
+
+    /**
+     * @Description 门店流水概览
+     * @author liuli
+     * @date 2020/4/14 13:46
+     * @param payStartTime
+     * @param payEndTime
+     * @param page
+     * @param size
+     * @return com.zhongke.entity.Result<java.util.Map>
+     **/
+    @GetMapping("/store_transactionOverview/{page}/{size}")
+    public Result<PageInfo<List<Map<String,Object>>>> store_transactionOverview(@RequestParam String payStartTime,@RequestParam String payEndTime,
+                                                    @PathVariable int page,@PathVariable int size){
+        try {
+            PageInfo<List<Map<String,Object>>> listPageInfo= orderService.store_transactionOverview(payStartTime,payEndTime,page,size);
+            return new Result<>(0,"查询成功",listPageInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("OrderController.store_transactionOverview(): "+e.getMessage());
+            return new Result<>(-1,"查询失败:"+e.getMessage());
+        }
+    }
+
+    @GetMapping("/findOrdersByStoreId/{page}/{size}")
+    public Result<PageInfo<Order>> findOrdersByStoreId(@RequestParam int storeId,@PathVariable int page,@PathVariable int size){
+        try {
+            PageInfo<Order> orders = orderService.findOrdersByStoreId(storeId,page,size);
+            return new Result<>(0,"查询成功",orders);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("OrderController.findOrderByStoreId(): "+e.getMessage());
             return new Result<>(-1,"查询失败:"+e.getMessage());
         }
     }

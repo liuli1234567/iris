@@ -122,4 +122,51 @@
         select store_name,order_id,pay_time,pay_method,member_id from order where order_id = #{orderId}
     </select>
 
+    <select id="findOrdersByDeviceId" parameterType="int" resultType="order">
+        select o.* from zk_order o where device_id = #{deviceId}
+    </select>
+
+    <select id="merchantPaidMoney" resultType="BigDecimal">
+        select ifnull(sum(actually_paid),0) from zk_order where status = 1 and pay_time &gt;= #{payStartTime} and pay_time &lt;= #{payEndTime} and device_id = #{deviceId}
+    </select>
+
+    <select id="retreatMoney" resultType="BigDecimal">
+        select ifnull(sum(actually_paid),0) from zk_order where status = -2 and pay_time &gt;= #{payStartTime} and pay_time &lt;= #{payEndTime} and device_id = #{deviceId}
+    </select>
+
+    <select id="actuallyPaidMoney" resultType="BigDecimal">
+        select ifnull(sum(actually_paid),0) from zk_order where status = 1 and pay_time &gt;= #{payStartTime} and pay_time &lt;= #{payEndTime} and device_id = #{deviceId}
+    </select>
+
+    <select id="orderTotal" resultType="integer">
+        select count(id) from zk_order where status = 1 and pay_time &gt;= #{payStartTime} and pay_time &lt;= #{payEndTime} and device_id = #{deviceId}
+    </select>
+
+    <select id="orderTotalMoney" resultType="BigDecimal">
+        select ifnull(sum(order_amount),0) from zk_order where status = 1 and pay_time &gt;= #{payStartTime} and pay_time &lt;= #{payEndTime} and device_id = #{deviceId}
+    </select>
+
+    <select id="merchantDiscount" resultType="BigDecimal">
+        select ifnull(sum(discount),0) from zk_order where status = 1 and pay_time &gt;= #{payStartTime} and pay_time &lt;= #{payEndTime} and device_id = #{deviceId}
+    </select>
+
+    <!--<select id="otherDiscount" resultType="BigDecimal">
+
+    </select>-->
+
+    <select id="refundOrderCount" resultType="integer">
+        select count(id) from zk_order where status = -2 and pay_time &gt;= #{payStartTime} and pay_time &lt;= #{payEndTime} and device_id = #{deviceId}
+    </select>
+
+    <select id="refundOrderMoney" resultType="BigDecimal">
+        select ifnull(sum(order_amount),0) from zk_order where status = -2 and pay_time &gt;= #{payStartTime} and pay_time &lt;= #{payEndTime} and device_id = #{deviceId}
+    </select>
+
+    <select id="effectiveOrderNum" resultType="integer">
+        select count(id) from zk_order where (status = -2 or status = 1) and pay_time &gt;= #{payStartTime} and pay_time &lt;= #{payEndTime} and device_id = #{deviceId}
+    </select>
+
+    <select id="effectiveOrderMoney" resultType="BigDecimal">
+        select ifnull(sum(order_amount),0) from zk_order where (status = -2 or status = 1) and pay_time &gt;= #{payStartTime} and pay_time &lt;= #{payEndTime} and device_id = #{deviceId}
+    </select>
 </mapper>

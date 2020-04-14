@@ -35,7 +35,7 @@ public class PlatformUser implements Serializable {
     private String nickname;
     @ApiModelProperty(value = "用户所属商户id",required = false)
     @Column(name = "merchant_id")
-    private String merchantId;
+    private Integer merchantId;
     @ApiModelProperty(value = "性别",required = false)
     @Column(name = "sex")
     private String sex;
@@ -115,11 +115,11 @@ public class PlatformUser implements Serializable {
         this.password = password;
     }
 
-    public String getMerchantId() {
+    public Integer getMerchantId() {
         return merchantId;
     }
 
-    public void setMerchantId(String merchantId) {
+    public void setMerchantId(Integer merchantId) {
         this.merchantId = merchantId;
     }
 

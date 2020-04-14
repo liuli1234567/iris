@@ -61,12 +61,34 @@ public interface OrderService {
     Map details(String orderId);
 
     /**
-     * @Description 查询流水概览
+     * @Description 查询商户流水概览
      * @author liuli
      * @date 2020/4/13 14:36
      * @param payStartTime
      * @param payEndTime
      * @return java.util.Map
      **/
-    Map transactionOverview(String payStartTime, String payEndTime);
+    Map merchant_transactionOverview(String payStartTime, String payEndTime);
+
+    /**
+     * @Description 查询门店流水概览
+     * @author liuli
+     * @date 2020/4/14 13:47
+     * @param payStartTime
+     * @param payEndTime
+     * @param page
+     * @param size
+     * @return java.util.Map
+     **/
+    PageInfo<List<Map<String,Object>>> store_transactionOverview(String payStartTime, String payEndTime, int page, int size);
+
+    /**
+     * @Description 查询门店下的订单
+     * @author liuli
+     * @date 2020/4/14 16:49
+     * @param page
+     * @param size
+     * @return com.github.pagehelper.PageInfo<com.zhongke.pojo.Order>
+     **/
+    PageInfo<Order> findOrdersByStoreId(int storeId,int page, int size);
 }

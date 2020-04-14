@@ -11,10 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
-import javax.sound.midi.Soundbank;
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -44,6 +41,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired(required = false)
     private PlatformUserMapper platformUserMapper;
+
+    @Autowired(required = false)
+    private StoreMapper storeMapper;
+
+    @Autowired(required = false)
+    private DeviceMapper deviceMapper;
 
     /**
      * @Description 查询全部订单
@@ -159,38 +162,121 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Map transactionOverview(String payStartTime, String payEndTime) {
+    public Map merchant_transactionOverview(String payStartTime, String payEndTime) {
         // 获取当前登录用户的账户名
         org.springframework.security.core.userdetails.User user =
                 (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Map<String, Object> map = new HashMap<>();
         if (user != null) {
             PlatformUser platformUser = new PlatformUser();
             platformUser.setName(user.getUsername());
             PlatformUser platformUser1 = platformUserMapper.selectOne(platformUser);
             if (platformUser1 != null) {
-                
+                List<Store> stores = storeMapper.findByMerchantId(platformUser1.getMerchantId());
+                if (stores != null && stores.size() > 0) {
+                    BigDecimal merchantPaidMoney = new BigDecimal("0.0");
+                    BigDecimal retreatMoney = new BigDecimal("0.0");
+                    BigDecimal actuallyPaidMoney = new BigDecimal("0.0");
+                    Integer orderTotal = 0;
+                    BigDecimal orderTotalMoney = new BigDecimal("0.0");
+                    BigDecimal merchantDiscount = new BigDecimal("0.0");
+                    Integer refundOrderCount = 0;
+                    BigDecimal refundOrderMoney = new BigDecimal("0.0");
+                    for (Store store : stores) {
+                        List<Device> devices = deviceMapper.findDevicesByStoreId(store.getId());
+                        if (devices != null && devices.size() > 0) {
+                            for (Device device : devices) {
+                                Integer deviceId = device.getId();
+                                merchantPaidMoney = merchantPaidMoney.add(orderMapper.merchantPaidMoney(payStartTime, payEndTime,deviceId)); // 商户实收总金额
+                                retreatMoney = retreatMoney.add(orderMapper.retreatMoney(payStartTime, payEndTime,deviceId)); // 商户实退总金额
+                                actuallyPaidMoney = actuallyPaidMoney.add(orderMapper.actuallyPaidMoney(payStartTime, payEndTime,deviceId)); // 顾客实付金额
+                                orderTotal += orderMapper.orderTotal(payStartTime, payEndTime,deviceId); // 支付成功订单总数
+                                orderTotalMoney = orderTotalMoney.add(orderMapper.orderTotalMoney(payStartTime, payEndTime,deviceId)); // 支付成功订单总金额
+                                merchantDiscount = merchantDiscount.add(orderMapper.merchantDiscount(payStartTime, payEndTime,deviceId)); // 商家优惠总金额
+                                //BigDecimal otherDiscount = orderMapper.otherDiscount(payStartTime, payEndTime,deviceId); // 其他方优惠总金额
+                                refundOrderCount += orderMapper.refundOrderCount(payStartTime, payEndTime,deviceId); // 退款订单总数
+                                refundOrderMoney = refundOrderMoney.add(orderMapper.refundOrderMoney(payStartTime, payEndTime,deviceId)); // 退款订单总金额
+                            }
+                        }
+                    }
+                    map.put("merchantPaidMoney", merchantPaidMoney.doubleValue());
+                    map.put("retreatMoney", retreatMoney.doubleValue());
+                    map.put("actualRevenue", merchantPaidMoney.subtract(retreatMoney).doubleValue()); // 商户实际营收（实收-实退）
+                    map.put("actuallyPaidMoney", actuallyPaidMoney.doubleValue());
+                    map.put("orderTotal", orderTotal);
+                    map.put("orderTotalMoney", orderTotalMoney.doubleValue());
+                    map.put("merchantDiscount", merchantDiscount.doubleValue());
+                    map.put("otherDiscount", 0.0);
+                    map.put("refundOrderCount", refundOrderCount);
+                    map.put("refundOrderMoney", refundOrderMoney.doubleValue());
+                    return map;
+                }
             }
         }
-        BigDecimal merchantPaidMoney = orderMapper.merchantPaidMoney(payStartTime,payEndTime); // 商户实收总金额
-        BigDecimal retreatMoney = orderMapper.retreatMoney(payStartTime,payEndTime); // 商户实退总金额
-        BigDecimal actuallyPaidMoney = orderMapper.actuallyPaidMoney(payStartTime,payEndTime); // 顾客实付金额
-        Integer orderTotal = orderMapper.orderTotal(payStartTime,payEndTime); // 支付成功订单总数
-        BigDecimal orderTotalMoney = orderMapper.orderTotalMoney(payStartTime,payEndTime); // 支付成功订单总金额
-        BigDecimal merchantDiscount = orderMapper.merchantDiscount(payStartTime,payEndTime); // 商家优惠总金额
-        BigDecimal otherDiscount = orderMapper.otherDiscount(payStartTime,payEndTime); // 其他方优惠总金额
-        Integer refundOrderCount = orderMapper.refundOrderCount(payStartTime,payEndTime); // 退款订单总数
-        BigDecimal refundOrderMoney = orderMapper.refundOrderMoney(payStartTime,payEndTime); // 退款订单总金额
+        return null;
+    }
+
+    @Override
+    public PageInfo<List<Map<String,Object>>> store_transactionOverview(String payStartTime, String payEndTime, int page, int size) {
+        PageHelper.startPage(page,size);
+        // 获取当前登录用户的账户名
+        org.springframework.security.core.userdetails.User user =
+                (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Map<String, Object> map = new HashMap<>();
-        map.put("merchantPaidMoney",merchantPaidMoney);
-        map.put("retreatMoney",retreatMoney);
-        map.put("actualRevenue",merchantPaidMoney.subtract(retreatMoney)); // 商户实际营收（实收-实退）
-        map.put("actuallyPaidMoney",actuallyPaidMoney);
-        map.put("orderTotal",orderTotal);
-        map.put("orderTotalMoney",orderTotalMoney);
-        map.put("merchantDiscount",merchantDiscount);
-        map.put("otherDiscount",otherDiscount);
-        map.put("refundOrderCount",refundOrderCount);
-        map.put("refundOrderMoney",refundOrderMoney);
-        return map;
+        if (user != null) {
+            PlatformUser platformUser = new PlatformUser();
+            platformUser.setName(user.getUsername());
+            PlatformUser platformUser1 = platformUserMapper.selectOne(platformUser);
+            if (platformUser1 != null) {
+                List<Store> stores = storeMapper.findByMerchantId(platformUser1.getMerchantId());
+                if (stores != null && stores.size() > 0) {
+                    List<Map<String,Object>> list = new ArrayList<>();
+                    for (Store store : stores) {
+                        Integer effectiveOrderNum = 0;
+                        BigDecimal effectiveOrderMoney = new BigDecimal("0.0");
+                        BigDecimal retreatMoney = new BigDecimal("0.0");
+                        BigDecimal actuallyPaidMoney = new BigDecimal("0.0");
+                        BigDecimal discountMoney = new BigDecimal("0.0");
+                        Map<String, Object> hashMap = new HashMap<>();
+                        List<Device> devices = deviceMapper.findDevicesByStoreId(store.getId());
+                        if (devices != null && devices.size() > 0) {
+                            for (Device device : devices) {
+                                Integer deviceId = device.getId();
+                                effectiveOrderNum += orderMapper.effectiveOrderNum(payStartTime, payEndTime, deviceId); // 有效订单数
+                                effectiveOrderMoney = effectiveOrderMoney.add(orderMapper.effectiveOrderMoney(payStartTime, payEndTime, deviceId)); // 有效订单金额
+                                retreatMoney = retreatMoney.add(orderMapper.retreatMoney(payStartTime, payEndTime, deviceId)); // 退款总金额
+                                actuallyPaidMoney = actuallyPaidMoney.add(orderMapper.actuallyPaidMoney(payStartTime, payEndTime, deviceId)); // 顾客实付金额
+                                discountMoney = discountMoney.add(orderMapper.merchantDiscount(payStartTime, payEndTime, deviceId)); // 优惠金额
+                            }
+                        }
+                        hashMap.put("storeName",store.getName()); // 门店名称
+                        hashMap.put("storeId",store.getName()); // 门店id
+                        hashMap.put("effectiveOrderNum",effectiveOrderNum);
+                        hashMap.put("effectiveOrderMoney",effectiveOrderMoney.doubleValue());
+                        hashMap.put("retreatMoney",retreatMoney.doubleValue());
+                        hashMap.put("actuallyPaidMoney",actuallyPaidMoney.doubleValue());
+                        hashMap.put("discountMoney",discountMoney.doubleValue());
+                        list.add(hashMap);
+                    }
+                    return new PageInfo<>(Collections.singletonList(list));
+                }
+            }
+                }
+        return new PageInfo<>();
+    }
+
+    @Override
+    public PageInfo<Order> findOrdersByStoreId(int storeId,int page, int size) {
+        List<Device> devices = deviceMapper.findDevicesByStoreId(storeId);
+        ArrayList<Order> orders = new ArrayList<>();
+        if (devices != null && devices.size()>0) {
+            for (Device device : devices) {
+                Integer deviceId = device.getId();
+                List<Order> list = orderMapper.findOrdersByDeviceId(deviceId);
+                orders.addAll(list);
+            }
+        }
+        PageHelper.startPage(page,size);
+        return new PageInfo<>(orders);
     }
 }
