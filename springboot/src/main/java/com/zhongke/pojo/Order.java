@@ -60,6 +60,8 @@ public class Order implements Serializable {
 
     @Transient
     private List<Spu> spus; // 商品集合
+    @Transient
+    private Integer storeId; // 门店id
 
     public List<Spu> getSpus() {
         return spus;
@@ -73,6 +75,14 @@ public class Order implements Serializable {
     private String startTime; // 起始时间
     @Transient
     private String endTime; // 结束时间
+
+    public Integer getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(Integer storeId) {
+        this.storeId = storeId;
+    }
 
     public String getSpuIds() {
         return spuIds;

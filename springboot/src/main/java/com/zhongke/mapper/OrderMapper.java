@@ -196,4 +196,13 @@ public interface OrderMapper extends Mapper<Order> {
      * @return java.math.BigDecimal
      **/
     BigDecimal effectiveOrderMoney(@Param("payStartTime") String payStartTime, @Param("payEndTime") String payEndTime,@Param("deviceId") int deviceId);
+
+    /**
+     * @Description 根据门店id和订单信息查询订单列表
+     * @author liuli
+     * @date 2020/4/16 18:27
+     * @param order
+     * @return java.util.List<com.zhongke.pojo.Order>
+     **/
+    List<Order> findOrdersByStoreId(Order order);
 }

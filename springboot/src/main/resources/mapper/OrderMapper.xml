@@ -169,4 +169,29 @@
     <select id="effectiveOrderMoney" resultType="BigDecimal">
         select ifnull(sum(order_amount),0) from zk_order where (status = -2 or status = 1) and pay_time &gt;= #{payStartTime} and pay_time &lt;= #{payEndTime} and device_id = #{deviceId}
     </select>
+
+    <select id="findOrdersByStoreId" parameterType="order" resultType="order">
+        select o.* from zk_device d ,zk_store s,zk_order o where d.store_id = s.id and o.device_id = d.id
+        <if test="orderId != null">
+            and o.order_id = #{orderId}
+        </if>
+        <if test="cashierName != null and cashierName != ''">
+            and o.cashier_name = #{cashierName}
+        </if>
+        <if test="storeName != null and storeName != ''">
+            and o.store_name = #{storeName}
+        </if>
+        <if test="payMethod != null and payMethod != ''">
+            and o.pay_method = #{payMethod}
+        </if>
+        <if test="status != null">
+            and o.status = #{status}
+        </if>
+        <if test="startTime != null and startTime != ''">
+            and o.createtime &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and o.createtime &lt;= #{endTime}
+        </if>
+    </select>
 </mapper>

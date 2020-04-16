@@ -83,12 +83,12 @@ public interface OrderService {
     PageInfo<List<Map<String,Object>>> store_transactionOverview(String payStartTime, String payEndTime, int page, int size);
 
     /**
-     * @Description 查询门店下的订单
+     * @Description 根据门店id和订单信息查询订单列表
      * @author liuli
      * @date 2020/4/14 16:49
      * @param page
      * @param size
      * @return com.github.pagehelper.PageInfo<com.zhongke.pojo.Order>
      **/
-    PageInfo<Order> findOrdersByStoreId(int storeId,int page, int size);
+    PageInfo<Order> findOrdersByStoreId(Order order,int page, int size);
 }

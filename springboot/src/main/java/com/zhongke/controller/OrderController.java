@@ -180,10 +180,19 @@ public class OrderController {
         }
     }
 
-    @GetMapping("/findOrdersByStoreId/{page}/{size}")
-    public Result<PageInfo<Order>> findOrdersByStoreId(@RequestParam int storeId,@PathVariable int page,@PathVariable int size){
+    /**
+     * @Description 根据门店id和订单信息查询订单列表
+     * @author liuli
+     * @date 2020/4/16 18:28
+     * @param order
+     * @param page
+     * @param size
+     * @return com.zhongke.entity.Result<com.github.pagehelper.PageInfo<com.zhongke.pojo.Order>>
+     **/
+    @PostMapping("/findOrdersByStoreId/{page}/{size}")
+    public Result<PageInfo<Order>> findOrdersByStoreId(@RequestBody Order order,@PathVariable int page,@PathVariable int size){
         try {
-            PageInfo<Order> orders = orderService.findOrdersByStoreId(storeId,page,size);
+            PageInfo<Order> orders = orderService.findOrdersByStoreId(order,page,size);
             return new Result<>(0,"查询成功",orders);
         } catch (Exception e) {
             e.printStackTrace();

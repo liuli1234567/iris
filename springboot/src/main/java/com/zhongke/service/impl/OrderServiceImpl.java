@@ -2,6 +2,7 @@ package com.zhongke.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.sun.org.apache.xpath.internal.operations.Or;
 import com.zhongke.mapper.*;
 import com.zhongke.pojo.*;
 import com.zhongke.service.OrderService;
@@ -266,16 +267,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public PageInfo<Order> findOrdersByStoreId(int storeId,int page, int size) {
-        List<Device> devices = deviceMapper.findDevicesByStoreId(storeId);
-        ArrayList<Order> orders = new ArrayList<>();
-        if (devices != null && devices.size()>0) {
-            for (Device device : devices) {
-                Integer deviceId = device.getId();
-                List<Order> list = orderMapper.findOrdersByDeviceId(deviceId);
-                orders.addAll(list);
-            }
-        }
+    public PageInfo<Order> findOrdersByStoreId(Order order, int page, int size) {
+        List<Order> orders = orderMapper.findOrdersByStoreId(order);
         PageHelper.startPage(page,size);
         return new PageInfo<>(orders);
     }

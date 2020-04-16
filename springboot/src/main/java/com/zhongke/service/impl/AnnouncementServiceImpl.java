@@ -23,6 +23,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     @Autowired(required = false)
     private AnnouncementMapper announcementMapper;
 
+
     @Override
     public PageInfo<Announcement> announs(String title, String startTime, String endTime, int page, int size) {
         List<Announcement> announcements = announcementMapper.announs(title,startTime,endTime);
