@@ -30,9 +30,10 @@ public class SpuController {
     private SpuService spuService;
 
     @GetMapping("/spus/{page}/{size}")
-    public Result<PageInfo> spus(@RequestParam(required = false)String nameOrNo,@PathVariable int page, @PathVariable int size){
+    public Result<PageInfo> spus(@RequestParam(required = false)String nameOrNo,@RequestParam(required = false)int isMarketable,
+                                 @PathVariable int page, @PathVariable int size){
         try {
-            PageInfo<Spu> spus = spuService.spus(nameOrNo,page,size);
+            PageInfo<Spu> spus = spuService.spus(nameOrNo,isMarketable,page,size);
             return new Result<>(0,"查询成功",spus);
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,5 +1,6 @@
 package com.zhongke.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import com.zhongke.entity.Result;
 import com.zhongke.pojo.Order;
@@ -7,7 +8,9 @@ import com.zhongke.service.OrderService;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,6 +33,30 @@ public class OrderController {
     @Autowired(required = false)
     private OrderService orderService;
 
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    private Environment env;
+
+    /**
+     * @Description 新增订单
+     * @author liuli
+     * @date 2020/4/17 10:52
+     * @param order
+     * @return com.zhongke.entity.Result
+     **/
+    @PostMapping("/add")
+    public Result add(@RequestBody Order order){
+        try {
+            orderService.add(order);
+            return new Result<>(0,"新增成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("OrderController.add(): "+e.getMessage());
+            return new Result<>(-1,"新增失败:"+e.getMessage());
+        }
+    }
     /**
      * @Description 查询全部订单
      * @author liuli
@@ -190,7 +217,7 @@ public class OrderController {
      * @return com.zhongke.entity.Result<com.github.pagehelper.PageInfo<com.zhongke.pojo.Order>>
      **/
     @PostMapping("/findOrdersByStoreId/{page}/{size}")
-    public Result<PageInfo<Order>> findOrdersByStoreId(@RequestBody Order order,@PathVariable int page,@PathVariable int size){
+    public Result<PageInfo<Order>> findOrdersByStoreId(@RequestBody(required = false) Order order,@PathVariable int page,@PathVariable int size){
         try {
             PageInfo<Order> orders = orderService.findOrdersByStoreId(order,page,size);
             return new Result<>(0,"查询成功",orders);

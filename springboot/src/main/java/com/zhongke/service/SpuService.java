@@ -4,7 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.zhongke.pojo.Spu;
 
 public interface SpuService {
-    PageInfo<Spu> spus(String nameOrNo, int page, int size);
+    PageInfo<Spu> spus(String nameOrNo, int is_marketable, int page, int size);
 
     void add(Spu spu);
 

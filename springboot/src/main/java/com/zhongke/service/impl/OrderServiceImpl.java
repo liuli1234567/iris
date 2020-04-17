@@ -3,6 +3,7 @@ package com.zhongke.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sun.org.apache.xpath.internal.operations.Or;
+import com.zhongke.entity.DateUtil;
 import com.zhongke.mapper.*;
 import com.zhongke.pojo.*;
 import com.zhongke.service.OrderService;
@@ -271,5 +272,30 @@ public class OrderServiceImpl implements OrderService {
         List<Order> orders = orderMapper.findOrdersByStoreId(order);
         PageHelper.startPage(page,size);
         return new PageInfo<>(orders);
+    }
+
+    @Override
+    public void add(Order order) {
+        orderMapper.insertSelective(order);
+    }
+
+    /**
+     * @Description 更新订单状态
+     * @author liuli
+     * @date 2020/4/17 15:33
+     * @param orderId 订单号
+     * @param transaction_id 微信生成的交易流水号
+     * @param pay_end_time 支付完成时间
+     * @param status 支付状态
+     * @return void
+     **/
+    @Override
+    public void updateStatus(String orderId, String transaction_id, String pay_end_time, int status) {
+        Order order = orderMapper.selectByPrimaryKey(orderId);
+        // 更新订单状态
+        order.setTransactionId(transaction_id);
+        order.setUpdatetime(new Date());        // 订单更新时间
+        order.setPayTime(DateUtil.StringToDate(pay_end_time,"yyyyMMddHHmmss")); // 支付完成时间
+        order.setStatus(status);  // 订单状态（支付状态）
     }
 }

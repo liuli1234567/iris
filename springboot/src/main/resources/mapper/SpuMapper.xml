@@ -9,11 +9,14 @@
 
     </select>
 
-    <select id="findByNameOrNo" parameterType="string" resultType="spu">
+    <select id="findByNameOrNo"  resultType="spu">
         select * from zk_spu
         <where>
             <if test="nameOrNo != null and nameOrNo != ''">
-                and name = #{nameOrNo} or no = #{nameOrNo}
+                and (name = #{nameOrNo} or no = #{nameOrNo})
+            </if>
+            <if test="is_marketable != null and is_marketable != ''">
+                and is_marketable = #{is_marketable}
             </if>
         </where>
     </select>

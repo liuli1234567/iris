@@ -35,7 +35,7 @@ public class WebSecutityConfig extends WebSecurityConfigurerAdapter {
         //super.configure(http);
         http.authorizeRequests()
                // .antMatchers("/member/findById/{id}").hasRole("USER")//指定权限为ADMIN才能访问
-                .antMatchers("/order/findAll").hasAnyRole("ADMIN","USER")
+                .antMatchers("/order/add").hasAnyRole("ADMIN","USER")
                 .anyRequest()
                 .authenticated()
                 .and()

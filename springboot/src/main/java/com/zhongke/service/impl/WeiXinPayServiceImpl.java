@@ -1,13 +1,21 @@
 package com.zhongke.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.github.wxpay.sdk.WXPayConstants;
 import com.github.wxpay.sdk.WXPayUtil;
 import com.zhongke.entity.DateUtil;
 import com.zhongke.entity.HttpClient;
+import com.zhongke.mapper.OrderMapper;
+import com.zhongke.pojo.Order;
 import com.zhongke.service.WeiXinPayService;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -32,6 +40,13 @@ public class WeiXinPayServiceImpl implements WeiXinPayService {
 
     @Value("${weixin.notifyurl}")
     private String notifyurl;       // 回调地址
+
+    private RabbitTemplate rabbitTemplate;
+
+    private Environment env;
+
+    @Autowired(required = false)
+    private OrderMapper orderMapper;
 
     /**
      * @Description 查询支付状态
@@ -105,17 +120,8 @@ public class WeiXinPayServiceImpl implements WeiXinPayService {
             // 处理响应数据
             String strXML = httpClient.getContent();
             Map<String, String> map = WXPayUtil.xmlToMap(strXML);   // 将xml转成map
-            if ("SUCCESS".equals(map.get("return_code"))){
-                if ("SUCCESS".equals(map.get("result_code"))){
-                    // TODO 调用订单mapper把数据存库,支付状态为：已支付
-                }
-                if ("FAIL".equals(map.get("result_code"))){
-                    // TODO 调用订单mapper把数据存库，支付状态为：支付失败
-                }
-            }
-            if ("FAIL".equals(map.get("return_code"))){
-                // TODO 调用订单mapper把数据存库，支付状态为：支付失败
-            }
+            // 将回调数据发送mq
+            rabbitTemplate.convertAndSend(env.getProperty("mq.pay.exchange.order"), env.getProperty("mq.pay.routing.key"), JSON.toJSONString(map));
             return map;
         } catch (Exception e) {
             e.printStackTrace();

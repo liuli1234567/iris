@@ -25,10 +25,11 @@ public class SpuServiceImpl implements SpuService {
     private SpuMapper spuMapper;
 
     @Override
-    public PageInfo<Spu> spus(String nameOrNo, int page, int size) {
-        List<Spu> spus = spuMapper.findByNameOrNo(nameOrNo);
+    public PageInfo<Spu> spus(String nameOrNo, int is_marketable, int page, int size) {
+        List<Spu> spus = spuMapper.findByNameOrNo(nameOrNo,is_marketable);
         return new PageInfo<>(spus);
     }
+
 
     @Override
     public void add(Spu spu) {

@@ -91,4 +91,25 @@ public interface OrderService {
      * @return com.github.pagehelper.PageInfo<com.zhongke.pojo.Order>
      **/
     PageInfo<Order> findOrdersByStoreId(Order order,int page, int size);
+
+    /**
+     * @Description 新增订单
+     * @author liuli
+     * @date 2020/4/17 10:51
+     * @param order
+     * @return void
+     **/
+    void add(Order order);
+
+    /**
+     * @Description 更新订单状态
+     * @author liuli
+     * @date 2020/4/17 15:33
+     * @param out_trade_no 订单号
+     * @param transaction_id 微信生成的交易流水号
+     * @param pay_end_time 支付完成时间
+     * @param status 支付状态
+     * @return void
+     **/
+    void updateStatus(String out_trade_no, String transaction_id, String pay_end_time, int status);
 }

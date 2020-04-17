@@ -28,7 +28,7 @@ public class Order implements Serializable {
     @Column(name = "order_amount")
     private BigDecimal orderAmount; // 订单金额
     @Column(name = "status")
-    private Integer status; // 订单状态: 0 未支付 1 已支付 -1 已取消
+    private Integer status; // 订单状态: 0 未支付 1 已支付 -1 已取消 -3 支付失败
     @Column(name = "pay_method")
     private String payMethod; // 支付方式
     @Column(name = "pay_aisle")
@@ -37,6 +37,8 @@ public class Order implements Serializable {
     private BigDecimal actuallyPaid; // 实付金额
     @Column(name = "discount")
     private BigDecimal discount; // 优惠金额
+    @Column(name = "transaction_id")
+    private String transactionId; // 交易流水号
     @Column(name = "spu_ids")
     private String spuIds; // 商品id集合
     @Column(name = "jam_id")
@@ -47,12 +49,16 @@ public class Order implements Serializable {
     private Integer deviceId; // 设备id
     @Column(name = "member_id")
     private Integer memberId; // 会员id
+    @Column(name = "member_name")
+    private Integer memberName; // 会员名字
     @Column(name = "cashier_id")
     private Integer cashierId; // 收银员id
     @Column(name = "cashier_name")
     private Integer cashierName; // 收银员名字
     @Column(name = "store_name")
     private String storeName; // 门店名称
+    @Column(name = "updatetime")
+    private Date updatetime; // 更新时间
     @Column(name = "createtime")
     private Date createTime; // 创建时间
     @Column(name = "pay_time")
@@ -75,6 +81,30 @@ public class Order implements Serializable {
     private String startTime; // 起始时间
     @Transient
     private String endTime; // 结束时间
+
+    public Date getUpdatetime() {
+        return updatetime;
+    }
+
+    public void setUpdatetime(Date updatetime) {
+        this.updatetime = updatetime;
+    }
+
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
+    }
+
+    public Integer getMemberName() {
+        return memberName;
+    }
+
+    public void setMemberName(Integer memberName) {
+        this.memberName = memberName;
+    }
 
     public Integer getStoreId() {
         return storeId;
