@@ -34,13 +34,13 @@ public class MemberServiceImpl implements MemberService {
     private OrderMapper orderMapper;
 
     @Override
-    public PageInfo<Member> memGrades(Member member, int page, int size) {
+    public PageInfo<Member> members(Member member, int page, int size) {
         PageHelper.startPage(page,size);
         Example example = new Example(Member.class);
         Example.Criteria criteria = example.createCriteria();
         if (member != null) {
             if (!StringUtils.isEmpty(member.getMemNo())){
-                criteria.andEqualTo("memNum",member.getMemNo());
+                criteria.andEqualTo("memNo",member.getMemNo());
             }
             if (!StringUtils.isEmpty(member.getTel())){
                 criteria.andEqualTo("tel",member.getTel());
@@ -59,12 +59,12 @@ public class MemberServiceImpl implements MemberService {
         List<Member> members = memberMapper.selectByExample(example);
         if (members != null && members.size()>0) {
             for (Member member1 : members) {
-                if (member1.getGradeId() != null){
+                /*if (member1.getGradeId() != null){
                     MemberGrade memberGrade = memberGradeMapper.selectByPrimaryKey(member1.getGradeId());
                     if (!StringUtils.isEmpty(memberGrade.getName())){
                         member1.setGradeName(memberGrade.getName());
                     }
-                }
+                }*/
                 BigDecimal bigDecimal = orderMapper.findConsumByMemberId(member1.getId());
                 member1.setLastConsum(bigDecimal);
             }
@@ -105,6 +105,11 @@ public class MemberServiceImpl implements MemberService {
     public Map analysisByTime(String startTime, String endTime) {
         Map map = getMap(startTime, endTime);
         return map;
+    }
+
+    @Override
+    public List<Member> exportMembers(Member member) {
+        return memberMapper.exportMembers(member);
     }
 
     private Map getMap(String startTime, String endTime) {

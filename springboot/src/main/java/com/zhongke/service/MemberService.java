@@ -4,11 +4,12 @@ import com.github.pagehelper.PageInfo;
 import com.zhongke.pojo.Member;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 public interface MemberService {
 
-    PageInfo<Member> memGrades(Member member, int page, int size);
+    PageInfo<Member> members(Member member, int page, int size);
 
     /**
      * @Description 查询会员基本信息
@@ -24,4 +25,13 @@ public interface MemberService {
     Map analysis(String startTime, String endTime);
 
     Map analysisByTime(String startTime, String endTime);
+
+    /**
+     * @Description 会员列表导出
+     * @author liuli
+     * @date 2020/4/20 11:07
+     * @param member
+     * @return java.util.List<com.zhongke.pojo.Member>
+     **/
+    List<Member> exportMembers(Member member);
 }

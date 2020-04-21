@@ -1,18 +1,29 @@
 package com.zhongke.controller;
 
 import com.github.pagehelper.PageInfo;
-import com.zhongke.entity.Result;
+import com.zhongke.entity.*;
 import com.zhongke.pojo.Member;
 import com.zhongke.pojo.MemberGrade;
 import com.zhongke.service.MemberService;
 import io.swagger.annotations.Api;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,6 +43,74 @@ public class MemberController {
     @Autowired(required = false)
     private MemberService memberService;
 
+
+    @GetMapping("/excel/export")
+    public Result export(@RequestParam(name = "tel",required = false) String tel, @RequestParam(name = "memNo",required = false) String memNo,
+                         @RequestParam(name = "startTime",required = false) String startTime, @RequestParam(name = "endTime",required = false) String endTime
+            , HttpServletResponse response){
+        try {
+            Member member = new Member();
+            member.setTel(tel);
+            member.setMemNo(memNo);
+            member.setStartTime(startTime);
+            member.setEndTime(endTime);
+            List<Member> members = memberService.exportMembers(member);
+            XSSFWorkbook wb = new XSSFWorkbook();
+            //构造sheet
+            Sheet sheet = wb.createSheet();
+            //创建行
+            //标题
+            String[] titles = "昵称，电话，生日，性别，卡号，余额（元），积分，创建时间，会员等级".split("，");
+            //处理标题
+            Row row = sheet.createRow(0);
+            int titleIndex = 0;
+            for (String title : titles) {
+                Cell cell = row.createCell(titleIndex++);
+                cell.setCellValue(title);
+            }
+            int rowIndex = 1;
+            Cell cell = null;
+            for (Member member1 : members) {
+                row = sheet.createRow(rowIndex++);
+                //昵称
+                cell = row.createCell(0);
+                cell.setCellValue(member1.getNickName());
+                //电话
+                cell = row.createCell(1);
+                cell.setCellValue(member1.getTel());
+                //生日
+                cell = row.createCell(2);
+                cell.setCellValue(member1.getBirthday());
+                //性别
+                cell = row.createCell(3);
+                cell.setCellValue(member1.getSex());
+                //卡号
+                cell = row.createCell(4);
+                cell.setCellValue(member1.getMemNo());
+                //余额（元）
+                cell = row.createCell(5);
+                cell.setCellValue(member1.getCardMoney().doubleValue());
+                //积分
+                cell = row.createCell(6);
+                cell.setCellValue(member1.getCardGral());
+                //创建时间
+                cell = row.createCell(7);
+                cell.setCellValue(DateUtil.dateToString(member1.getRegisterTime(),"yyyy-MM-dd HH:mm:ss"));
+                //会员等级
+                cell = row.createCell(8);
+                cell.setCellValue(member1.getGradeName());
+            }
+            // 完成下载
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            wb.write(os);
+            new DownloadUtils().download(os,response,"会员列表.xlsx");
+            return new Result(0,"导出成功！");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(-1,"导出失败！");
+        }
+    }
+
     /**
      * @Description 根据条件查询并分页
      * @author liuli
@@ -42,16 +121,15 @@ public class MemberController {
      * @return com.zhongke.entity.Result<com.github.pagehelper.PageInfo>
      **/
     @PostMapping("/members/{page}/{size}")
-    public Result<PageInfo> memGrades(@RequestBody(required = false) Member member, @PathVariable int page, @PathVariable int size){
+    public Result<PageInfo> members(@RequestBody(required = false) Member member, @PathVariable int page, @PathVariable int size){
         try {
-            PageInfo<Member> members = memberService.memGrades(member,page,size);
+            PageInfo<Member> members = memberService.members(member,page,size);
             return new Result<>(0,"查询成功",members);
         } catch (Exception e) {
             e.printStackTrace();
             log.error("MemberController.memGrades(): "+e.getMessage());
             return new Result<>(-1,"查询失败");
         }
-
     }
 
     /**

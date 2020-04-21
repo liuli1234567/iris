@@ -57,6 +57,9 @@ public class Member implements Serializable {
     @ApiModelProperty(value = "会员卡等级id",required = false)
     @Column(name = "grade_id")
     private Integer gradeId;
+    @ApiModelProperty(value = "会员卡等级名称",required = false)
+    @Column(name = "grade_name")
+    private String gradeName;
     @ApiModelProperty(value = "注册时间",required = false)
     @Column(name = "register_time")
     private Date registerTime;
@@ -65,11 +68,9 @@ public class Member implements Serializable {
     private Date updateTime;
 
     @Transient
-    private String gradeName;
+    private String startTime;
     @Transient
-    private Date startTime;
-    @Transient
-    private Date endTime;
+    private String endTime;
     @Transient
     private BigDecimal lastConsum;
 
@@ -193,19 +194,19 @@ public class Member implements Serializable {
         this.gradeName = gradeName;
     }
 
-    public Date getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Date startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
-    public Date getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Date endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 

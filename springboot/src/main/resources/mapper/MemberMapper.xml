@@ -11,4 +11,21 @@
         select count(*) from zk_member where register_time &lt;= #{time}
     </select>
 
+    <select id="exportMembers" parameterType="member" resultType="member">
+        select m.* from zk_member m
+        <where>
+            <if test="tel != null and tel != ''">
+                and tel = #{tel}
+            </if>
+            <if test="memNo != null and memNo != ''">
+                and mem_no = #{memNo}
+            </if>
+            <if test="startTime != null and startTime != ''">
+                and register_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null and endTime !=''">
+                and register_time &lt;= #{endTime}
+            </if>
+        </where>
+    </select>
 </mapper>

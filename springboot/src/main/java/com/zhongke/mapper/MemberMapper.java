@@ -4,6 +4,8 @@ import com.zhongke.pojo.Member;
 import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.common.Mapper;
 
+import java.util.List;
+
 
 public interface MemberMapper extends Mapper<Member> {
     /**
@@ -17,4 +19,13 @@ public interface MemberMapper extends Mapper<Member> {
     Integer analysis(@Param("startTime") String startTime, @Param("endTime") String endTime);
 
     Integer findCountByTime(String time);
+
+    /**
+     * @Description 会员列表导出
+     * @author liuli
+     * @date 2020/4/20 11:09
+     * @param member
+     * @return java.util.List<com.zhongke.pojo.Member>
+     **/
+    List<Member> exportMembers(Member member);
 }
