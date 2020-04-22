@@ -2,6 +2,7 @@ package com.zhongke.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.zhongke.entity.Result;
+import com.zhongke.pojo.Order;
 import com.zhongke.pojo.Spu;
 import com.zhongke.pojo.SpuCategory;
 import com.zhongke.service.SpuCategoryService;
@@ -11,6 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @ClassName SpuController
@@ -37,7 +41,7 @@ public class SpuController {
             return new Result<>(0,"查询成功",spus);
         } catch (Exception e) {
             e.printStackTrace();
-            log.error("SpuController.spus(): "+e.getMessage());
+            log.error("SpuController.spus():{}, ",e.getMessage());
             return new Result<>(-1,"查询失败");
         }
     }
@@ -49,7 +53,7 @@ public class SpuController {
             return new Result<>(0,"新增成功");
         } catch (Exception e) {
             e.printStackTrace();
-            log.error("SpuController.add(): "+e.getMessage());
+            log.error("SpuController.add():{}, ",e.getMessage());
             return new Result<>(-1,"新增失败");
         }
     }

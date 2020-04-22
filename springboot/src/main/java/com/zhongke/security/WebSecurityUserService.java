@@ -25,6 +25,7 @@ import java.util.Set;
  * @Date 2020/4/10 18:19
  * @Version 1.0
  **/
+
 @Service
 public class WebSecurityUserService implements UserDetailsService {
 
@@ -35,6 +36,7 @@ public class WebSecurityUserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String platformUserName) throws UsernameNotFoundException {
+
         PlatformUser platformUser = platformUserService.findByPlatformUserName(platformUserName);
         if (platformUser == null){
             return null;

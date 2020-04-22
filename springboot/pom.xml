@@ -124,22 +124,23 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         <!--热部署-->
-        <dependency>
+        <!--<dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-devtools</artifactId>
-        <!--optional=true 依赖不会传递，该项目依赖devtools
-        之后依赖该项目的项目如果想要使用devtools，需要重新导入-->
+        &lt;!&ndash;optional=true 依赖不会传递，该项目依赖devtools
+        之后依赖该项目的项目如果想要使用devtools，需要重新导入&ndash;&gt;
         <optional>true</optional>
-        </dependency>
+        </dependency>-->
         <!--单元测试包-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.alipay.sdk/alipay-sdk-java -->
         <dependency>
-            <groupId>alipay</groupId>
-            <artifactId>sdk-java</artifactId>
-            <version>4.9.3</version>
+            <groupId>com.alipay.sdk</groupId>
+            <artifactId>alipay-sdk-java</artifactId>
+            <version>4.9.124.ALL</version>
         </dependency>
     </dependencies>
 </project>
