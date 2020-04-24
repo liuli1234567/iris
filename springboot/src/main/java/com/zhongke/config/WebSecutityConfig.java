@@ -36,6 +36,7 @@ public class WebSecutityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                // .antMatchers("/member/findById/{id}").hasRole("USER")//指定权限为ADMIN才能访问
                 .antMatchers("/order/add").hasAnyRole("ADMIN","USER")
+                .antMatchers("/alipay/**").permitAll()// 不拦截
                 .anyRequest()
                 .authenticated()
                 .and()
