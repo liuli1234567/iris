@@ -15,6 +15,8 @@ public interface OrderMapper extends Mapper<Order> {
 
     BigDecimal findConsumByMemberId(Integer id);
 
+    Integer findDeviceIdByOutTradeNo(String outTradeNo);
+
     /**
      * @Description 订单总数
      * @author liuli
@@ -205,4 +207,13 @@ public interface OrderMapper extends Mapper<Order> {
      * @return java.util.List<com.zhongke.pojo.Order>
      **/
     List<Order> findOrdersByStoreId(Order order);
+
+    /**
+     * @Description 通过订单号查找订单
+     * @author liuli
+     * @date 2020/4/26 17:25
+     * @param out_trade_no
+     * @return com.zhongke.pojo.Order
+     **/
+    Order findOrderByOrderId(String out_trade_no);
 }

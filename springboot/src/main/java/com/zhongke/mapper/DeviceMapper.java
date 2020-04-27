@@ -8,4 +8,7 @@ import java.util.List;
 public interface DeviceMapper extends Mapper<Device> {
 
     List<Device> findDevicesByStoreId(int storeId);
+
+    Integer findDeviceIdByDeviceNo(String deviceNo);
+
 }

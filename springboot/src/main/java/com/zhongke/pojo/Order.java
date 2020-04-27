@@ -27,8 +27,20 @@ public class Order implements Serializable {
     private String orderId; // 订单号
     @Column(name = "order_amount")
     private BigDecimal orderAmount; // 订单金额
+    @Column(name = "buyer_logon_id")
+    private String buyerLogonId; // 买家支付宝账号
+    @Column(name = "buyer_user_id")
+    private String buyerUserId; // 买家userID
     @Column(name = "status")
     private Integer status; // 订单状态: 0 未支付 1 已支付 -1 已取消 -3 支付失败
+    @Column(name = "code")
+    private String code; // 支付状态码
+    @Column(name = "msg")
+    private String msg; // 支付描述
+    @Column(name = "sub_code")
+    private String subCode; // 支付错误码
+    @Column(name = "sub_msg")
+    private String subMsg; // 支付错误描述
     @Column(name = "pay_method")
     private String payMethod; // 支付方式
     @Column(name = "pay_aisle")
@@ -45,8 +57,16 @@ public class Order implements Serializable {
     private Integer jamId; // 优惠卷id
     @Column(name = "full_rule_id")
     private Integer fullRuleId; // 满减规则id
+    @Column(name = "fund_channel")
+    private String fundChannel; // 支付渠道
     @Column(name = "device_id")
     private Integer deviceId; // 设备id
+    @Column(name = "refund_buyer_amount")
+    private BigDecimal refundBuyerAmount; // 买家退款金额
+    @Column(name = "refund_discount_amount")
+    private BigDecimal refundDiscountAmount; // 平台优惠退款金额
+    @Column(name = "refund_mdiscount_amount")
+    private BigDecimal refundMdiscountAmount; // 商家优惠退款金额
     @Column(name = "member_id")
     private Integer memberId; // 会员id
     @Column(name = "member_name")
@@ -81,6 +101,86 @@ public class Order implements Serializable {
     private String startTime; // 起始时间
     @Transient
     private String endTime; // 结束时间
+
+    public BigDecimal getRefundBuyerAmount() {
+        return refundBuyerAmount;
+    }
+
+    public void setRefundBuyerAmount(BigDecimal refundBuyerAmount) {
+        this.refundBuyerAmount = refundBuyerAmount;
+    }
+
+    public BigDecimal getRefundDiscountAmount() {
+        return refundDiscountAmount;
+    }
+
+    public void setRefundDiscountAmount(BigDecimal refundDiscountAmount) {
+        this.refundDiscountAmount = refundDiscountAmount;
+    }
+
+    public BigDecimal getRefundMdiscountAmount() {
+        return refundMdiscountAmount;
+    }
+
+    public void setRefundMdiscountAmount(BigDecimal refundMdiscountAmount) {
+        this.refundMdiscountAmount = refundMdiscountAmount;
+    }
+
+    public String getBuyerLogonId() {
+        return buyerLogonId;
+    }
+
+    public void setBuyerLogonId(String buyerLogonId) {
+        this.buyerLogonId = buyerLogonId;
+    }
+
+    public String getBuyerUserId() {
+        return buyerUserId;
+    }
+
+    public void setBuyerUserId(String buyerUserId) {
+        this.buyerUserId = buyerUserId;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    public String getSubCode() {
+        return subCode;
+    }
+
+    public void setSubCode(String subCode) {
+        this.subCode = subCode;
+    }
+
+    public String getSubMsg() {
+        return subMsg;
+    }
+
+    public void setSubMsg(String subMsg) {
+        this.subMsg = subMsg;
+    }
+
+    public String getFundChannel() {
+        return fundChannel;
+    }
+
+    public void setFundChannel(String fundChannel) {
+        this.fundChannel = fundChannel;
+    }
 
     public Date getUpdatetime() {
         return updatetime;
@@ -274,4 +374,41 @@ public class Order implements Serializable {
         this.endTime = endTime;
     }
 
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", orderId='" + orderId + '\'' +
+                ", orderAmount=" + orderAmount +
+                ", buyerLogonId='" + buyerLogonId + '\'' +
+                ", buyerUserId='" + buyerUserId + '\'' +
+                ", status=" + status +
+                ", code='" + code + '\'' +
+                ", msg='" + msg + '\'' +
+                ", subCode='" + subCode + '\'' +
+                ", subMsg='" + subMsg + '\'' +
+                ", payMethod='" + payMethod + '\'' +
+                ", payAisle='" + payAisle + '\'' +
+                ", actuallyPaid=" + actuallyPaid +
+                ", discount=" + discount +
+                ", transactionId='" + transactionId + '\'' +
+                ", spuIds='" + spuIds + '\'' +
+                ", jamId=" + jamId +
+                ", fullRuleId=" + fullRuleId +
+                ", fundChannel='" + fundChannel + '\'' +
+                ", deviceId=" + deviceId +
+                ", memberId=" + memberId +
+                ", memberName=" + memberName +
+                ", cashierId=" + cashierId +
+                ", cashierName=" + cashierName +
+                ", storeName='" + storeName + '\'' +
+                ", updatetime=" + updatetime +
+                ", createTime=" + createTime +
+                ", payTime=" + payTime +
+                ", spus=" + spus +
+                ", storeId=" + storeId +
+                ", startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                '}';
+    }
 }

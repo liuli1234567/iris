@@ -30,13 +30,15 @@ public class AlipayController {
      * @date 2020/4/24 14:14
      * @param auth_code  付款码（baycde）
      * @param out_trade_no （订单号）
+     * @param device_no （设备号）
      * @return com.zhongke.entity.Result<java.util.Map>
      **/
     @GetMapping("/create")
     public Result<Map> create(@RequestParam(name = "auth_code") String auth_code,
                               @RequestParam(name = "out_trade_no") String out_trade_no,
-                              @RequestParam(name = "total_amount") String total_amount){
-        Map map = alipayService.create_pay(auth_code,out_trade_no,total_amount);
+                              @RequestParam(name = "total_amount") String total_amount,
+                              @RequestParam(name = "device_no")String device_no){
+        Map map = alipayService.create_pay(auth_code,out_trade_no,total_amount,device_no);
         if (map != null) {
             return new Result<>(0,"调用成功！",map);
         }else {
@@ -67,12 +69,14 @@ public class AlipayController {
      * @date 2020/4/24 15:31
      * @param out_trade_no 订单号
      * @param refund_amount 退款金额
+     * @param device_no 设备号
      * @return com.zhongke.entity.Result<java.util.Map>
      **/
     @GetMapping("/refund")
     public Result<Map> refund(@RequestParam(name = "out_trade_no") String out_trade_no,
-                              @RequestParam(name = "refund_amount") String refund_amount){
-        Map map = alipayService.pay_refund(out_trade_no,refund_amount);
+                              @RequestParam(name = "refund_amount") String refund_amount,
+                              @RequestParam(name = "device_no") String device_no){
+        Map map = alipayService.pay_refund(out_trade_no,refund_amount,device_no);
         if (map != null) {
             return new Result<>(0,"调用成功！",map);
         }else {
@@ -84,12 +88,13 @@ public class AlipayController {
      * @Description 支付宝统一收单交易撤销接口
      * @author liuli
      * @date 2020/4/24 16:09
-     * @param out_trade_no
+     * @param out_trade_no 订单号
+     * @param device_no 设备号
      * @return com.zhongke.entity.Result<java.util.Map>
      **/
     @GetMapping("/cancel")
-    public Result<Map> cancel(@RequestParam(name = "out_trade_no") String out_trade_no){
-        Map map = alipayService.pay_cancel(out_trade_no);
+    public Result<Map> cancel(@RequestParam(name = "out_trade_no") String out_trade_no,@RequestParam(name = "device_no") String device_no){
+        Map map = alipayService.pay_cancel(out_trade_no,device_no);
         if (map != null) {
             return new Result<>(0,"调用成功！",map);
         }else {

@@ -7,16 +7,25 @@ import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.request.*;
 import com.alipay.api.response.*;
 import com.zhongke.entity.DateUtil;
+import com.zhongke.mapper.DeviceMapper;
+import com.zhongke.mapper.OrderMapper;
+import com.zhongke.pojo.Order;
 import com.zhongke.service.AlipayService;
 import jdk.internal.org.objectweb.asm.tree.TryCatchBlockNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayOutputStream;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,17 +37,24 @@ import java.util.Map;
  **/
 @Service
 public class AlipayServiceImpl implements AlipayService {
+    private final Logger log = LoggerFactory.getLogger(AlipayService.class);
     private final AlipayClient alipayClient = new DefaultAlipayClient("https://openapi.alipay.com/gateway.do","2019111269065681","MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCA9qotPhEVpL92qUH7Jz1YfhXzERct5Vx595T5B9TDmM2fD+GBZ0vOjtiFEn9EHBixUERrE7nXD2BT13LysTAExCwxtKG/Orfyy5uaUukkXNMP5Vw45l4LhktpghiyY+59La3gr+uuXK4rzigOTiSWjhbElq4x/3IBM0QlInNuVhbIcLMD+bdBOvTuxET0gnUADMGUbmu0Rr2S5b8gPkY9P5vAJY3JNxduJpiNV3msNTfmUD9i1ifGLo+05AcpNNVBn6wgWkr1H/TXE/Sw6aaELvfYbCcHAzwTaol/lWwx+zsYNWYW40H9w+vZFKs7+UxD38WGAXfM1PzLfP2qza3tAgMBAAECggEAWaWeFIchry7v3Ve5QxI65an4LhhCSag3yZ0eVKJp93Hf9eM/OgoJO1Q3FQIPr9PsIk4O0XRL6kCJEJ8jC6u6GoYXxpGvIlR6DHAXAYcDBED2gwVIP1F8LHy1LWm/KzqmTSQUy6zeoz1P4amUVKVjb7jkANJR0vWkVUtC4qF5Jkf5craG2J3jr9ZGIiRE8IG3YuzU5rZ7fXb7zZCeuKxdKBEgW5Z1bm3/8usR5bhkqwp8Y+TPJALsZ9QqMRwrMeOb/LW4SN502/xG7i2FHre7ZQK4btxcALws2DX2MlmWAqIDMDCI/peDVDAa6rCEPDYvceH+afT414PGuRu0JFsRTQKBgQDMthMmSQuJjKHOGq+9NL3Y4i5DHzDIqiR/wfXletw+KsbQ6RaYYSJVR6XVMEzIYaWj1g3AROHIzmuQdJwrM4Eu1GrtJvJCDB6YDhCSzy1ln6Qqx8+Abk40Bcu+36yFlTJ8fhSNuY2EZE4LlbyhsYWHq5+3lXWvUAinYNc67p+UzwKBgQChRjn1l38Q1EkwT8D8t3+PX8EsWz/LJpN/ZXWLND+XcnFfWAR+zMbyAr8+3FidGTpUpa6uBckTyFNhUANHdoJdFjy8mX3OPemmOjNv7cRmoMW6fs7nvaz+F/SQDuYBPcFmrNp9dbyhjhcQ57lNgKk1sdaT8ES9Mg1MJTT9kET4gwKBgQCrjeKacRiUGyD2YnLocyyud04hvh/Z6oxP7LIvsDimeJ7JMK1Y4f4tza9x69pNC1gO5zH68T7uU97c3nyJz83w+t7pA3x+UT3KW+8TuT/oLFMd7vk8PjSXcEwBF92yzQfUQKzk4J1yV8T3/HJqZyTqP6/H4B8R3laCPqvgnV1rDQKBgH0cNrBgQ3GxzclNxaAHVkzKcthPPZECryAAfIxuDvsVDAB0DqCziY6LNQO1+oR84rRyB632zQOsv4pZgQG6XO2L57hDtsX9X7nVorutD1SyWlIQN8Ctc3t26AGtnR7PYq6dX64+XQRTb29s5GLMcfg2qwj/NsQzBP/SSWZ/uhGzAoGAGpEM9JTs9UGVJCmefiIMu+Fa14iUrvK81f05GnrqotpCM0lG96Xajk62ArsEwk45ThvHjMxCIY4o/gVsKkg8nWzu3bXi53if774DpKGteWfo7c2HCCX4StZ9bjiBUlENVD8jOF1A1hQ6jbw8bn2Fbb7xTPJKEVXA1AWvpF+WeEM=","json","UTF-8","MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnPnKdGFxWLNONtn+Dns3KDhVKGGfM6sSIvPYnKXLWg1pqHknZ+nNfzxG5QcUJg1tUODIVTE3Y66hcylYI1FEdsS0lfmim8SUwULuP/58JRsg/EVUEIsWYxz7zMcdsWUj8XNcy0eDlDbC0xak9SHcsCGHI5JtLWnpCFfFFlsrdA/wmzaxcviiE3Z1TJ16VDMgR9dwQmKkpek9L7o3VZN1LE+VTgbaPXsGDhloQMn4uqA3CMueuZAZZGYXSeDv0/SnODqtVHWGCigIlLOvLzQ+IbFmhDhVyZOR+sQvbnRoGnZFcfyLCaLw4l3MaNDh95rjMEAOVYeo36XMjTbu7/AjvQIDAQAB","RSA2");
     private final String APP_ID = "2019111269065681";
     private final String APP_PRIVATE_KEY = "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCA9qotPhEVpL92qUH7Jz1YfhXzERct5Vx595T5B9TDmM2fD+GBZ0vOjtiFEn9EHBixUERrE7nXD2BT13LysTAExCwxtKG/Orfyy5uaUukkXNMP5Vw45l4LhktpghiyY+59La3gr+uuXK4rzigOTiSWjhbElq4x/3IBM0QlInNuVhbIcLMD+bdBOvTuxET0gnUADMGUbmu0Rr2S5b8gPkY9P5vAJY3JNxduJpiNV3msNTfmUD9i1ifGLo+05AcpNNVBn6wgWkr1H/TXE/Sw6aaELvfYbCcHAzwTaol/lWwx+zsYNWYW40H9w+vZFKs7+UxD38WGAXfM1PzLfP2qza3tAgMBAAECggEAWaWeFIchry7v3Ve5QxI65an4LhhCSag3yZ0eVKJp93Hf9eM/OgoJO1Q3FQIPr9PsIk4O0XRL6kCJEJ8jC6u6GoYXxpGvIlR6DHAXAYcDBED2gwVIP1F8LHy1LWm/KzqmTSQUy6zeoz1P4amUVKVjb7jkANJR0vWkVUtC4qF5Jkf5craG2J3jr9ZGIiRE8IG3YuzU5rZ7fXb7zZCeuKxdKBEgW5Z1bm3/8usR5bhkqwp8Y+TPJALsZ9QqMRwrMeOb/LW4SN502/xG7i2FHre7ZQK4btxcALws2DX2MlmWAqIDMDCI/peDVDAa6rCEPDYvceH+afT414PGuRu0JFsRTQKBgQDMthMmSQuJjKHOGq+9NL3Y4i5DHzDIqiR/wfXletw+KsbQ6RaYYSJVR6XVMEzIYaWj1g3AROHIzmuQdJwrM4Eu1GrtJvJCDB6YDhCSzy1ln6Qqx8+Abk40Bcu+36yFlTJ8fhSNuY2EZE4LlbyhsYWHq5+3lXWvUAinYNc67p+UzwKBgQChRjn1l38Q1EkwT8D8t3+PX8EsWz/LJpN/ZXWLND+XcnFfWAR+zMbyAr8+3FidGTpUpa6uBckTyFNhUANHdoJdFjy8mX3OPemmOjNv7cRmoMW6fs7nvaz+F/SQDuYBPcFmrNp9dbyhjhcQ57lNgKk1sdaT8ES9Mg1MJTT9kET4gwKBgQCrjeKacRiUGyD2YnLocyyud04hvh/Z6oxP7LIvsDimeJ7JMK1Y4f4tza9x69pNC1gO5zH68T7uU97c3nyJz83w+t7pA3x+UT3KW+8TuT/oLFMd7vk8PjSXcEwBF92yzQfUQKzk4J1yV8T3/HJqZyTqP6/H4B8R3laCPqvgnV1rDQKBgH0cNrBgQ3GxzclNxaAHVkzKcthPPZECryAAfIxuDvsVDAB0DqCziY6LNQO1+oR84rRyB632zQOsv4pZgQG6XO2L57hDtsX9X7nVorutD1SyWlIQN8Ctc3t26AGtnR7PYq6dX64+XQRTb29s5GLMcfg2qwj/NsQzBP/SSWZ/uhGzAoGAGpEM9JTs9UGVJCmefiIMu+Fa14iUrvK81f05GnrqotpCM0lG96Xajk62ArsEwk45ThvHjMxCIY4o/gVsKkg8nWzu3bXi53if774DpKGteWfo7c2HCCX4StZ9bjiBUlENVD8jOF1A1hQ6jbw8bn2Fbb7xTPJKEVXA1AWvpF+WeEM=";
     private final String ALIPAY_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnPnKdGFxWLNONtn+Dns3KDhVKGGfM6sSIvPYnKXLWg1pqHknZ+nNfzxG5QcUJg1tUODIVTE3Y66hcylYI1FEdsS0lfmim8SUwULuP/58JRsg/EVUEIsWYxz7zMcdsWUj8XNcy0eDlDbC0xak9SHcsCGHI5JtLWnpCFfFFlsrdA/wmzaxcviiE3Z1TJ16VDMgR9dwQmKkpek9L7o3VZN1LE+VTgbaPXsGDhloQMn4uqA3CMueuZAZZGYXSeDv0/SnODqtVHWGCigIlLOvLzQ+IbFmhDhVyZOR+sQvbnRoGnZFcfyLCaLw4l3MaNDh95rjMEAOVYeo36XMjTbu7/AjvQIDAQAB";
     private final String CHARSET = "UTF-8";
 
+    @Autowired(required = false)
+    private OrderMapper orderMapper;
+    @Autowired(required = false)
+    private DeviceMapper deviceMapper;
+
     @Override
-    public Map create_pay(String auth_code,String out_trade_no,String total_amount) {
+    public Map create_pay(String auth_code,String out_trade_no,String total_amount,String device_no) {
         try {
             System.out.println(auth_code);
             System.out.println(out_trade_no);
+            System.out.println(device_no);
             AlipayTradePayRequest request = new AlipayTradePayRequest();
             HashMap<String, Object> requestMap = new HashMap<>();
             //sign	String	是	344	商户请求参数的签名串，详见签名	详见示例
@@ -46,13 +62,7 @@ public class AlipayServiceImpl implements AlipayService {
             requestMap.put("scene", "bar_code");
             requestMap.put("auth_code", auth_code);
             requestMap.put("subject", "iphone12");
-            //requestMap.put("goods_id", "202004231111");
-            //requestMap.put("goods_name", "iphone14");
-            //requestMap.put("quantity", 1);
-            //requestMap.put("Price", 8000);
             requestMap.put("total_amount", total_amount);
-
-
             String jsonString = JSON.toJSONString(requestMap);
             request.setBizContent(jsonString);
             String app_auth_token = "201911BB960c3d24767f4a54b250bc45f5e19X18";
@@ -60,11 +70,75 @@ public class AlipayServiceImpl implements AlipayService {
             // 根据response中的结果继续业务逻辑处理
             if(response.isSuccess()){
                 System.out.println("调用成功");
-
+                System.out.println(response.getBody());
+                List<Order> orders = findTradeNo(response.getTradeNo());
+                for (Order order : orders) {
+                    System.out.println(order);
+                }
+                if (orders.size()==0) { // 查询数据库是否已存在这条流水，不存在就插入
+                    //保存订单数据
+                    Order order = new Order();
+                    order.setOrderId(response.getOutTradeNo());// 订单号
+                    order.setOrderAmount(new BigDecimal(response.getTotalAmount()));// 订单金额
+                    order.setBuyerLogonId(response.getBuyerLogonId());// 买家支付宝账号
+                    order.setBuyerUserId(response.getBuyerUserId()); // 买家userID
+                    order.setStatus(1); // 设置支付状态为：已支付
+                    order.setCode(response.getCode()); // 支付状态码
+                    order.setMsg(response.getMsg()); // 支付描述
+                    order.setSubCode(response.getSubCode()); // 支付错误码
+                    order.setSubMsg(response.getSubMsg()); // 支付错误描述
+                    order.setPayMethod("支付宝支付"); // 支付方式
+                    order.setPayAisle("支付宝"); // 支付通道
+                    order.setActuallyPaid(new BigDecimal(response.getTotalAmount())); // 实付金额
+                    order.setDiscount(new BigDecimal(response.getDiscountAmount()==null?"0":response.getDiscountAmount()).add(new BigDecimal(response.getMdiscountAmount()==null?"0":response.getMdiscountAmount()))); // 优惠金额（商户优惠金额+平台优惠金额）
+                    order.setTransactionId(response.getTradeNo()); // 交易流水号
+                    order.setFundChannel(response.getFundBillList()==null?null:response.getFundBillList().get(0).getFundChannel()); // 支付渠道
+                    order.setDeviceId(deviceMapper.findDeviceIdByDeviceNo(device_no)==null?0:deviceMapper.findDeviceIdByDeviceNo(device_no)); // 设备id
+                    order.setCashierId(1); // 收银员id
+                    order.setStoreName(response.getStoreName()); // 门店名称
+                    order.setUpdatetime(new Date()); // 更新时间
+                    order.setCreateTime(new Date()); // 创建时间
+                    order.setPayTime(response.getGmtPayment()); // 支付时间
+                    orderMapper.insertSelective(order);
+                }
             } else {
-                System.out.println("调用失败");
+                try {
+                    System.out.println("调用失败");
+                    System.out.println(response.getBody());
+                    List<Order> orders = findTradeNo(response.getTradeNo());
+                    for (Order order : orders) {
+                        System.out.println(order);
+                    }
+                    if (orders.size()==0){
+                        //保存订单数据
+                        Order order = new Order();
+                        order.setOrderId(response.getOutTradeNo());// 订单号
+                        order.setOrderAmount(new BigDecimal(response.getTotalAmount()));// 订单金额
+                        order.setBuyerLogonId(response.getBuyerLogonId());// 买家支付宝账号
+                        order.setBuyerUserId(response.getBuyerUserId()); // 买家userID
+                        order.setStatus(-3); // 设置支付状态为：支付失败
+                        order.setCode(response.getCode()); // 支付状态码
+                        order.setMsg(response.getMsg()); // 支付描述
+                        order.setSubCode(response.getSubCode()); // 支付错误码
+                        order.setSubMsg(response.getSubMsg()); // 支付错误描述
+                        order.setPayMethod("支付宝支付"); // 支付方式
+                        order.setPayAisle("支付宝"); // 支付通道
+                        order.setTransactionId(response.getTradeNo()); // 交易流水号
+                        order.setDeviceId(deviceMapper.findDeviceIdByDeviceNo(device_no)==null?0:deviceMapper.findDeviceIdByDeviceNo(device_no)); // 设备id
+                        order.setCashierId(1); // 收银员id
+                        order.setStoreName(response.getStoreName()); // 门店名称
+                        order.setUpdatetime(new Date()); // 更新时间
+                        order.setCreateTime(new Date()); // 创建时间
+                        order.setPayTime(response.getGmtPayment()); // 支付时间
+                        orderMapper.insertSelective(order);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put("response",response);
+                    return map;
+                }
             }
-            System.out.println(response.getBody());
             HashMap<String, Object> map = new HashMap<>();
             map.put("response",response);
             return map;
@@ -100,7 +174,7 @@ public class AlipayServiceImpl implements AlipayService {
     }
 
     @Override
-    public Map pay_cancel(String out_trade_no) {
+    public Map pay_cancel(String out_trade_no,String device_no) {
         try {
             AlipayTradeCancelRequest request = new AlipayTradeCancelRequest();
             HashMap<String, Object> requestMap = new HashMap<>();
@@ -110,9 +184,12 @@ public class AlipayServiceImpl implements AlipayService {
             String app_auth_token = "201911BB960c3d24767f4a54b250bc45f5e19X18";
             AlipayTradeCancelResponse response = alipayClient.execute(request,"",app_auth_token);
             if(response.isSuccess()){
-                System.out.println("调用成功");
+                //修改订单状态
+                Order order = orderMapper.findOrderByOrderId(out_trade_no);
+                order.setStatus(-1); // 订单支付状态改为：已取消
+                orderMapper.updateByPrimaryKeySelective(order);
             } else {
-                System.out.println("调用失败");
+                log.info("订单撤销失败：{},{}",response.getSubCode(),response.getSubMsg());
             }
             System.out.println(response.getBody());
             HashMap<String, Object> map = new HashMap<>();
@@ -150,21 +227,22 @@ public class AlipayServiceImpl implements AlipayService {
     }
 
     @Override
-    public Map pay_refund(String out_trade_no, String refund_amount) {
+    public Map pay_refund(String out_trade_no, String refund_amount,String device_no) {
         try {
             AlipayTradeRefundRequest request = new AlipayTradeRefundRequest();
             HashMap<String, Object> requestMap = new HashMap<>();
-            requestMap.put("out_trade_no","222223");
-            requestMap.put("refund_amount",2);
+            requestMap.put("out_trade_no",out_trade_no);
+            requestMap.put("refund_amount",refund_amount);
             JSON json = (JSON) JSON.toJSON(requestMap);
             request.setBizContent(json.toJSONString());
-            //String app_auth_token = "202004BBd64fc7c9a6344e7ea6fd1bc0ab090C28";
             String app_auth_token = "201911BB960c3d24767f4a54b250bc45f5e19X18";
             AlipayTradeRefundResponse response = alipayClient.execute(request,"",app_auth_token);
             if(response.isSuccess()){
-                System.out.println("调用成功");
+                //保存订单数据
+                saveOrder(device_no, response);
             } else {
-                System.out.println("调用失败");
+                //保存订单数据
+                saveOrder(device_no, response);
             }
             System.out.println(response.getBody());
             HashMap<String, Object> map = new HashMap<>();
@@ -176,25 +254,35 @@ public class AlipayServiceImpl implements AlipayService {
         return null;
     }
 
-    private AlipayTradePayResponse getAlipayTradePayResponse() throws AlipayApiException {
-        AlipayClient alipayClient = new DefaultAlipayClient("https://openapi.alipay.com/gateway.do", APP_ID, APP_PRIVATE_KEY, "json", CHARSET, ALIPAY_PUBLIC_KEY, "RSA2"); //获得初始化的AlipayClient
-        AlipayTradePayRequest request = new AlipayTradePayRequest(); //创建API对应的request类
-        request.setBizContent("{" +
-                "    \"out_trade_no\":\"20150320010101001\"," +
-                "    \"scene\":\"bar_code\"," +
-                "    \"auth_code\":\"289519743141099930\"," +//即用户在支付宝客户端内出示的付款码，使用一次即失效，需要刷新后再去付款
-                "    \"subject\":\"Iphone6 16G\"," +
-                "    \"store_id\":\"NJ_001\"," +
-                "    \"timeout_express\":\"2m\"," +
-                "    \"total_amount\":\"0.01\"" +
-                "  }"); //设置业务参数
-        AlipayTradePayResponse response = alipayClient.execute(request,"","201911BB960c3d24767f4a54b250bc45f5e19X18"); //通过alipayClient调用API，获得对应的response类
-        System.out.print(response.getBody());
-        return response;
+    private void saveOrder(String device_no, AlipayTradeRefundResponse response) {
+        //保存订单数据
+        Order order = new Order();
+        order.setOrderId(response.getOutTradeNo());// 订单号
+        order.setOrderAmount(new BigDecimal(response.getRefundFee()));// 退款总金额
+        order.setBuyerLogonId(response.getBuyerLogonId());// 买家支付宝账号
+        order.setBuyerUserId(response.getBuyerUserId()); // 买家userID
+        order.setStatus(-2); // 设置支付状态为：退款
+        order.setCode(response.getCode()); // 状态码
+        order.setMsg(response.getMsg()); // 描述
+        order.setSubCode(response.getSubCode()); // 错误码
+        order.setSubMsg(response.getSubMsg()); // 错误描述
+        order.setPayMethod("支付宝支付"); // 支付方式
+        order.setPayAisle("支付宝"); // 支付通道
+        order.setRefundBuyerAmount(new BigDecimal(response.getPresentRefundBuyerAmount() == null ? "0" : response.getPresentRefundBuyerAmount())); // 本次退款金额中买家退款金额
+        order.setRefundBuyerAmount(new BigDecimal(response.getPresentRefundDiscountAmount() == null ? "0" : response.getPresentRefundDiscountAmount())); // 本次退款金额中平台优惠退款金额
+        order.setRefundBuyerAmount(new BigDecimal(response.getPresentRefundMdiscountAmount() == null ? "0" : response.getPresentRefundMdiscountAmount())); // 本次退款金额中商家优惠退款金额
+        order.setTransactionId(response.getTradeNo()); // 交易流水号
+        order.setFundChannel(response.getRefundDetailItemList() == null ? null : response.getRefundDetailItemList().get(0).getFundChannel()); // 支付渠道
+        order.setDeviceId(deviceMapper.findDeviceIdByDeviceNo(device_no)==null?0:deviceMapper.findDeviceIdByDeviceNo(device_no)); // 设备id
+        order.setCashierId(1); // 收银员id
+        order.setStoreName(response.getStoreName()); // 门店名称
+        order.setUpdatetime(new Date()); // 更新时间
+        order.setCreateTime(new Date()); // 创建时间
+        order.setPayTime(response.getGmtRefundPay()); // 退款时间
+        orderMapper.insertSelective(order);
     }
 
     public static void main(String[] args) {
-
         try {
             AlipayClient
                     alipayClient = new
@@ -214,5 +302,21 @@ public class AlipayServiceImpl implements AlipayService {
         } catch (AlipayApiException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * @Description 根据交易流水号查数据库是否已存在
+     * @author liuli
+     * @date 2020/4/26 12:17
+     * @param tradeNo
+     * @return java.util.List<com.zhongke.pojo.Order>
+     **/
+    private List<Order> findTradeNo(String tradeNo){
+        Order order = new Order();
+        order.setTransactionId(tradeNo);
+        Example example = new Example(Order.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("transactionId",order.getTransactionId());
+        return orderMapper.selectByExample(example);
     }
     }

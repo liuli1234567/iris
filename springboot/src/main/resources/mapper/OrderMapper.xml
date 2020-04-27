@@ -3,6 +3,14 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zhongke.mapper.OrderMapper">
 
+    <select id="findDeviceIdByOutTradeNo" parameterType="string" resultType="integer">
+        select device_id from zk_order where order_id = #{orderid}
+    </select>
+
+    <select id="findOrderByOrderId" parameterType="string" resultType="order">
+        select * from zk_order where order_id = #{orderId}
+    </select>
+
     <select id="findByDeviceIdAndTime" resultType="order">
         select * from zk_order where device_id = #{id}
             <if test="startTime != null and startTime != ''">

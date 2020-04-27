@@ -8,4 +8,9 @@
         select d.* from zk_device d where store_id = #{storeId}
 
     </select>
+    
+    <select id="findDeviceIdByDeviceNo" parameterType="string" resultType="integer">
+        select id from zk_device where device_no = #{deviceNo}
+    </select>
+
 </mapper>
