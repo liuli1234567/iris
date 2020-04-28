@@ -38,6 +38,7 @@ public class WebSecutityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/alipay/**").permitAll()// 不拦截
                 .antMatchers("/file/**").permitAll()// 不拦截
                 .antMatchers("/static/**").permitAll()// 不拦截
+                .antMatchers("/user/**").permitAll()// 不拦截
                 .anyRequest()
                 .authenticated()
                 .and()
