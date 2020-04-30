@@ -41,8 +41,10 @@ public class WeiXinPayServiceImpl implements WeiXinPayService {
     @Value("${weixin.notifyurl}")
     private String notifyurl;       // 回调地址
 
+    @Autowired
     private RabbitTemplate rabbitTemplate;
 
+    @Autowired
     private Environment env;
 
     @Autowired(required = false)
@@ -121,7 +123,7 @@ public class WeiXinPayServiceImpl implements WeiXinPayService {
             String strXML = httpClient.getContent();
             Map<String, String> map = WXPayUtil.xmlToMap(strXML);   // 将xml转成map
             // 将回调数据发送mq
-            rabbitTemplate.convertAndSend(env.getProperty("mq.pay.exchange.order"), env.getProperty("mq.pay.routing.key"), JSON.toJSONString(map));
+            rabbitTemplate.convertAndSend(env.getProperty("mq.pay.exchange.weixinorder"), env.getProperty("mq.pay.routing.weixinkey"), JSON.toJSONString(map));
             return map;
         } catch (Exception e) {
             e.printStackTrace();

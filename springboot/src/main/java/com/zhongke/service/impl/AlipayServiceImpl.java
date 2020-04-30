@@ -14,7 +14,9 @@ import com.zhongke.service.AlipayService;
 import jdk.internal.org.objectweb.asm.tree.TryCatchBlockNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 import tk.mybatis.mapper.entity.Example;
@@ -48,6 +50,10 @@ public class AlipayServiceImpl implements AlipayService {
     private OrderMapper orderMapper;
     @Autowired(required = false)
     private DeviceMapper deviceMapper;
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+    @Autowired
+    private Environment env;
 
     @Override
     public Map create_pay(String auth_code,String out_trade_no,String total_amount,String device_no) {
@@ -67,80 +73,11 @@ public class AlipayServiceImpl implements AlipayService {
             request.setBizContent(jsonString);
             String app_auth_token = "201911BB960c3d24767f4a54b250bc45f5e19X18";
             AlipayTradePayResponse response = alipayClient.execute(request,"",app_auth_token);
-            // 根据response中的结果继续业务逻辑处理
-            if(response.isSuccess()){
-                System.out.println("调用成功");
-                System.out.println(response.getBody());
-                List<Order> orders = findTradeNo(response.getTradeNo());
-                for (Order order : orders) {
-                    System.out.println(order);
-                }
-                if (orders.size()==0) { // 查询数据库是否已存在这条流水，不存在就插入
-                    //保存订单数据
-                    Order order = new Order();
-                    order.setOrderId(response.getOutTradeNo());// 订单号
-                    order.setOrderAmount(new BigDecimal(response.getTotalAmount()));// 订单金额
-                    order.setBuyerLogonId(response.getBuyerLogonId());// 买家支付宝账号
-                    order.setBuyerUserId(response.getBuyerUserId()); // 买家userID
-                    order.setStatus(1); // 设置支付状态为：已支付
-                    order.setCode(response.getCode()); // 支付状态码
-                    order.setMsg(response.getMsg()); // 支付描述
-                    order.setSubCode(response.getSubCode()); // 支付错误码
-                    order.setSubMsg(response.getSubMsg()); // 支付错误描述
-                    order.setPayMethod("支付宝支付"); // 支付方式
-                    order.setPayAisle("支付宝"); // 支付通道
-                    order.setActuallyPaid(new BigDecimal(response.getTotalAmount())); // 实付金额
-                    order.setDiscount(new BigDecimal(response.getDiscountAmount()==null?"0":response.getDiscountAmount()).add(new BigDecimal(response.getMdiscountAmount()==null?"0":response.getMdiscountAmount()))); // 优惠金额（商户优惠金额+平台优惠金额）
-                    order.setTransactionId(response.getTradeNo()); // 交易流水号
-                    order.setFundChannel(response.getFundBillList()==null?null:response.getFundBillList().get(0).getFundChannel()); // 支付渠道
-                    order.setDeviceId(deviceMapper.findDeviceIdByDeviceNo(device_no)==null?0:deviceMapper.findDeviceIdByDeviceNo(device_no)); // 设备id
-                    order.setCashierId(1); // 收银员id
-                    order.setStoreName(response.getStoreName()); // 门店名称
-                    order.setUpdatetime(new Date()); // 更新时间
-                    order.setCreateTime(new Date()); // 创建时间
-                    order.setPayTime(response.getGmtPayment()); // 支付时间
-                    orderMapper.insertSelective(order);
-                }
-            } else {
-                try {
-                    System.out.println("调用失败");
-                    System.out.println(response.getBody());
-                    List<Order> orders = findTradeNo(response.getTradeNo());
-                    for (Order order : orders) {
-                        System.out.println(order);
-                    }
-                    if (orders.size()==0){
-                        //保存订单数据
-                        Order order = new Order();
-                        order.setOrderId(response.getOutTradeNo());// 订单号
-                        order.setOrderAmount(new BigDecimal(response.getTotalAmount()));// 订单金额
-                        order.setBuyerLogonId(response.getBuyerLogonId());// 买家支付宝账号
-                        order.setBuyerUserId(response.getBuyerUserId()); // 买家userID
-                        order.setStatus(-3); // 设置支付状态为：支付失败
-                        order.setCode(response.getCode()); // 支付状态码
-                        order.setMsg(response.getMsg()); // 支付描述
-                        order.setSubCode(response.getSubCode()); // 支付错误码
-                        order.setSubMsg(response.getSubMsg()); // 支付错误描述
-                        order.setPayMethod("支付宝支付"); // 支付方式
-                        order.setPayAisle("支付宝"); // 支付通道
-                        order.setTransactionId(response.getTradeNo()); // 交易流水号
-                        order.setDeviceId(deviceMapper.findDeviceIdByDeviceNo(device_no)==null?0:deviceMapper.findDeviceIdByDeviceNo(device_no)); // 设备id
-                        order.setCashierId(1); // 收银员id
-                        order.setStoreName(response.getStoreName()); // 门店名称
-                        order.setUpdatetime(new Date()); // 更新时间
-                        order.setCreateTime(new Date()); // 创建时间
-                        order.setPayTime(response.getGmtPayment()); // 支付时间
-                        orderMapper.insertSelective(order);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    HashMap<String, Object> map = new HashMap<>();
-                    map.put("response",response);
-                    return map;
-                }
-            }
             HashMap<String, Object> map = new HashMap<>();
             map.put("response",response);
+            map.put("device_no",device_no);
+            // 将回调数据发送mq
+            rabbitTemplate.convertAndSend(env.getProperty("mq.pay.exchange.alipayorder"),env.getProperty("mq.pay.routing.alipaykey"),map);
             return map;
         } catch (AlipayApiException e) {
             e.printStackTrace();
@@ -237,23 +174,17 @@ public class AlipayServiceImpl implements AlipayService {
             request.setBizContent(json.toJSONString());
             String app_auth_token = "201911BB960c3d24767f4a54b250bc45f5e19X18";
             AlipayTradeRefundResponse response = alipayClient.execute(request,"",app_auth_token);
-            if(response.isSuccess()){
-                //保存订单数据
-                saveOrder(device_no, response);
-            } else {
-                //保存订单数据
-                saveOrder(device_no, response);
-            }
-            System.out.println(response.getBody());
             HashMap<String, Object> map = new HashMap<>();
             map.put("response",response);
+            map.put("device_no",response);
+            // 将回调数据发送mq
+            rabbitTemplate.convertAndSend(env.getProperty("mq.pay.exchange.alirefundorder"),env.getProperty("mq.pay.routing.alirefundkey"),map);
             return map;
         } catch (AlipayApiException e) {
             e.printStackTrace();
         }
         return null;
     }
-
     private void saveOrder(String device_no, AlipayTradeRefundResponse response) {
         //保存订单数据
         Order order = new Order();
@@ -304,19 +235,4 @@ public class AlipayServiceImpl implements AlipayService {
         }
     }
 
-    /**
-     * @Description 根据交易流水号查数据库是否已存在
-     * @author liuli
-     * @date 2020/4/26 12:17
-     * @param tradeNo
-     * @return java.util.List<com.zhongke.pojo.Order>
-     **/
-    private List<Order> findTradeNo(String tradeNo){
-        Order order = new Order();
-        order.setTransactionId(tradeNo);
-        Example example = new Example(Order.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("transactionId",order.getTransactionId());
-        return orderMapper.selectByExample(example);
-    }
     }

@@ -25,26 +25,4 @@ public class SpringbootDemo {
         return new RestTemplate();
     }
 
-    @Autowired
-    private Environment environment;
-
-    // 创建队列
-    @Bean
-    public Queue orderQueue(){
-        return new Queue(environment.getProperty("mq.pay.queue.order"),true);
-    }
-
-    // 创建交换机
-    @Bean
-    public Exchange orderExchange(){
-        return new DirectExchange(environment.getProperty("mq.pay.exchange.order"),true,false);
-    }
-
-    // 队列绑定到交换机
-    @Bean
-    public Binding bindQueueToExchange(Queue orderQueue,Exchange orderExchange){
-        return BindingBuilder.bind(orderQueue).to(orderExchange).with(environment.getProperty("mq.pay.routing.key")).noargs();
-    }
-
-
 }

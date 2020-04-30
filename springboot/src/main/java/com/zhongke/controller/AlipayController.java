@@ -2,6 +2,10 @@ package com.zhongke.controller;
 
 
 import com.zhongke.entity.Result;
+import com.zhongke.mapper.CashierMapper;
+import com.zhongke.mapper.OrderMapper;
+import com.zhongke.pojo.Cashier;
+import com.zhongke.pojo.Order;
 import com.zhongke.service.AlipayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayOutputStream;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -23,6 +29,8 @@ import java.util.Map;
 public class AlipayController {
     @Autowired(required = false)
     private AlipayService alipayService;
+    @Autowired(required = false)
+    private OrderMapper orderMapper;
 
     /**
      * @Description 支付宝统一收单交易支付接口
@@ -83,6 +91,7 @@ public class AlipayController {
             return new Result<>(-1,"退款失败",map);
         }
     }
+
 
     /**
      * @Description 支付宝统一收单交易撤销接口

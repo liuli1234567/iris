@@ -10,15 +10,15 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 
 /**
- * @ClassName OrderPayMessageListener
- * @Description
+ * @ClassName OrderWeixinPayMessageListener
+ * @Description 微信支付消息监听
  * @Author liuli
  * @Date 2020/4/17 14:19
  * @Version 1.0
  **/
 @Component
-@RabbitListener(queues = {"${mq.pay.queue.order}"})
-public class OrderPayMessageListener {
+@RabbitListener(queues = {"${mq.pay.queue.weixinorder}"})
+public class OrderWeixinPayMessageListener {
 
     @Autowired
     private OrderService orderService;
