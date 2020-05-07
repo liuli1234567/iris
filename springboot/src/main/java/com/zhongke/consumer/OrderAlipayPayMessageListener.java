@@ -4,11 +4,17 @@ import com.alibaba.fastjson.JSON;
 import com.alipay.api.response.AlipayTradePayResponse;
 import com.zhongke.mapper.DeviceMapper;
 import com.zhongke.mapper.OrderMapper;
+import com.zhongke.mapper.StoreMapper;
+import com.zhongke.pojo.Device;
 import com.zhongke.pojo.Order;
+import com.zhongke.pojo.Store;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
 import java.math.BigDecimal;
@@ -27,10 +33,17 @@ import java.util.Map;
 @RabbitListener(queues = {"${mq.pay.queue.alipayorder}"})
 public class OrderAlipayPayMessageListener {
 
+    @Value("${mysql.table.orderNewName}")
+    private String orderTableNewName;
+
+    @Autowired(required = false)
+    private RedisTemplate redisTemplate;
     @Autowired(required = false)
     private DeviceMapper deviceMapper;
     @Autowired(required = false)
     private OrderMapper orderMapper;
+    @Autowired(required = false)
+    private StoreMapper storeMapper;
 
     @RabbitHandler
     public void readMessage(Map map) {
@@ -63,12 +76,30 @@ public class OrderAlipayPayMessageListener {
                 order.setTransactionId(response.getTradeNo()); // 交易流水号
                 order.setFundChannel(response.getFundBillList() == null ? null : response.getFundBillList().get(0).getFundChannel()); // 支付渠道
                 order.setDeviceId(deviceMapper.findDeviceIdByDeviceNo(map.get("device_no").toString()) == null ? 0 : deviceMapper.findDeviceIdByDeviceNo(map.get("device_no").toString())); // 设备id
+                Device device = new Device();
+                device.setDeviceNo((String)map.get("device_no"));
+                Device device1 = deviceMapper.selectOne(device);
+                if (device1 != null) {
+                    Integer storeId = device1.getStoreId();
+                    Store store = new Store();
+                    store.setId(storeId);
+                    Store store1 = storeMapper.selectByPrimaryKey(store);
+                    if (store1 != null) {
+                        order.setMerchantId(store1.getMerchantId());
+                    }
+                }
                 order.setCashierId(1); // 收银员id
                 order.setStoreName(response.getStoreName()); // 门店名称
                 order.setUpdatetime(new Date()); // 更新时间
                 order.setCreateTime(new Date()); // 创建时间
                 order.setPayTime(response.getGmtPayment()); // 支付时间
-                orderMapper.insertSelective(order);
+                String orderTableName = (String) redisTemplate.boundValueOps(orderTableNewName).get();
+                if (!StringUtils.isEmpty(orderTableName)){
+                    order.setTableNewName(orderTableName);
+                    orderMapper.saveOrderToNewTableName(order);
+                }else {
+                    orderMapper.insertSelective(order);
+                }
             }
         } else {
             System.out.println("调用失败");
@@ -93,12 +124,30 @@ public class OrderAlipayPayMessageListener {
                 order.setPayAisle("支付宝"); // 支付通道
                 order.setTransactionId(response.getTradeNo()); // 交易流水号
                 order.setDeviceId(deviceMapper.findDeviceIdByDeviceNo(map.get("device_no").toString()) == null ? 0 : deviceMapper.findDeviceIdByDeviceNo(map.get("device_no").toString())); // 设备id
+                Device device = new Device();
+                device.setDeviceNo((String)map.get("device_no"));
+                Device device1 = deviceMapper.selectOne(device);
+                if (device1 != null) {
+                    Integer storeId = device1.getStoreId();
+                    Store store = new Store();
+                    store.setId(storeId);
+                    Store store1 = storeMapper.selectByPrimaryKey(store);
+                    if (store1 != null) {
+                        order.setMerchantId(store1.getMerchantId());
+                    }
+                }
                 order.setCashierId(1); // 收银员id
                 order.setStoreName(response.getStoreName()); // 门店名称
                 order.setUpdatetime(new Date()); // 更新时间
                 order.setCreateTime(new Date()); // 创建时间
                 order.setPayTime(response.getGmtPayment()); // 支付时间
-                orderMapper.insertSelective(order);
+                String orderTableName = (String) redisTemplate.boundValueOps(orderTableNewName).get();
+                if (!StringUtils.isEmpty(orderTableName)){
+                    order.setTableNewName(orderTableName);
+                    orderMapper.saveOrderToNewTableName(order);
+                }else {
+                    orderMapper.insertSelective(order);
+                }
             }
         }
     }

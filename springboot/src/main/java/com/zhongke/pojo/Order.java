@@ -61,6 +61,8 @@ public class Order implements Serializable {
     private String fundChannel; // 支付渠道
     @Column(name = "device_id")
     private Integer deviceId; // 设备id
+    @Column(name = "merchant_id")
+    private Integer merchantId; // 商户id
     @Column(name = "refund_buyer_amount")
     private BigDecimal refundBuyerAmount; // 买家退款金额
     @Column(name = "refund_discount_amount")
@@ -88,6 +90,29 @@ public class Order implements Serializable {
     private List<Spu> spus; // 商品集合
     @Transient
     private Integer storeId; // 门店id
+    @Transient
+    private String tableNewName; // 订单新表名
+
+    @Transient
+    private String startTime; // 起始时间
+    @Transient
+    private String endTime; // 结束时间
+
+    public Integer getMerchantId() {
+        return merchantId;
+    }
+
+    public void setMerchantId(Integer merchantId) {
+        this.merchantId = merchantId;
+    }
+
+    public String getTableNewName() {
+        return tableNewName;
+    }
+
+    public void setTableNewName(String tableNewName) {
+        this.tableNewName = tableNewName;
+    }
 
     public List<Spu> getSpus() {
         return spus;
@@ -96,11 +121,6 @@ public class Order implements Serializable {
     public void setSpus(List<Spu> spus) {
         this.spus = spus;
     }
-
-    @Transient
-    private String startTime; // 起始时间
-    @Transient
-    private String endTime; // 结束时间
 
     public BigDecimal getRefundBuyerAmount() {
         return refundBuyerAmount;
@@ -374,41 +394,4 @@ public class Order implements Serializable {
         this.endTime = endTime;
     }
 
-    @Override
-    public String toString() {
-        return "Order{" +
-                "id=" + id +
-                ", orderId='" + orderId + '\'' +
-                ", orderAmount=" + orderAmount +
-                ", buyerLogonId='" + buyerLogonId + '\'' +
-                ", buyerUserId='" + buyerUserId + '\'' +
-                ", status=" + status +
-                ", code='" + code + '\'' +
-                ", msg='" + msg + '\'' +
-                ", subCode='" + subCode + '\'' +
-                ", subMsg='" + subMsg + '\'' +
-                ", payMethod='" + payMethod + '\'' +
-                ", payAisle='" + payAisle + '\'' +
-                ", actuallyPaid=" + actuallyPaid +
-                ", discount=" + discount +
-                ", transactionId='" + transactionId + '\'' +
-                ", spuIds='" + spuIds + '\'' +
-                ", jamId=" + jamId +
-                ", fullRuleId=" + fullRuleId +
-                ", fundChannel='" + fundChannel + '\'' +
-                ", deviceId=" + deviceId +
-                ", memberId=" + memberId +
-                ", memberName=" + memberName +
-                ", cashierId=" + cashierId +
-                ", cashierName=" + cashierName +
-                ", storeName='" + storeName + '\'' +
-                ", updatetime=" + updatetime +
-                ", createTime=" + createTime +
-                ", payTime=" + payTime +
-                ", spus=" + spus +
-                ", storeId=" + storeId +
-                ", startTime='" + startTime + '\'' +
-                ", endTime='" + endTime + '\'' +
-                '}';
-    }
 }

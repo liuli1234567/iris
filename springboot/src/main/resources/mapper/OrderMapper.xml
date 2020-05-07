@@ -3,6 +3,10 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zhongke.mapper.OrderMapper">
 
+    <insert id="saveOrderToNewTableName" parameterType="order">
+        insert into ${tableNewName} (order_id,order_amount,buyer_logon_id,buyer_user_id,status,code,msg,sub_code,sub_msg,pay_method,pay_aisle,actually_paid,discount,transaction_id,fund_channel,refund_buyer_amount,refund_discount_amount,refund_mdiscount_amount,device_id,member_id,member_name,cashier_id,cashier_name,store_name,updatetime,createtime,pay_time)values(#{orderId},#{orderAmount},#{buyerLogonId},#{buyerUserId},#{status},#{code},#{msg},#{subCode},#{subMsg},#{payMethod},#{payAisle},#{actuallyPaid},#{discount},#{transactionId},#{fundChannel},#{refundBuyerAmount},#{refundDiscountAmount},#{refundMdiscountAmount},#{deviceId},#{memberId},#{memberName},#{cashierId},#{cashierName},#{storeName},#{updatetime},#{createTime},#{payTime})
+
+    </insert>
     <select id="findDeviceIdByOutTradeNo" parameterType="string" resultType="integer">
         select device_id from zk_order where order_id = #{orderid}
     </select>

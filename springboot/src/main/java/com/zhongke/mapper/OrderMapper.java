@@ -216,4 +216,13 @@ public interface OrderMapper extends Mapper<Order> {
      * @return com.zhongke.pojo.Order
      **/
     Order findOrderByOrderId(String out_trade_no);
+
+    /**
+     * @Description 保存订单到新订单表中
+     * @author liuli
+     * @date 2020/5/6 16:50
+     * @param order
+     * @return void
+     **/
+    void saveOrderToNewTableName(Order order);
 }

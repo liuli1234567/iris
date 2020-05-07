@@ -1,0 +1,5 @@
+mysql:
+  table:
+    orderNum: 2292504
+    orderNewName: orderTableNewName
+    orderAllName: orderTableAllName
