@@ -11,22 +11,21 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.StringUtils;
 
-import javax.sound.midi.Soundbank;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- * @ClassName CreateTable
+ * @ClassName CreateOrderTable
  * @Description 动态创建交易流水表
  * @Author liuli
  * @Date 2020/4/28 18:43
  * @Version 1.0
  **/
 @Configuration
-public class CreateTable {
-    private final Logger log = LoggerFactory.getLogger(CreateTable.class);
+public class CreateOrderTable {
+    private final Logger log = LoggerFactory.getLogger(CreateOrderTable.class);
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -48,7 +47,7 @@ public class CreateTable {
     private String orderTableAllName;
     private Connection conn = null;
 
-    @Scheduled(cron = "0 0/30 * * * ?")
+    @Scheduled(cron = "0 0 2 * * ?")
     public void createTable(){
         String tableAllName = null;
         int count = orderMapper.selectCount(new Order());

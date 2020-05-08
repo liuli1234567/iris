@@ -1,5 +1,5 @@
 mysql:
   table:
-    orderNum: 2292504
+    orderNum: 30000000
     orderNewName: orderTableNewName
     orderAllName: orderTableAllName

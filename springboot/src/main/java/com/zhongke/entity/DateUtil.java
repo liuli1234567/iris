@@ -15,6 +15,24 @@ import java.util.Date;
 public class DateUtil {
 
     /**
+     * @Description 获取当前日期的前N天
+     * @author liuli
+     * @date 2020/5/8 14:18
+     * @param num 天数
+     * @return java.lang.String
+     **/
+    public static String getBeforeDate(int num){
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_MONTH, num);
+        date =  calendar.getTime();
+        String format = df.format(date);
+        return format;
+    }
+
+    /**
      * @Description 获取当前时间毫秒值字符串
      * @author liuli
      * @date 2020/4/16 16:28

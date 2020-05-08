@@ -225,4 +225,59 @@ public interface OrderMapper extends Mapper<Order> {
      * @return void
      **/
     void saveOrderToNewTableName(Order order);
+
+    /**
+     * @Description 商户流水订单统计：订单总金额
+     * @author liuli
+     * @date 2020/5/8 16:57
+     * @param merchantId
+     * @param startTime
+     * @param endTime
+     * @return java.math.BigDecimal
+     **/
+    BigDecimal totalAmountByMerchantId(@Param("merchantId") Integer merchantId, @Param("startTime") String startTime, @Param("endTime") String endTime);
+
+    /**
+     * @Description 商户订单流水统计：退款总金额
+     * @author liuli
+     * @date 2020/5/8 17:11
+     * @param merchantId
+     * @param startTime
+     * @param endTime
+     * @return java.math.BigDecimal
+     **/
+    BigDecimal refundAmountByMerchantId(@Param("merchantId") Integer merchantId, @Param("startTime") String startTime, @Param("endTime") String endTime);
+
+    /**
+     * @Description 商户订单流水统计：实收总金额
+     * @author liuli
+     * @date 2020/5/8 17:12
+     * @param merchantId
+     * @param startTime
+     * @param endTime
+     * @return java.math.BigDecimal
+     **/
+    BigDecimal cancelAmountByMerchantId(@Param("merchantId") Integer merchantId, @Param("startTime") String startTime, @Param("endTime") String endTime);
+
+    /**
+     * @Description 商户订单流水统计：交易总笔数
+     * @author liuli
+     * @date 2020/5/8 17:20
+     * @param merchantId
+     * @param startTime
+     * @param endTime
+     * @return int
+     **/
+    int transactionNumberByMerchantId(@Param("merchantId") Integer merchantId, @Param("startTime") String startTime, @Param("endTime") String endTime);
+
+    /**
+     * @Description 商户订单流水统计：退款总笔数
+     * @author liuli
+     * @date 2020/5/8 17:22
+     * @param merchantId
+     * @param startTime
+     * @param endTime
+     * @return int
+     **/
+    int refundNumberByMerchantId(@Param("merchantId") Integer merchantId, @Param("startTime") String startTime, @Param("endTime") String endTime);
 }
