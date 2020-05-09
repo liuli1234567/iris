@@ -4,19 +4,19 @@
 <mapper namespace="com.zhongke.mapper.OrderMapper">
 
     <select id="totalAmountByMerchantId" resultType="BigDecimal">
-        select ifnull(sum(order_amount),0) from zk_order where status = 1 and pay_time &gt;= #{startTime} and pay_time &lt;= #{endTime} and merchant_id = #{merchantId}
+        select ifnull(sum(order_amount),0) from ${orderTableName} where status = 1 and pay_time &gt;= #{startTime} and pay_time &lt;= #{endTime} and merchant_id = #{merchantId}
     </select>
     <select id="refundAmountByMerchantId" resultType="BigDecimal">
-        select ifnull(sum(order_amount),0) from zk_order where status = -2 and pay_time &gt;= #{startTime} and pay_time &lt;= #{endTime} and merchant_id = #{merchantId}
+        select ifnull(sum(order_amount),0) from ${orderTableName} where status = -2 and pay_time &gt;= #{startTime} and pay_time &lt;= #{endTime} and merchant_id = #{merchantId}
     </select>
     <select id="cancelAmountByMerchantId" resultType="BigDecimal">
-        select ifnull(sum(order_amount),0) from zk_order where status = -1 and pay_time &gt;= #{startTime} and pay_time &lt;= #{endTime} and merchant_id = #{merchantId}
+        select ifnull(sum(order_amount),0) from ${orderTableName} where status = -1 and pay_time &gt;= #{startTime} and pay_time &lt;= #{endTime} and merchant_id = #{merchantId}
     </select>
     <select id="transactionNumberByMerchantId" resultType="BigDecimal">
-        select count(id) from zk_order where pay_time &gt;= #{startTime} and pay_time &lt;= #{endTime} and merchant_id = #{merchantId}
+        select count(id) from ${orderTableName} where pay_time &gt;= #{startTime} and pay_time &lt;= #{endTime} and merchant_id = #{merchantId}
     </select>
     <select id="refundNumberByMerchantId" resultType="BigDecimal">
-        select count(id) from zk_order where status = -2 pay_time &gt;= #{startTime} and pay_time &lt;= #{endTime} and merchant_id = #{merchantId}
+        select count(id) from ${orderTableName} where status = -2 pay_time &gt;= #{startTime} and pay_time &lt;= #{endTime} and merchant_id = #{merchantId}
     </select>
     <insert id="saveOrderToNewTableName" parameterType="order">
         insert into ${tableNewName} (order_id,order_amount,buyer_logon_id,buyer_user_id,status,code,msg,sub_code,sub_msg,pay_method,pay_aisle,actually_paid,discount,transaction_id,fund_channel,refund_buyer_amount,refund_discount_amount,refund_mdiscount_amount,device_id,member_id,member_name,cashier_id,cashier_name,store_name,updatetime,createtime,pay_time)values(#{orderId},#{orderAmount},#{buyerLogonId},#{buyerUserId},#{status},#{code},#{msg},#{subCode},#{subMsg},#{payMethod},#{payAisle},#{actuallyPaid},#{discount},#{transactionId},#{fundChannel},#{refundBuyerAmount},#{refundDiscountAmount},#{refundMdiscountAmount},#{deviceId},#{memberId},#{memberName},#{cashierId},#{cashierName},#{storeName},#{updatetime},#{createTime},#{payTime})

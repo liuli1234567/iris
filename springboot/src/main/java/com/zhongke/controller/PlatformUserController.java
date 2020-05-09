@@ -49,7 +49,7 @@ public class PlatformUserController {
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("PlatformUserController.platUsers(): "+e.getMessage());
-            return new Result<>(-1,"查询平台用户列表失败："+e.getMessage());
+            return new Result<>(-1,"查询平台用户列表失败：{}",e.getMessage());
         }
     }
 
@@ -69,8 +69,8 @@ public class PlatformUserController {
             return new Result(0,"更新成功");
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("PlatformUserController.update(): "+e.getMessage());
-            return new Result(-1,"更新失败："+e.getMessage());
+            logger.error("PlatformUserController.update():{}",e.getMessage());
+            return new Result(-1,"更新失败{}",e.getMessage());
         }
     }
 
@@ -88,8 +88,8 @@ public class PlatformUserController {
             return new Result<PlatformUser>(0,"查询成功",platformUser);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("PlatformUserController.findById(): "+e.getMessage());
-            return new Result(-1,"查询失败："+e.getMessage());
+            logger.error("PlatformUserController.findById():{}",e.getMessage());
+            return new Result(-1,"查询失败{}",e.getMessage());
         }
     }
 
@@ -102,8 +102,20 @@ public class PlatformUserController {
                             SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             return new Result(0,"获取成功",user.getUsername());
         }catch (Exception e){
-            logger.error("PlatformUserController.getUsername(): "+e.getMessage());
+            logger.error("PlatformUserController.getUsername():{},"+e.getMessage());
             return new Result(-1,"获取失败");
+        }
+    }
+
+    //添加用户
+    @PostMapping("/add")
+    public Result add(@RequestBody PlatformUser platformUser){
+        try{
+           platformUserService.add(platformUser);
+            return new Result(0,"添加成功");
+        }catch (Exception e){
+            logger.error("PlatformUserController.add():{},"+e.getMessage());
+            return new Result(-1,"添加失败");
         }
     }
 }

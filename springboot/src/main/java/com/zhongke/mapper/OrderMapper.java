@@ -235,7 +235,7 @@ public interface OrderMapper extends Mapper<Order> {
      * @param endTime
      * @return java.math.BigDecimal
      **/
-    BigDecimal totalAmountByMerchantId(@Param("merchantId") Integer merchantId, @Param("startTime") String startTime, @Param("endTime") String endTime);
+    BigDecimal totalAmountByMerchantId(@Param("orderTableName") String orderTableName,@Param("merchantId") Integer merchantId, @Param("startTime") String startTime, @Param("endTime") String endTime);
 
     /**
      * @Description 商户订单流水统计：退款总金额
@@ -246,7 +246,7 @@ public interface OrderMapper extends Mapper<Order> {
      * @param endTime
      * @return java.math.BigDecimal
      **/
-    BigDecimal refundAmountByMerchantId(@Param("merchantId") Integer merchantId, @Param("startTime") String startTime, @Param("endTime") String endTime);
+    BigDecimal refundAmountByMerchantId(@Param("orderTableName") String orderTableName,@Param("merchantId") Integer merchantId, @Param("startTime") String startTime, @Param("endTime") String endTime);
 
     /**
      * @Description 商户订单流水统计：实收总金额
@@ -257,7 +257,7 @@ public interface OrderMapper extends Mapper<Order> {
      * @param endTime
      * @return java.math.BigDecimal
      **/
-    BigDecimal cancelAmountByMerchantId(@Param("merchantId") Integer merchantId, @Param("startTime") String startTime, @Param("endTime") String endTime);
+    BigDecimal cancelAmountByMerchantId(@Param("orderTableName") String orderTableName,@Param("merchantId") Integer merchantId, @Param("startTime") String startTime, @Param("endTime") String endTime);
 
     /**
      * @Description 商户订单流水统计：交易总笔数
@@ -268,7 +268,7 @@ public interface OrderMapper extends Mapper<Order> {
      * @param endTime
      * @return int
      **/
-    int transactionNumberByMerchantId(@Param("merchantId") Integer merchantId, @Param("startTime") String startTime, @Param("endTime") String endTime);
+    int transactionNumberByMerchantId(@Param("orderTableName") String orderTableName,@Param("merchantId") Integer merchantId, @Param("startTime") String startTime, @Param("endTime") String endTime);
 
     /**
      * @Description 商户订单流水统计：退款总笔数
@@ -279,5 +279,5 @@ public interface OrderMapper extends Mapper<Order> {
      * @param endTime
      * @return int
      **/
-    int refundNumberByMerchantId(@Param("merchantId") Integer merchantId, @Param("startTime") String startTime, @Param("endTime") String endTime);
+    int refundNumberByMerchantId(@Param("orderTableName") String orderTableName,@Param("merchantId") Integer merchantId, @Param("startTime") String startTime, @Param("endTime") String endTime);
 }

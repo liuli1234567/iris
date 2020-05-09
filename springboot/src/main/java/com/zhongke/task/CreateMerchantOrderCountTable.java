@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -47,13 +48,16 @@ public class CreateMerchantOrderCountTable {
         String startTime = DateUtil.getBeforeDate(-1)+ " 00:00:00";
         String endTime = DateUtil.getBeforeDate(-1)+ " 00:00:00";
         String orderTableName = (String) redisTemplate.boundValueOps(orderTableNewName).get();
+        if (StringUtils.isEmpty(orderTableName)) {
+            orderTableName = "zk_order";
+        }
         for (Integer merchantId : merchantIds) {
-            BigDecimal total_amount = orderMapper.totalAmountByMerchantId(merchantId,startTime,endTime);//订单总金额
-            BigDecimal refund_amount = orderMapper.refundAmountByMerchantId(merchantId,startTime,endTime);//退款总金额
-            BigDecimal cancel_amount = orderMapper.cancelAmountByMerchantId(merchantId,startTime,endTime);
+            BigDecimal total_amount = orderMapper.totalAmountByMerchantId(orderTableName,merchantId,startTime,endTime);//订单总金额
+            BigDecimal refund_amount = orderMapper.refundAmountByMerchantId(orderTableName,merchantId,startTime,endTime);//退款总金额
+            BigDecimal cancel_amount = orderMapper.cancelAmountByMerchantId(orderTableName,merchantId,startTime,endTime);
             BigDecimal received_amount = total_amount.subtract(refund_amount.add(cancel_amount));//实收总金额
-            int transaction_number = orderMapper.transactionNumberByMerchantId(merchantId,startTime,endTime);//交易笔数
-            int refund_number = orderMapper.refundNumberByMerchantId(merchantId,startTime,endTime);//退款笔数
+            int transaction_number = orderMapper.transactionNumberByMerchantId(orderTableName,merchantId,startTime,endTime);//交易笔数
+            int refund_number = orderMapper.refundNumberByMerchantId(orderTableName,merchantId,startTime,endTime);//退款笔数
 
             MerchantTransaction merchantTransaction = new MerchantTransaction();
             merchantTransaction.setMerchantId(merchantId);

@@ -45,6 +45,11 @@ public class PlatformUserServiceImpl implements PlatformUserService {
         return platformUserMapper.findByPlatformUserName(platformUserName);
     }
 
+    @Override
+    public void add(PlatformUser platformUser) {
+        platformUserMapper.insertSelective(platformUser);
+    }
+
     /**
      * @Description 构建搜索条件
      * @author liuli

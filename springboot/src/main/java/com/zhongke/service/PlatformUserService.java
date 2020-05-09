@@ -44,4 +44,13 @@ public interface PlatformUserService {
      * @return com.zhongke.pojo.PlatformUser
      **/
     PlatformUser findByPlatformUserName(String platformUserName);
+
+    /**
+     * @Description 添加用户
+     * @author liuli
+     * @date 2020/5/9 11:03
+     * @param platformUser
+     * @return void
+     **/
+    void add(PlatformUser platformUser);
 }
