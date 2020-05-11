@@ -3,6 +3,7 @@ package com.zhongke.controller;
 import com.github.pagehelper.PageInfo;
 import com.zhongke.entity.Result;
 import com.zhongke.pojo.Announcement;
+import com.zhongke.pojo.Menu;
 import com.zhongke.pojo.PlatformUser;
 import com.zhongke.service.AnnouncementService;
 import com.zhongke.service.PlatformUserService;
@@ -13,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @ClassName PlatformUserController
@@ -33,18 +36,32 @@ public class PlatformUserController {
     private PlatformUserService platformUserService;
 
     /**
+     * @Description springseurity验证成功后跳转首页加载菜单
+     * @author liuli
+     * @date 2020/5/11 16:59
+     * @param
+     * @return com.zhongke.entity.Result
+     **/
+    @RequestMapping("/getMenu")
+    public Result getMenu(){
+        List<Menu> menus = platformUserService.getMenu();
+        return new Result(0,"查询成功",menus);
+    }
+
+    /**
      * @Description 根据条件查询平台用户列表并分页
      * @author liuli
      * @date 2020/4/2 18:05
-     * @param platformUser
      * @param page
      * @param size
      * @return com.zhongke.entity.Result<com.github.pagehelper.PageInfo>
      **/
-    @PostMapping("/platUsers/{page}/{size}")
-    public Result<PageInfo> platUsers(@RequestBody(required = false) PlatformUser platformUser,@PathVariable int page, @PathVariable int size){
+    @RequestMapping("/platUsers/{page}/{size}")
+    public Result<PageInfo> platUsers(@RequestParam(required = false) String name,
+                                      @RequestParam(required = false) String tel,
+                                      @PathVariable int page, @PathVariable int size){
         try {
-            PageInfo<PlatformUser> platUsers = platformUserService.platUsers(platformUser,page,size);
+            PageInfo<PlatformUser> platUsers = platformUserService.platUsers(name,tel,page,size);
             return new Result<>(0,"查询平台用户列表成功",platUsers);
         } catch (Exception e) {
             e.printStackTrace();

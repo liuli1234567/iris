@@ -6,8 +6,24 @@
         select p.* from zk_platform_user p where name = #{platformUserName}
 
     </select>
+    <!--<resultMap id="platformUserMap" type="com.zhongke.pojo.PlatformUser">
+        <id column="id" property="id"></id>
+        <collection property="role" column="id" select="com.zhongke.mapper.RoleMapper.findRoleByPlatformUserId"></collection>
+    </resultMap>-->
     <resultMap id="platformUserMap" type="com.zhongke.pojo.PlatformUser">
         <id column="id" property="id"></id>
-        <collection property="roles" column="id" select="com.zhongke.mapper.RoleMapper.findRolesByPlatformUserId"></collection>
+        <association property="role" column="roleName" select="com.zhongke.mapper.RoleMapper.findRoleByRoleName"></association>
     </resultMap>
+
+    <select id="selectAllByExample" resultType="platformUser">
+        select id,name,nickname,store_name,sex,tel,role_name,status from zk_platform_user
+        <where>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="tel != null and tel != ''">
+                and tel = #{tel}
+            </if>
+        </where>
+    </select>
 </mapper>

@@ -7,6 +7,6 @@ import java.util.Set;
 
 public interface RoleMapper extends Mapper<Role> {
 
-    Set<Role> findRolesByPlatformUserId(Integer platformUserId);
+    Role findRoleByRoleName(String roleName);
 
 }

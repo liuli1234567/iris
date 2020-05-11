@@ -32,9 +32,12 @@ public class Menu implements Serializable {
     @ApiModelProperty(value = "菜单项所对应的路由路径",required = false)
     @Column(name = "path")
     private String path;
-    @ApiModelProperty(value = "优先级",required = false)
+    /*@ApiModelProperty(value = "优先级",required = false)
     @Column(name = "priority")
-    private Integer priority;
+    private Integer priority;*/
+    @ApiModelProperty(value = "排序",required = false)
+    @Column(name = "sort")
+    private Integer sort;
     @ApiModelProperty(value = "图标",required = false)
     @Column(name = "icon")
     private String icon;
@@ -90,12 +93,12 @@ public class Menu implements Serializable {
         this.path = path;
     }
 
-    public Integer getPriority() {
-        return priority;
+    public Integer getSort() {
+        return sort;
     }
 
-    public void setPriority(Integer priority) {
-        this.priority = priority;
+    public void setSort(Integer sort) {
+        this.sort = sort;
     }
 
     public String getIcon() {

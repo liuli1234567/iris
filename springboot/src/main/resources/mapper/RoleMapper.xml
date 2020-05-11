@@ -3,8 +3,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zhongke.mapper.RoleMapper">
 
-    <select id="findRolesByPlatformUserId" parameterType="int" resultMap="roleMap">
-        select r.* from zk_role r,zk_platuser_role pr where r.id = pr.role_id and pr.platuser_id = #{platformUserId}
+    <select id="findRoleByRoleName" parameterType="string" resultMap="roleMap">
+        select r.* from zk_role r where r.id = #{roleName}
     </select>
     <resultMap id="roleMap" type="com.zhongke.pojo.Role">
         <id column="id" property="id"></id>

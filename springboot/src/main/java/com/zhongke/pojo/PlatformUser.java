@@ -33,9 +33,12 @@ public class PlatformUser implements Serializable {
     @ApiModelProperty(value = "用户昵称",required = false)
     @Column(name = "nickname")
     private String nickname;
-    @ApiModelProperty(value = "用户所属商户id",required = false)
-    @Column(name = "merchant_id")
-    private Integer merchantId;
+    @ApiModelProperty(value = "用户角色",required = false)
+    @Column(name = "role_name")
+    private String roleName;
+    @ApiModelProperty(value = "用户所属门店姓名",required = false)
+    @Column(name = "store_name")
+    private String storeName;
     @ApiModelProperty(value = "性别",required = false)
     @Column(name = "sex")
     private String sex;
@@ -55,9 +58,12 @@ public class PlatformUser implements Serializable {
     @Column(name = "createtime")
     private Date createTime;
 
-    @Transient
+    /*@Transient
     @ApiModelProperty(value = "角色集合",required = false)
-    private Set<Role> roles = new HashSet<Role>(0);
+    private Set<Role> roles = new HashSet<Role>(0);*/
+    @Transient
+    @ApiModelProperty(value = "角色对象",required = false)
+    private Role role;
 
     public Date getUpdatetime() {
         return updatetime;
@@ -67,12 +73,20 @@ public class PlatformUser implements Serializable {
         this.updatetime = updatetime;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+    public String getRoleName() {
+        return roleName;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public String getNickname() {
@@ -115,12 +129,12 @@ public class PlatformUser implements Serializable {
         this.password = password;
     }
 
-    public Integer getMerchantId() {
-        return merchantId;
+    public String getStoreName() {
+        return storeName;
     }
 
-    public void setMerchantId(Integer merchantId) {
-        this.merchantId = merchantId;
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
     }
 
     public String getSex() {

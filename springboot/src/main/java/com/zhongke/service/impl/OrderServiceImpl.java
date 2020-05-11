@@ -175,7 +175,8 @@ public class OrderServiceImpl implements OrderService {
             platformUser.setName(user.getUsername());
             PlatformUser platformUser1 = platformUserMapper.selectOne(platformUser);
             if (platformUser1 != null) {
-                List<Store> stores = storeMapper.findByMerchantId(platformUser1.getMerchantId());
+                //List<Store> stores = storeMapper.findByMerchantId(platformUser1.getMerchantId());
+                List<Store> stores = storeMapper.findByMerchantId(1);
                 if (stores != null && stores.size() > 0) {
                     BigDecimal merchantPaidMoney = new BigDecimal("0.0");
                     BigDecimal retreatMoney = new BigDecimal("0.0");
@@ -231,7 +232,8 @@ public class OrderServiceImpl implements OrderService {
             platformUser.setName(user.getUsername());
             PlatformUser platformUser1 = platformUserMapper.selectOne(platformUser);
             if (platformUser1 != null) {
-                List<Store> stores = storeMapper.findByMerchantId(platformUser1.getMerchantId());
+                //List<Store> stores = storeMapper.findByMerchantId(platformUser1.getMerchantId());
+                List<Store> stores = storeMapper.findByMerchantId(1);
                 if (stores != null && stores.size() > 0) {
                     List<Map<String,Object>> list = new ArrayList<>();
                     for (Store store : stores) {
