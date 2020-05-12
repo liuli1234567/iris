@@ -1,5 +1,6 @@
 package com.zhongke.task;
 
+import com.zhongke.entity.DateUtil;
 import com.zhongke.mapper.OrderMapper;
 import com.zhongke.pojo.Order;
 import org.slf4j.Logger;
@@ -50,7 +51,13 @@ public class CreateOrderTable {
     @Scheduled(cron = "0 0 2 * * ?")
     public void createTable(){
         String tableAllName = null;
-        int count = orderMapper.selectCount(new Order());
+        int count = 0;
+        String orderName = (String)redisTemplate.boundValueOps(orderTableNewName).get();
+        if (!StringUtils.isEmpty(orderName)){
+            count = orderMapper.findCount(orderName);
+        }else {
+            count = orderMapper.findCount("zk_order");
+        }
         if (count>=orderNum){
             try {
                 Class.forName(mysqlDriver);
@@ -58,7 +65,7 @@ public class CreateOrderTable {
                 e.printStackTrace();
             }
             try {
-                int num = (int) ((Math.random()*9+1)*10000);
+                /*int num = (int) ((Math.random()*9+1)*10000);
                 String tableName = "zk_order"+ num;
                 String allName = (String) redisTemplate.boundValueOps(orderTableAllName).get();
                 if (!StringUtils.isEmpty(allName)){
@@ -71,7 +78,10 @@ public class CreateOrderTable {
                             break;
                         }
                     }
-                }
+                }*/
+                String tableTime = DateUtil.getBeforeDate(0);
+                String tableName = "zk_order"+ tableTime;
+
                 String tableSql = "CREATE TABLE "+tableName+" (\n" +
                         "  `id` int(11) NOT NULL AUTO_INCREMENT,\n" +
                         "  `order_id` varchar(35) DEFAULT NULL COMMENT '订单号',\n" +

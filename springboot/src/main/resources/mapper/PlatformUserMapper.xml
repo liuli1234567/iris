@@ -26,4 +26,7 @@
             </if>
         </where>
     </select>
+    <select id="selectById" parameterType="int" resultType="platformUser">
+        select id,name,nickname,store_name,sex,tel,role_name,status from zk_platform_user
+    </select>
 </mapper>

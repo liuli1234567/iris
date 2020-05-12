@@ -15,6 +15,24 @@ import java.util.Date;
 public class DateUtil {
 
     /**
+     * @Description 判断一个字符串日期是否是今日
+     * @author liuli
+     * @date 2020/5/12 10:11
+     * @param time
+     * @return boolean
+     **/
+    public static boolean isToDay(String time){
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        String today = df.format(date);
+        if (today.equals(time)){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    /**
      * @Description 获取当前日期的前N天
      * @author liuli
      * @date 2020/5/8 14:18

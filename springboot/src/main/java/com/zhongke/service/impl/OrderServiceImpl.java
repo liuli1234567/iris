@@ -9,6 +9,8 @@ import com.zhongke.pojo.*;
 import com.zhongke.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -26,6 +28,12 @@ import java.util.*;
  **/
 @Service
 public class OrderServiceImpl implements OrderService {
+
+    @Value("${mysql.table.orderNewName}")
+    private String orderTableNewName;
+
+    @Autowired(required = false)
+    private MerchantTransactionMapper merchantTransactionMapper;
 
     @Autowired(required = false)
     private OrderMapper orderMapper;
@@ -50,6 +58,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired(required = false)
     private DeviceMapper deviceMapper;
+
+    @Autowired(required = false)
+    private RedisTemplate redisTemplate;
 
     /**
      * @Description 查询全部订单
@@ -164,7 +175,7 @@ public class OrderServiceImpl implements OrderService {
         return map;
     }
 
-    @Override
+    /*@Override
     public Map merchant_transactionOverview(String payStartTime, String payEndTime) {
         // 获取当前登录用户的账户名
         org.springframework.security.core.userdetails.User user =
@@ -218,7 +229,77 @@ public class OrderServiceImpl implements OrderService {
             }
         }
         return null;
+    }*/
+    @Override
+    public Map merchant_transactionOverview(String payStartTime, String payEndTime) {
+        // 获取当前登录用户的账户名
+        org.springframework.security.core.userdetails.User user =
+                (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Map<String, Object> map = new HashMap<>();
+        if (user != null) {
+            PlatformUser platformUser = new PlatformUser();
+            platformUser.setName(user.getUsername());
+            PlatformUser platformUser1 = platformUserMapper.selectOne(platformUser);
+            if (platformUser1 != null) {
+                Store store = new Store();
+                store.setName(platformUser1.getStoreName());
+                Integer merchantId = storeMapper.selectOne(store).getMerchantId();
+                String orderTableName = (String) redisTemplate.boundValueOps(orderTableNewName).get();
+                if (StringUtils.isEmpty(orderTableName)) {
+                    orderTableName = "zk_order";
+                }
+                BigDecimal todayTotal_amount = new BigDecimal("0.0");//订单总金额
+                BigDecimal todayRefund_amount = new BigDecimal("0.0");// 退款总金额
+                BigDecimal todayMerchant_amount = new BigDecimal("0.0");// 商户实收
+                BigDecimal todayReceived_amount = new BigDecimal("0.0");// 实际营收
+                BigDecimal todayReceivedRefund_amount = new BigDecimal("0.0");// 商户实退
+                BigDecimal todayKeReceived_amount = new BigDecimal("0.0");// 顾客实付
+                int todayOrderCount = 0; // 订单总数
+                BigDecimal todayMerchantDiscount = new BigDecimal("0.0"); // 商户优惠
+                BigDecimal todayOtherDiscount = new BigDecimal("0.0"); // 其他优惠
+                int todayRefundCount = 0; // 退款总数
+                if (!StringUtils.isEmpty(payEndTime)) {
+                    if (DateUtil.isToDay(payEndTime)) {
+                        String startTime = payEndTime + " 00:00:00";
+                        String endTime = payEndTime + " 23:59:59";
+                        todayTotal_amount = orderMapper.findTodayTotal_amount(orderTableName, merchantId, startTime, endTime);
+                        todayRefund_amount = orderMapper.findTodayRefund_amount(orderTableName, merchantId, startTime, endTime);
+                        todayMerchant_amount = orderMapper.findTodayMerchant_amount(orderTableName, merchantId, startTime, endTime);
+                        todayReceivedRefund_amount = todayRefund_amount;
+                        todayKeReceived_amount = todayMerchant_amount;
+                        todayOrderCount = orderMapper.findOrderCount(orderTableName, merchantId, startTime, endTime);
+                        todayOtherDiscount = orderMapper.findTodayOtherDiscount(orderTableName, merchantId, startTime, endTime);
+                        todayRefundCount = orderMapper.findTodayRefundCount(orderTableName, merchantId, startTime, endTime);
+                    }
+                }
+                BigDecimal beforeTotal_amount = new BigDecimal("0.0");//订单总金额
+                BigDecimal beforeRefund_amount = new BigDecimal("0.0");// 退款总金额
+                BigDecimal beforeMerchant_amount = new BigDecimal("0.0");// 商户实收
+                BigDecimal beforeReceived_amount = new BigDecimal("0.0");// 实际营收
+                BigDecimal beforeReceivedRefund_amount = new BigDecimal("0.0");// 商户实退
+                BigDecimal beforeKeReceived_amount = new BigDecimal("0.0");// 顾客实付
+                int beforeOrderCount = 0; // 订单总数
+                BigDecimal beforeMerchantDiscount = new BigDecimal("0.0"); // 商户优惠
+                BigDecimal beforeOtherDiscount = new BigDecimal("0.0"); // 其他优惠
+                int beforeRefundCount = 0; // 退款总数
+
+
+                /*map.put("merchantPaidMoney", merchantPaidMoney.doubleValue());
+                map.put("retreatMoney", retreatMoney.doubleValue());
+                map.put("actualRevenue", merchantPaidMoney.subtract(retreatMoney).doubleValue()); // 商户实际营收（实收-实退）
+                map.put("actuallyPaidMoney", actuallyPaidMoney.doubleValue());
+                map.put("orderTotal", orderTotal);
+                map.put("orderTotalMoney", orderTotalMoney.doubleValue());
+                map.put("merchantDiscount", merchantDiscount.doubleValue());
+                map.put("otherDiscount", 0.0);
+                map.put("refundOrderCount", refundOrderCount);
+                map.put("refundOrderMoney", refundOrderMoney.doubleValue());*/
+                return map;
+            }
+        }
+        return map;
     }
+
 
     @Override
     public PageInfo<List<Map<String,Object>>> store_transactionOverview(String payStartTime, String payEndTime, int page, int size) {

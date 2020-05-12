@@ -3,6 +3,7 @@ package com.zhongke.mapper;
 import com.zhongke.pojo.Order;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.springframework.security.core.parameters.P;
 import tk.mybatis.mapper.common.Mapper;
 
 import java.math.BigDecimal;
@@ -280,4 +281,106 @@ public interface OrderMapper extends Mapper<Order> {
      * @return int
      **/
     int refundNumberByMerchantId(@Param("orderTableName") String orderTableName,@Param("merchantId") Integer merchantId, @Param("startTime") String startTime, @Param("endTime") String endTime);
+
+    int findCount(String orderName);
+
+    /**
+     * @Description 商户流水统计
+     * @author liuli
+     * @date 2020/5/12 15:26
+     * @param orderTableName
+     * @param startTime
+     * @param endTime
+     * @return java.math.BigDecimal
+     **/
+    BigDecimal findTodayTotal_amount(@Param("tableName") String orderTableName,@Param("merchantId") int merchantId, @Param("startTime") String startTime, @Param("endTime") String endTime);
+
+    /**
+     * @Description 商户流水统计
+     * @author liuli
+     * @date 2020/5/12 15:26
+     * @param orderTableName
+     * @param startTime
+     * @param endTime
+     * @return java.math.BigDecimal
+     **/
+    BigDecimal findTodayRefund_amount(@Param("tableName") String orderTableName, @Param("merchantId") int merchantId,@Param("startTime") String startTime, @Param("endTime") String endTime);
+
+    /**
+     * @Description 商户流水统计
+     * @author liuli
+     * @date 2020/5/12 15:26
+     * @param orderTableName
+     * @param startTime
+     * @param endTime
+     * @return java.math.BigDecimal
+     **/
+    BigDecimal findTodayMerchant_amount(@Param("tableName") String orderTableName, @Param("merchantId") int merchantId,@Param("startTime") String startTime, @Param("endTime") String endTime);
+
+    /**
+     * @Description 商户流水统计
+     * @author liuli
+     * @date 2020/5/12 15:26
+     * @param orderTableName
+     * @param startTime
+     * @param endTime
+     * @return java.math.BigDecimal
+     **/
+    BigDecimal findTodayReceivedRefund_amount(@Param("tableName") String orderTableName, @Param("merchantId") int merchantId,@Param("startTime") String startTime, @Param("endTime") String endTime);
+
+    /**
+     * @Description 商户流水统计
+     * @author liuli
+     * @date 2020/5/12 15:26
+     * @param orderTableName
+     * @param startTime
+     * @param endTime
+     * @return java.math.BigDecimal
+     **/
+    BigDecimal findTodayKeReceived_amount(@Param("tableName") String orderTableName,@Param("merchantId") int merchantId, @Param("startTime") String startTime, @Param("endTime") String endTime);
+
+    /**
+     * @Description 商户流水统计
+     * @author liuli
+     * @date 2020/5/12 15:26
+     * @param orderTableName
+     * @param startTime
+     * @param endTime
+     * @return java.math.BigDecimal
+     **/
+    int findOrderCount(@Param("tableName") String orderTableName, @Param("merchantId") int merchantId,@Param("startTime") String startTime, @Param("endTime") String endTime);
+
+    /**
+     * @Description 商户流水统计
+     * @author liuli
+     * @date 2020/5/12 15:26
+     * @param orderTableName
+     * @param startTime
+     * @param endTime
+     * @return java.math.BigDecimal
+     **/
+    BigDecimal findTodayOtherDiscount(@Param("tableName") String orderTableName, @Param("merchantId") int merchantId,@Param("startTime") String startTime, @Param("endTime") String endTime);
+
+    /**
+     * @Description 商户流水统计
+     * @author liuli
+     * @date 2020/5/12 15:26
+     * @param orderTableName
+     * @param startTime
+     * @param endTime
+     * @return java.math.BigDecimal
+     **/
+    int findTodayRefundCount(@Param("tableName") String orderTableName, @Param("merchantId") int merchantId,@Param("startTime") String startTime, @Param("endTime") String endTime);
+
+    /**
+     * @Description 优惠总金额，定时器商户流水统计表
+     * @author liuli
+     * @date 2020/5/12 17:57
+     * @param orderTableName
+     * @param merchantId
+     * @param startTime
+     * @param endTime
+     * @return java.math.BigDecimal
+     **/
+    BigDecimal discountAmountByMerchantId(@Param("tableName") String orderTableName, @Param("merchantId") Integer merchantId, @Param("startTime") String startTime, @Param("endTime") String endTime);
 }

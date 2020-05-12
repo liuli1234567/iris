@@ -56,6 +56,7 @@ public class CreateMerchantOrderCountTable {
             BigDecimal refund_amount = orderMapper.refundAmountByMerchantId(orderTableName,merchantId,startTime,endTime);//退款总金额
             BigDecimal cancel_amount = orderMapper.cancelAmountByMerchantId(orderTableName,merchantId,startTime,endTime);
             BigDecimal received_amount = total_amount.subtract(refund_amount.add(cancel_amount));//实收总金额
+            BigDecimal discount_amount = orderMapper.discountAmountByMerchantId(orderTableName,merchantId,startTime,endTime);//优惠总金额
             int transaction_number = orderMapper.transactionNumberByMerchantId(orderTableName,merchantId,startTime,endTime);//交易笔数
             int refund_number = orderMapper.refundNumberByMerchantId(orderTableName,merchantId,startTime,endTime);//退款笔数
 
@@ -65,6 +66,7 @@ public class CreateMerchantOrderCountTable {
             merchantTransaction.setTotalAmount(total_amount);
             merchantTransaction.setRefundAmount(refund_amount);
             merchantTransaction.setReceivedAmount(received_amount);
+            merchantTransaction.setDiscountAmount(discount_amount);
             merchantTransaction.setTransactionNumber(transaction_number);
             merchantTransaction.setRefundNumber(refund_number);
             merchantTransaction.setCreateTime(new Date());

@@ -34,6 +34,9 @@ public class MerchantTransaction implements Serializable {
     @ApiModelProperty(value = "实收总金额",required = false)
     @Column(name = "received_amount")
     private BigDecimal receivedAmount;
+    @ApiModelProperty(value = "优惠总金额",required = false)
+    @Column(name = "discount_amount")
+    private BigDecimal discountAmount;
     @ApiModelProperty(value = "交易笔数",required = false)
     @Column(name = "transaction_number")
     private Integer transactionNumber;
@@ -43,6 +46,14 @@ public class MerchantTransaction implements Serializable {
     @ApiModelProperty(value = "创建时间",required = false)
     @Column(name = "createtime")
     private Date createTime;
+
+    public BigDecimal getDiscountAmount() {
+        return discountAmount;
+    }
+
+    public void setDiscountAmount(BigDecimal discountAmount) {
+        this.discountAmount = discountAmount;
+    }
 
     public Integer getMerchantId() {
         return merchantId;

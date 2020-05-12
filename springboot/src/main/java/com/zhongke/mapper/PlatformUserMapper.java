@@ -26,4 +26,13 @@ public interface PlatformUserMapper extends Mapper<PlatformUser> {
      * @return java.util.List<com.zhongke.pojo.PlatformUser>
      **/
     List<PlatformUser> selectAllByExample(@Param("name") String name, @Param("tel") String tel);
+
+    /**
+     * @Description 通过id查询
+     * @author liuli
+     * @date 2020/5/11 18:32
+     * @param id
+     * @return com.zhongke.pojo.PlatformUser
+     **/
+    PlatformUser selectById(int id);
 }

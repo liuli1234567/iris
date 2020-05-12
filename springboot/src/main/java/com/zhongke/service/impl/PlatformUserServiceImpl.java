@@ -50,7 +50,7 @@ public class PlatformUserServiceImpl implements PlatformUserService {
 
     @Override
     public PlatformUser findById(int id) {
-        return platformUserMapper.selectByPrimaryKey(id);
+        return platformUserMapper.selectById(id);
     }
 
     @Override

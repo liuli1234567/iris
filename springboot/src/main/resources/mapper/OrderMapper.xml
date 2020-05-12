@@ -3,6 +3,36 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zhongke.mapper.OrderMapper">
 
+    <select id="discountAmountByMerchantId" resultType="BigDecimal">
+        select sum(discount) from ${tableName} where merchant_id = #{merchantId} and status = 1 and pay_time &gt;= #{startTime} and pay_time &lt;= #{endTime}
+    </select>
+    <select id="findTodayTotal_amount" resultType="BigDecimal">
+        select sum(order_amount) from ${tableName} where merchant_id = #{merchantId} and status = 1 and pay_time &gt;= #{startTime} and pay_time &lt;= #{endTime}
+    </select>
+    <select id="findTodayRefund_amount" resultType="BigDecimal">
+        select sum(order_amount) from ${tableName} where merchant_id = #{merchantId} and status = -2 and pay_time &gt;= #{startTime} and pay_time &lt;= #{endTime}
+    </select>
+    <select id="findTodayMerchant_amount" resultType="BigDecimal">
+        select sum(order_amount-discount) from ${tableName} where merchant_id = #{merchantId} and status = 1 and pay_time &gt;= #{startTime} and pay_time &lt;= #{endTime}
+    </select>
+    <!--<select id="findTodayReceivedRefund_amount" resultType="BigDecimal">
+        select count(order_amount) from ${tableName} where merchant_id = #{merchantId} and status = 1 and pay_time &gt;= #{startTime} and pay_time &lt;= #{endTime}
+    </select>-->
+    <!--<select id="findTodayKeReceived_amount" resultType="BigDecimal">
+        select count(order_amount) from ${tableName} where merchant_id = #{merchantId} and status = 1 and pay_time &gt;= #{startTime} and pay_time &lt;= #{endTime}
+    </select>-->
+    <select id="findOrderCount" resultType="BigDecimal">
+        select count(id) from ${tableName} where merchant_id = #{merchantId} and status = 1 and pay_time &gt;= #{startTime} and pay_time &lt;= #{endTime}
+    </select>
+    <select id="findTodayOtherDiscount" resultType="BigDecimal">
+        select sum(discount) from ${tableName} where merchant_id = #{merchantId} and status = 1
+    </select>
+    <select id="findTodayRefundCount" resultType="BigDecimal">
+        select count(id) from ${tableName} where merchant_id = #{merchantId} and status = -2 and pay_time &gt;= #{startTime} and pay_time &lt;= #{endTime}
+    </select>
+    <select id="findCount" parameterType="string" resultType="int">
+        select count(id) from ${orderName}
+    </select>
     <select id="totalAmountByMerchantId" resultType="BigDecimal">
         select ifnull(sum(order_amount),0) from ${orderTableName} where status = 1 and pay_time &gt;= #{startTime} and pay_time &lt;= #{endTime} and merchant_id = #{merchantId}
     </select>

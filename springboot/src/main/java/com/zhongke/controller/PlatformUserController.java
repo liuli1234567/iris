@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -82,6 +84,10 @@ public class PlatformUserController {
     public Result update(@RequestBody PlatformUser platformUser,@PathVariable int id){
         try {
             platformUser.setId(id);
+            if (!StringUtils.isEmpty(platformUser.getPassword())){
+                String password = new BCryptPasswordEncoder().encode(platformUser.getPassword());
+                platformUser.setPassword(password);
+            }
             platformUserService.update(platformUser,id);
             return new Result(0,"更新成功");
         } catch (Exception e) {
