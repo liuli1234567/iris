@@ -283,23 +283,31 @@ public class OrderServiceImpl implements OrderService {
                 BigDecimal beforeOtherDiscount = new BigDecimal("0.0"); // 其他优惠
                 int beforeRefundCount = 0; // 退款总数
 
-
-                /*map.put("merchantPaidMoney", merchantPaidMoney.doubleValue());
-                map.put("retreatMoney", retreatMoney.doubleValue());
-                map.put("actualRevenue", merchantPaidMoney.subtract(retreatMoney).doubleValue()); // 商户实际营收（实收-实退）
-                map.put("actuallyPaidMoney", actuallyPaidMoney.doubleValue());
-                map.put("orderTotal", orderTotal);
-                map.put("orderTotalMoney", orderTotalMoney.doubleValue());
-                map.put("merchantDiscount", merchantDiscount.doubleValue());
-                map.put("otherDiscount", 0.0);
-                map.put("refundOrderCount", refundOrderCount);
-                map.put("refundOrderMoney", refundOrderMoney.doubleValue());*/
+                //从定时器创建的商户流水表中查询历史数据
+                beforeTotal_amount = merchantTransactionMapper.beforeTotal_amount(merchantId,payStartTime,payEndTime);//订单总金额
+                beforeRefund_amount = merchantTransactionMapper.beforeRefund_amount(merchantId,payStartTime,payEndTime);//退款总金额
+                beforeMerchant_amount = merchantTransactionMapper.beforeMerchant_amount(merchantId,payStartTime,payEndTime);//商户实收
+                beforeReceived_amount = beforeMerchant_amount;//实际营收
+                beforeReceivedRefund_amount = beforeRefund_amount;//商户实退
+                beforeOtherDiscount = merchantTransactionMapper.beforeOtherDiscount(merchantId,payStartTime,payEndTime);//其他优惠
+                beforeKeReceived_amount = beforeTotal_amount.subtract(beforeOtherDiscount);//顾客实付
+                beforeOrderCount = merchantTransactionMapper.beforeOrderCount(merchantId,payStartTime,payEndTime);//订单总数
+                beforeRefundCount = merchantTransactionMapper.beforeRefundCount(merchantId,payStartTime,payEndTime);//退款总数
+                map.put("total_amount", beforeTotal_amount.add(todayTotal_amount).doubleValue());
+                map.put("refund_amount", beforeRefund_amount.add(todayRefund_amount).doubleValue());
+                map.put("merchant_amount", beforeMerchant_amount.add(todayMerchant_amount).doubleValue()); // 商户实际营收
+                map.put("received_amount", beforeReceived_amount.add(todayReceived_amount).doubleValue());
+                map.put("receivedRefund_amount", beforeReceivedRefund_amount.add(todayReceivedRefund_amount).doubleValue());
+                map.put("keReceived_amount", beforeKeReceived_amount.add(todayKeReceived_amount).doubleValue());
+                map.put("orderCount", beforeOrderCount+todayOrderCount);
+                map.put("merchantDiscount",beforeMerchantDiscount.add(todayMerchantDiscount).doubleValue());
+                map.put("otherDiscount", beforeOtherDiscount.add(todayOtherDiscount).doubleValue());
+                map.put("refundCount",beforeRefundCount+todayRefundCount);
                 return map;
             }
         }
         return map;
     }
-
 
     @Override
     public PageInfo<List<Map<String,Object>>> store_transactionOverview(String payStartTime, String payEndTime, int page, int size) {
@@ -351,6 +359,19 @@ public class OrderServiceImpl implements OrderService {
         return new PageInfo<>();
     }
 
+    public static void main(String[] args) {
+        ArrayList<Integer> list = new ArrayList<>();
+        Collections.addAll(list,34,54,65,77,98,210);
+        ArrayList<Integer> integers = new ArrayList<>();
+        int start = 58;
+        int end = 79;
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i)<=79 && list.get(i)>=58){
+                integers.add(list.get(i));
+            }
+        }
+        list.get(list.indexOf(integers.get(0))-1);
+    }
     @Override
     public PageInfo<Order> findOrdersByStoreId(Order order, int page, int size) {
         List<Order> orders = orderMapper.findOrdersByStoreId(order);

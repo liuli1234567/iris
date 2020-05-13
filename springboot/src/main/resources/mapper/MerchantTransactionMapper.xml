@@ -1,0 +1,23 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhongke.mapper.MerchantTransactionMapper">
+    <select id="beforeTotal_amount" resultType="BigDecimal">
+        select sum(total_amount) from zk_merchant_transaction where merchant_id = #{merchantId} and time &gt;= #{startTime} and time &lt;= #{endTime}
+    </select>
+    <select id="beforeRefund_amount" resultType="BigDecimal">
+        select sum(refund_amount) from zk_merchant_transaction where merchant_id = #{merchantId} and time &gt;= #{startTime} and time &lt;= #{endTime}
+    </select>
+    <select id="beforeMerchant_amount" resultType="BigDecimal">
+        select sum(received_amount) from zk_merchant_transaction where merchant_id = #{merchantId} and time &gt;= #{startTime} and time &lt;= #{endTime}
+    </select>
+    <select id="beforeOtherDiscount" resultType="BigDecimal">
+        select sum(discount_amount) from zk_merchant_transaction where merchant_id = #{merchantId} and time &gt;= #{startTime} and time &lt;= #{endTime}
+    </select>
+    <select id="beforeOrderCount" resultType="BigDecimal">
+        select count(transaction_number) from zk_merchant_transaction where merchant_id = #{merchantId} and time &gt;= #{startTime} and time &lt;= #{endTime}
+    </select>
+    <select id="beforeRefundCount" resultType="BigDecimal">
+        select count(refund_number) from zk_merchant_transaction where merchant_id = #{merchantId} and time &gt;= #{startTime} and time &lt;= #{endTime}
+    </select>
+</mapper>
