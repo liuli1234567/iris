@@ -66,9 +66,9 @@ public class MerchantServiceImpl implements MerchantService {
             List<Store> stores = storeMapper.select(store);
             if (stores != null && stores.size()>0) {
                 for (Store store1 : stores) {
-                    Integer id = store1.getId();
+                    String name = store1.getName();
                     Device device = new Device();
-                    device.setStoreId(id);
+                    device.setStoreName(name);
                     List<Device> devices = deviceMapper.select(device);
                     if (devices != null && devices.size()>0) {
                         for (Device device1 : devices) {

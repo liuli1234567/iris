@@ -9,6 +9,7 @@ import tk.mybatis.mapper.common.Mapper;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public interface OrderMapper extends Mapper<Order> {
 
@@ -383,4 +384,13 @@ public interface OrderMapper extends Mapper<Order> {
      * @return java.math.BigDecimal
      **/
     BigDecimal discountAmountByMerchantId(@Param("tableName") String orderTableName, @Param("merchantId") Integer merchantId, @Param("startTime") String startTime, @Param("endTime") String endTime);
+
+    /**
+     * @Description 设备列表根据设备号统计订单
+     * @author liuli
+     * @date 2020/5/15 16:09
+     * @param device_no
+     * @return java.util.Map<java.lang.String,java.lang.Object>
+     **/
+    Map<String, Object> transaction_count(String device_no);
 }

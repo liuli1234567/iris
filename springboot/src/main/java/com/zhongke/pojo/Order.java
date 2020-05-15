@@ -79,6 +79,16 @@ public class Order implements Serializable {
     private Integer cashierName; // 收银员名字
     @Column(name = "store_name")
     private String storeName; // 门店名称
+    @Column(name = "order_count")
+    private Integer orderCount; // 设备订单总数
+    @Column(name = "total_money")
+    private BigDecimal totalMoney; // 设备订单总金额
+    @Column(name = "refund_total")
+    private BigDecimal refundTotal; // 设备退款总金额
+    @Column(name = "payment_total")
+    private BigDecimal paymentTotal; // 设备顾客实付总金额
+    @Column(name = "discount_total")
+    private BigDecimal discountTotal; // 设备优惠总金额
     @Column(name = "updatetime")
     private Date updatetime; // 更新时间
     @Column(name = "createtime")
@@ -97,6 +107,46 @@ public class Order implements Serializable {
     private String startTime; // 起始时间
     @Transient
     private String endTime; // 结束时间
+
+    public Integer getOrderCount() {
+        return orderCount;
+    }
+
+    public void setOrderCount(Integer orderCount) {
+        this.orderCount = orderCount;
+    }
+
+    public BigDecimal getTotalMoney() {
+        return totalMoney;
+    }
+
+    public void setTotalMoney(BigDecimal totalMoney) {
+        this.totalMoney = totalMoney;
+    }
+
+    public BigDecimal getRefundTotal() {
+        return refundTotal;
+    }
+
+    public void setRefundTotal(BigDecimal refundTotal) {
+        this.refundTotal = refundTotal;
+    }
+
+    public BigDecimal getPaymentTotal() {
+        return paymentTotal;
+    }
+
+    public void setPaymentTotal(BigDecimal paymentTotal) {
+        this.paymentTotal = paymentTotal;
+    }
+
+    public BigDecimal getDiscountTotal() {
+        return discountTotal;
+    }
+
+    public void setDiscountTotal(BigDecimal discountTotal) {
+        this.discountTotal = discountTotal;
+    }
 
     public Integer getMerchantId() {
         return merchantId;

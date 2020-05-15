@@ -43,14 +43,16 @@ public class WebSecurityUserService implements UserDetailsService {
         }
         List<GrantedAuthority> list = new ArrayList<GrantedAuthority>();
         Role role = platformUser.getRole();
-
-        Set<Permission> permissions = role.getPermissions();
-        for(Permission permission : permissions){
-            //授权
-            list.add(new SimpleGrantedAuthority(permission.getKeyword()));
+        if (role != null) {
+            Set<Permission> permissions = role.getPermissions();
+            if (permissions != null && permissions.size()>0) {
+                for(Permission permission : permissions){
+                    //授权
+                    list.add(new SimpleGrantedAuthority(permission.getKeyword()));
+                }
+            }
         }
-        //User user = new User(merchantName, passwordEncoder.encode("123"), list);
+        return new User(platformUserName, passwordEncoder.encode(platformUser.getPassword()), list);
         //return new User(platformUserName, platformUser.getPassword(), list);
-        return new User(platformUserName, platformUser.getPassword(), list);
     }
 }

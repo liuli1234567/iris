@@ -4,16 +4,21 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zhongke.mapper.DeviceMapper;
 import com.zhongke.mapper.OrderMapper;
+import com.zhongke.mapper.PlatformUserMapper;
 import com.zhongke.pojo.Device;
 import com.zhongke.pojo.Order;
+import com.zhongke.pojo.PlatformUser;
 import com.zhongke.service.DeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName DeviceServiceImpl
@@ -29,6 +34,8 @@ public class DeviceServiceImpl implements DeviceService {
     private DeviceMapper deviceMapper;
     @Autowired(required = false)
     private OrderMapper orderMapper;
+    @Autowired(required = false)
+    private PlatformUserMapper platformUserMapper;
 
     @Override
     public PageInfo<Device> devices(Device device,int page,int size) {
@@ -59,6 +66,33 @@ public class DeviceServiceImpl implements DeviceService {
         return new PageInfo<Device>(devices);
     }
 
+    @Override
+    public void add(Device device) {
+        org.springframework.security.core.userdetails.User user =
+                (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (user != null) {
+            String username = user.getUsername();
+            PlatformUser platformUser = new PlatformUser();
+            platformUser.setName(user.getUsername());
+            PlatformUser platformUser1 = platformUserMapper.selectOne(platformUser);
+            if (platformUser1 != null){
+                device.setStoreName(platformUser1.getStoreName());
+                device.setCreateTime(new Date());
+            }
+        }
+        deviceMapper.insertSelective(device);
+    }
+
+    @Override
+    public Map transaction_count(String device_no) {
+        Map<String,Object> map = orderMapper.transaction_count(device_no);
+        map.put("total_money",new BigDecimal(map.get("total_money").toString()).doubleValue());
+        map.put("refund_total",new BigDecimal(map.get("refund_total").toString()).doubleValue());
+        map.put("payment_total",new BigDecimal(map.get("payment_total").toString()).doubleValue());
+        map.put("discount_total",new BigDecimal(map.get("discount_total").toString()).doubleValue());
+        return map;
+    }
+
     /**
      * @Description 构建搜索条件
      * @author liuli
@@ -83,13 +117,13 @@ public class DeviceServiceImpl implements DeviceService {
                 criteria.andEqualTo("deviceNumber",device.getDeviceNo());
             }
             // 设备类型
-            if (!StringUtils.isEmpty(device.getEquipmentType())){
-                criteria.andEqualTo("equipmentType",device.getEquipmentType());
+            if (!StringUtils.isEmpty(device.getType())){
+                criteria.andEqualTo("equipmentType",device.getType());
             }
             // 所属门店id
-            if (!StringUtils.isEmpty(device.getStoreId())){
+            /*if (!StringUtils.isEmpty(device.getStoreId())){
                 criteria.andEqualTo("storeId",device.getStoreId());
-            }
+            }*/
             // 所属门店名称
             if (!StringUtils.isEmpty(device.getStoreName())){
                 criteria.andEqualTo("storeName",device.getStoreName());

@@ -80,10 +80,10 @@ public class OrderAlipayPayMessageListener {
                 device.setDeviceNo((String)map.get("device_no"));
                 Device device1 = deviceMapper.selectOne(device);
                 if (device1 != null) {
-                    Integer storeId = device1.getStoreId();
+                    String storeName = device1.getStoreName();
                     Store store = new Store();
-                    store.setId(storeId);
-                    Store store1 = storeMapper.selectByPrimaryKey(store);
+                    store.setName(storeName);
+                    Store store1 = storeMapper.selectOne(store);
                     if (store1 != null) {
                         order.setMerchantId(store1.getMerchantId());
                     }
@@ -128,9 +128,9 @@ public class OrderAlipayPayMessageListener {
                 device.setDeviceNo((String)map.get("device_no"));
                 Device device1 = deviceMapper.selectOne(device);
                 if (device1 != null) {
-                    Integer storeId = device1.getStoreId();
+                    String storeName = device1.getStoreName();
                     Store store = new Store();
-                    store.setId(storeId);
+                    store.setName(storeName);
                     Store store1 = storeMapper.selectByPrimaryKey(store);
                     if (store1 != null) {
                         order.setMerchantId(store1.getMerchantId());

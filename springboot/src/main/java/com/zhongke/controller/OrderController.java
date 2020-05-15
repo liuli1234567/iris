@@ -195,10 +195,10 @@ public class OrderController {
      * @return com.zhongke.entity.Result<java.util.Map>
      **/
     @GetMapping("/store_transactionOverview/{page}/{size}")
-    public Result<PageInfo<List<Map<String,Object>>>> store_transactionOverview(@RequestParam String payStartTime,@RequestParam String payEndTime,
+    public Result<PageInfo<List<Map<String,Object>>>> store_transactionOverview(@RequestParam String storeName,@RequestParam String payStartTime,@RequestParam String payEndTime,
                                                     @PathVariable int page,@PathVariable int size){
         try {
-            PageInfo<List<Map<String,Object>>> listPageInfo= orderService.store_transactionOverview(payStartTime,payEndTime,page,size);
+            PageInfo<List<Map<String,Object>>> listPageInfo= orderService.store_transactionOverview(storeName,payStartTime,payEndTime,page,size);
             return new Result<>(0,"查询成功",listPageInfo);
         } catch (Exception e) {
             e.printStackTrace();

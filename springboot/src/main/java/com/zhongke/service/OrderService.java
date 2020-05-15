@@ -80,7 +80,7 @@ public interface OrderService {
      * @param size
      * @return java.util.Map
      **/
-    PageInfo<List<Map<String,Object>>> store_transactionOverview(String payStartTime, String payEndTime, int page, int size);
+    PageInfo<List<Map<String,Object>>> store_transactionOverview(String storeName,String payStartTime, String payEndTime, int page, int size);
 
     /**
      * @Description 根据门店id和订单信息查询订单列表

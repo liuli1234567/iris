@@ -3,6 +3,9 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zhongke.mapper.OrderMapper">
 
+    <select id="transaction_count" parameterType="string" resultType="map">
+        select order_count,total_money,refund_total,payment_total,discount_total from zk_order where device_no = 1 order by createtime desc
+    </select>
     <select id="discountAmountByMerchantId" resultType="BigDecimal">
         select sum(discount) from ${tableName} where merchant_id = #{merchantId} and status = 1 and pay_time &gt;= #{startTime} and pay_time &lt;= #{endTime}
     </select>

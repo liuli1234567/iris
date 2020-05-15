@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName DeviceController
@@ -59,4 +60,22 @@ public class DeviceController {
         }
     }
 
+    @PostMapping("/add")
+    public Result add(@RequestBody Device device){
+        deviceService.add(device);
+        return new Result(0,"添加成功");
+    }
+
+    /**
+     * @Description 设备列表设备号查看流水统计
+     * @author liuli
+     * @date 2020/5/15 15:55
+     * @param device_no
+     * @return com.zhongke.entity.Result
+     **/
+    @RequestMapping("/transaction_count")
+    public Result transaction_count(@RequestParam String device_no){
+        Map map = deviceService.transaction_count(device_no);
+        return new Result(0,"查询成功",map);
+    }
 }

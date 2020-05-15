@@ -27,14 +27,12 @@ public class Device implements Serializable {
     private String serialNo; // 序列号
     @Column(name = "device_no")
     private String deviceNo; // 设备号
-    @Column(name = "equipment_type")
-    private String equipmentType; // 设备类型
-    @Column(name = "store_id")
-    private Integer storeId; // 所属门店id
-    @Column(name = "d_store_name")
+    @Column(name = "type")
+    private String type; // 设备类型
+    @Column(name = "store_name")
     private String storeName; // 所属门店名称
-    @Column(name = "d_mode")
-    private Integer mode; // 收银模式：0 收银 1 收银+押金 2 收银+结算 3 收银+押金+结算
+    @Column(name = "mode")
+    private String mode; // 收银模式
     @Column(name = "createtime")
     private Date createTime;
 
@@ -78,21 +76,14 @@ public class Device implements Serializable {
         this.deviceNo = deviceNo;
     }
 
-    public String getEquipmentType() {
-        return equipmentType;
+    public String getType() {
+        return type;
     }
 
-    public void setEquipmentType(String equipmentType) {
-        this.equipmentType = equipmentType;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public Integer getStoreId() {
-        return storeId;
-    }
-
-    public void setStoreId(Integer storeId) {
-        this.storeId = storeId;
-    }
 
     public String getStoreName() {
         return storeName;
@@ -102,11 +93,11 @@ public class Device implements Serializable {
         this.storeName = storeName;
     }
 
-    public Integer getMode() {
+    public String getMode() {
         return mode;
     }
 
-    public void setMode(Integer mode) {
+    public void setMode(String mode) {
         this.mode = mode;
     }
 
