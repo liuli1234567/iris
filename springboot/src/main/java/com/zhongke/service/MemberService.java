@@ -34,4 +34,13 @@ public interface MemberService {
      * @return java.util.List<com.zhongke.pojo.Member>
      **/
     List<Member> exportMembers(Member member);
+
+    /**
+     * @Description 会员列表批量导入
+     * @author liuli
+     * @date 2020/5/16 11:19
+     * @param members
+     * @return void
+     **/
+    void addAll(List<Member> members);
 }

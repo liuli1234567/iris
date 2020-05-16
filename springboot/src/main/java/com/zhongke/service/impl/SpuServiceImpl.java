@@ -6,6 +6,7 @@ import com.zhongke.pojo.Spu;
 import com.zhongke.service.SpuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
@@ -61,6 +62,16 @@ public class SpuServiceImpl implements SpuService {
                     spu.setId(Long.parseLong(s));
                     spuMapper.deleteByPrimaryKey(spu);
                 }
+            }
+        }
+    }
+
+    @Override
+    @Transactional
+    public void addAll(List<Spu> spus) {
+        if (spus != null && spus.size() > 0) {
+            for (Spu spu : spus) {
+                spuMapper.insertSelective(spu);
             }
         }
     }

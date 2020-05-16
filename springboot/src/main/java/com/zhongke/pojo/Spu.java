@@ -22,6 +22,7 @@ import java.util.Date;
 public class Spu implements Serializable {
     @ApiModelProperty(value = "主键，商品id",required = false)
     @JsonSerialize(using = ToStringSerializer.class)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id")
     private Long id;
@@ -55,9 +56,12 @@ public class Spu implements Serializable {
     @ApiModelProperty(value = "1 上架 -1 下架",required = false)
     @Column(name = "is_marketable")
     private Integer isMarketable;
-    @ApiModelProperty(value = "商品分类id",required = true)
+   /* @ApiModelProperty(value = "商品分类id",required = true)
     @Column(name = "category_id")
-    private Integer categoryId;
+    private Integer categoryId;*/
+   @ApiModelProperty(value = "商品分类名称",required = true)
+   @Column(name = "category_name")
+   private String categoryName;
     @ApiModelProperty(value = "备注",required = false)
     @Column(name = "remarks")
     private String remarks;
@@ -168,12 +172,12 @@ public class Spu implements Serializable {
         this.isMarketable = isMarketable;
     }
 
-    public Integer getCategoryId() {
-        return categoryId;
+    public String getCategoryName() {
+        return categoryName;
     }
 
-    public void setCategoryId(Integer categoryId) {
-        this.categoryId = categoryId;
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     public String getRemarks() {

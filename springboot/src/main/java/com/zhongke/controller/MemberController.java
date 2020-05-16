@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.zhongke.entity.*;
 import com.zhongke.pojo.Member;
 import com.zhongke.pojo.MemberGrade;
+import com.zhongke.pojo.Spu;
 import com.zhongke.service.MemberService;
 import io.swagger.annotations.Api;
 import org.apache.poi.ss.usermodel.Cell;
@@ -17,15 +18,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * @ClassName MemberController
@@ -44,6 +44,37 @@ public class MemberController {
     @Autowired(required = false)
     private MemberService memberService;
 
+    /**
+     * @Description 会员列表批量导入
+     * @author liuli
+     * @date 2020/5/16 11:19
+     * @param excelFile
+     * @return com.zhongke.entity.Result
+     **/
+    @RequestMapping("/import_member")
+    public Result upload(@RequestParam("excelFile") MultipartFile excelFile){
+        try {
+            List<String[]> list = POIUtils.readExcel(excelFile);
+            if (list != null && list.size() > 0){
+                List<Member> members = new ArrayList<>();
+                for (String[] strings : list) {
+                    Member member = new Member();
+                    member.setNickName(strings[0]);
+                    member.setTel(strings[1]);
+                    member.setBirthday(strings[2]);
+                    member.setSex(strings[3]);
+                    member.setCardMoney(new BigDecimal(strings[4]));
+                    member.setCardGral(Integer.parseInt(strings[5]));
+                    members.add(member);
+                }
+                memberService.addAll(members);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new Result(-1,"导入失败",e.getMessage());
+        }
+        return new Result(0,"批量导入成功");
+    }
 
     @GetMapping("/excel/export")
     public Result export(@RequestParam(name = "tel",required = false) String tel, @RequestParam(name = "memNo",required = false) String memNo,

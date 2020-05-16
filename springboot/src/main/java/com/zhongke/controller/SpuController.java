@@ -13,7 +13,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +37,37 @@ public class SpuController {
     @Autowired(required = false)
     private SpuService spuService;
 
+    /**
+     * @Description 商品批量导入
+     * @author liuli
+     * @date 2020/5/16 9:46
+     * @param excelFile
+     * @return com.zhongke.entity.Result
+     **/
+    @RequestMapping("/import_spu")
+    public Result upload(@RequestParam("excelFile") MultipartFile excelFile){
+        try {
+            List<String[]> list = POIUtils.readExcel(excelFile);
+            if (list != null && list.size() > 0){
+                List<Spu> spus = new ArrayList<>();
+                for (String[] strings : list) {
+                    Spu spu = new Spu();
+                    spu.setName(strings[0]);
+                    spu.setNo(strings[1]);
+                    spu.setPrice(new BigDecimal(strings[2]));
+                    spu.setSn(strings[3]);
+                    spu.setCategoryName(strings[4]);
+                    spu.setNum(Integer.parseInt(strings[5]));
+                    spus.add(spu);
+                }
+                spuService.addAll(spus);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new Result(-1,"导入失败",e.getMessage());
+        }
+        return new Result(0,"批量导入成功");
+    }
 
     @GetMapping("/spus/{page}/{size}")
     public Result<PageInfo> spus(@RequestParam(required = false)String nameOrNo,@RequestParam(required = false)int isMarketable,

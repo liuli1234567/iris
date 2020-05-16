@@ -138,7 +138,7 @@ public class AlipayController {
     @RequestMapping("/notify/url")
     public String notifyUrl(HttpServletRequest request) throws Exception {
         System.out.println("回调方法执行了。。。");
-        // 获取微信的通知信息
+        // 获取支付宝的通知信息
         ServletInputStream is = request.getInputStream();// 网络输入的字节流对象
         ByteArrayOutputStream bos = new ByteArrayOutputStream();// 数组：缓冲区
         byte[] buffer = new byte[1024];// 定义缓冲区的大小
@@ -153,7 +153,6 @@ public class AlipayController {
         // 将字节的输入流对象转成string
         String strXML = new String(bos.toByteArray(), "utf-8");
         System.out.println("通知的结果："+strXML);
-
         return "success";
     }
 }

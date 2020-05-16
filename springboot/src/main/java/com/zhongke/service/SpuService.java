@@ -3,6 +3,8 @@ package com.zhongke.service;
 import com.github.pagehelper.PageInfo;
 import com.zhongke.pojo.Spu;
 
+import java.util.List;
+
 public interface SpuService {
     PageInfo<Spu> spus(String nameOrNo, int is_marketable, int page, int size);
 
@@ -21,4 +23,13 @@ public interface SpuService {
      * @return void
      **/
     void batch(String spuIds,int status);
+
+    /**
+     * @Description 商品批量导入
+     * @author liuli
+     * @date 2020/5/16 9:46
+     * @param spus
+     * @return void
+     **/
+    void addAll(List<Spu> spus);
 }

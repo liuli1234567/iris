@@ -10,6 +10,7 @@ import com.zhongke.pojo.MemberGrade;
 import com.zhongke.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
@@ -110,6 +111,16 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public List<Member> exportMembers(Member member) {
         return memberMapper.exportMembers(member);
+    }
+
+    @Override
+    @Transactional
+    public void addAll(List<Member> members) {
+        if (members != null && members.size() > 0) {
+            for (Member member : members) {
+                memberMapper.insertSelective(member);
+            }
+        }
     }
 
     private Map getMap(String startTime, String endTime) {
