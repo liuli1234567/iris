@@ -28,7 +28,10 @@ public class User implements Serializable {
     @ApiModelProperty(value = "密码", required = false)
     @Column(name = "password")
     private String password;
-    @ApiModelProperty(value = "0 普通 1 财务 2 客服", required = false)
+    @ApiModelProperty(value = "手机号", required = false)
+    @Column(name = "phone")
+    private String phone;
+    @ApiModelProperty(value = "0 管理员 1 财务 2 客服", required = false)
     @Column(name = "role")
     private Integer role;
     @ApiModelProperty(value = "更新时间", required = false)
@@ -43,6 +46,14 @@ public class User implements Serializable {
 
     public String getToken() {
         return token;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public void setToken(String token) {

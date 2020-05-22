@@ -3,6 +3,7 @@ package com.zhongke.controller;
 import com.zhongke.entity.BCrypt;
 import com.zhongke.entity.DateUtil;
 import com.zhongke.entity.Result;
+import com.zhongke.entity.StatusCode;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,7 @@ import java.util.Map;
  * @Version 1.0
  **/
 @RestController
+@RequestMapping("/file")
 public class FileController {
     private static final Logger log = LoggerFactory.getLogger(FileController.class);
 
@@ -57,9 +59,9 @@ public class FileController {
                 e.printStackTrace();
             }
             log.info("文件成功上传到指定目录下");
-            return new Result<>(0,"文件上传成功");
+            return new Result<>(StatusCode.SUCCESS,"文件上传成功");
         } else {
-            return new Result(-1,"文件不能为空！");
+            return new Result(StatusCode.FALL,"文件不能为空！");
         }
     }
 
@@ -89,7 +91,6 @@ public class FileController {
             e.printStackTrace();
         }
     }
-
     @PostMapping(value = "/image_upload")
     public Result imageUpload(@RequestParam(required = false) MultipartFile file,
                          HttpServletRequest request) {
@@ -128,15 +129,15 @@ public class FileController {
                     System.out.println("文件成功上传到指定目录下");
                     log.info("文件成功上传到指定目录下");
                 }
-                return new Result(0,"文件上传成功！",path);
+                return new Result(StatusCode.SUCCESS,"文件上传成功！",path);
             } else {
                 log.info("不是我们想要的文件类型,请按要求重新上传");
-                return new Result(-1, "不是我们想要的文件类型,请按要求重新上传");
+                return new Result(StatusCode.FALL, "不是我们想要的文件类型,请按要求重新上传");
             }
         } else {
             System.out.println("文件类型为空");
             log.info("文件类型为空");
-            return new Result(-1, "文件类型为空");
+            return new Result(StatusCode.FALL, "文件类型为空");
         }
     }
 

@@ -1,0 +1,27 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhongke.mapper.ProductMapper">
+
+    <select id="findAll" resultType="com.zhongke.pojo.Product">
+        select id,name,input_time,stock_in,out_time,stock_out,stock,updatetime from tb_product
+        <where>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="inputStartTime != null and inputStartTime != ''">
+                and input_time &gt;= #{inputStartTime}
+            </if>
+            <if test="inputEndTime != null and inputEndTime != ''">
+                and input_time &lt;= #{inputEndTime}
+            </if>
+            <if test="outStartTime != null and outStartTime != ''">
+                and out_time &gt;= #{outStartTime}
+            </if>
+            <if test="outEndTime != null and outEndTime != ''">
+                and out_time &lt;= #{outEndTime}
+            </if>
+        </where>
+    </select>
+
+</mapper>

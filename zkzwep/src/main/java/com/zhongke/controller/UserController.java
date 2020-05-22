@@ -1,7 +1,9 @@
 package com.zhongke.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.zhongke.entity.JwtUtil;
 import com.zhongke.entity.Result;
+import com.zhongke.entity.StatusCode;
 import com.zhongke.pojo.User;
 import com.zhongke.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,13 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    /**
+     * @Description 后台系统登录
+     * @author liuli
+     * @date 2020/5/21 17:41
+     * @param u 登录对象
+     * @return com.zhongke.entity.Result
+     **/
     @PostMapping("/login")
     public Result login(@RequestBody User u) {
         User user = userService.login(u);
@@ -31,19 +40,69 @@ public class UserController {
             System.out.println(token);
             user.setPassword(null);
             user.setToken(token);
-            return new Result(0,"登录成功",user);
+            return new Result(StatusCode.SUCCESS,"登录成功",user);
         }else {
-            return new Result(-1,"登录失败");
+            return new Result(StatusCode.FALL,"登录失败");
         }
     }
 
-    @RequestMapping("/list")
-    public String list(HttpServletRequest request){
-        if(request.getAttribute("2_claims")==null){
-            System.out.println("权限不足");
-            return "false";
-        }else {
-            return "true";
-        }
+    /**
+     * @Description 添加系统登录用户
+     * @author liuli
+     * @date 2020/5/21 17:50
+     * @param username 用户名
+     * @param password 密码
+     * @param role 角色
+     * @return com.zhongke.entity.Result
+     **/
+    @GetMapping("/add")
+    public Result add(@RequestParam String username,@RequestParam String password,@RequestParam int role){
+        userService.add(username,password,role);
+        return new Result(StatusCode.SUCCESS,"添加成功");
+    }
+
+    /**
+     * @Description 查询后台系统用户列表
+     * @author liuli
+     * @date 2020/5/21 17:41
+     * @param nameOrPhone 姓名或手机号
+     * @param role 角色
+     * @param page 当前页
+     * @param size 每页显示条数
+     * @return com.zhongke.entity.Result
+     **/
+    @GetMapping("/findAll")
+    public Result findAll(@RequestParam(required = false) String nameOrPhone,@RequestParam(required = false)Integer role,
+                          @RequestParam int page,@RequestParam int size){
+        PageInfo<User> userPageInfo = userService.findAll(nameOrPhone,role,page,size);
+        return new Result(StatusCode.SUCCESS,"查询成功",userPageInfo);
+    }
+
+    /**
+     * @Description 根据id删除用户
+     * @author liuli
+     * @date 2020/5/21 17:57
+     * @param id
+     * @return com.zhongke.entity.Result
+     **/
+    @DeleteMapping("/deleteById")
+    public Result delete(@RequestParam int id){
+        userService.deleteById(id);
+        return new Result(StatusCode.SUCCESS,"删除成功");
+    }
+
+    /**
+     * @Description 根据id更新用户
+     * @author liuli
+     * @date 2020/5/21 18:03
+     * @param user 用户对象
+     * @param id
+     * @return com.zhongke.entity.Result
+     **/
+    @PutMapping("/updateById")
+    public Result update(@RequestBody User user,@RequestParam int id){
+        user.setId(id);
+        userService.updateById(user);
+        return new Result(StatusCode.SUCCESS,"编辑成功");
     }
 }

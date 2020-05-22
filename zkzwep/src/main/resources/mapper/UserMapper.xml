@@ -1,0 +1,22 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhongke.mapper.UserMapper">
+
+    <select id="findAll" resultType="user">
+        select id,username,phone,role,updatetime,createtime from tb_user
+        <where>
+            <if test="nameOrPhone != null and nameOrPhone != ''">
+                and (username = #{nameOrPhone} or phone = #{nameOrPhone})
+            </if>
+            <if test="role != null">
+                and role = #{role}
+            </if>
+        </where>
+    </select>
+
+    <select id="findUserByName" parameterType="string" resultType="user">
+        select id,username,password,phone,role,updatetime,createtime from tb_user where username = #{username}
+    </select>
+
+</mapper>

@@ -1,0 +1,18 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhongke.mapper.FacPersonMapper">
+
+    <select id="findAll" resultType="com.zhongke.pojo.FacPerson">
+        select id,openid,fac_name,phone,`status`,createtime from tb_fac_person
+        <where>
+            <if test="nameOrPhone != null and nameOrPhone != ''">
+                and (fac_name = #{nameOrPhone} or phone = #{nameOrPhone})
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+        </where>
+    </select>
+
+</mapper>

@@ -28,7 +28,13 @@ public class Order implements Serializable {
     @ApiModelProperty(value = "客户手机号", required = false)
     @Column(name = "phone")
     private String phone;
-    @ApiModelProperty(value = "0 未收款 1 已收款 2 已确认", required = false)
+    @ApiModelProperty(value = "客户姓名", required = false)
+    @Column(name = "name")
+    private String name;
+    @ApiModelProperty(value = "订单号", required = false)
+    @Column(name = "order_no")
+    private String orderNo;
+    @ApiModelProperty(value = "0 未收款 1 已收款 -1 驳回 2 已确认", required = false)
     @Column(name = "status")
     private Integer status;
     @ApiModelProperty(value = "更新时间", required = false)
@@ -37,6 +43,22 @@ public class Order implements Serializable {
     @ApiModelProperty(value = "创建时间", required = false)
     @Column(name = "createtime")
     private Date createTime;
+
+    public String getOrderNo() {
+        return orderNo;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setOrderNo(String orderNo) {
+        this.orderNo = orderNo;
+    }
 
     public Integer getId() {
         return id;

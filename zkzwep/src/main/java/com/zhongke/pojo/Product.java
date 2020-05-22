@@ -25,15 +25,15 @@ public class Product implements Serializable {
     @ApiModelProperty(value = "产品名称", required = false)
     @Column(name = "name")
     private String name;
-    @ApiModelProperty(value = "库存", required = false)
-    @Column(name = "sku")
-    private Integer sku;
     @ApiModelProperty(value = "入库时间", required = false)
     @Column(name = "input_time")
     private Date inputTime;
     @ApiModelProperty(value = "入库吨数", required = false)
     @Column(name = "stock_in")
     private Integer stockIn;
+    @ApiModelProperty(value = "出库时间", required = false)
+    @Column(name = "out_time")
+    private Date outTime;
     @ApiModelProperty(value = "出库吨数", required = false)
     @Column(name = "stock_out")
     private Integer stockOut;
@@ -60,20 +60,20 @@ public class Product implements Serializable {
         this.name = name;
     }
 
-    public Integer getSku() {
-        return sku;
-    }
-
-    public void setSku(Integer sku) {
-        this.sku = sku;
-    }
-
     public Date getInputTime() {
         return inputTime;
     }
 
     public void setInputTime(Date inputTime) {
         this.inputTime = inputTime;
+    }
+
+    public Date getOutTime() {
+        return outTime;
+    }
+
+    public void setOutTime(Date outTime) {
+        this.outTime = outTime;
     }
 
     public Integer getStockIn() {

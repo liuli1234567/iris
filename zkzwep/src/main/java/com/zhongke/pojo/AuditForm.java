@@ -31,9 +31,6 @@ public class AuditForm implements Serializable {
     @ApiModelProperty(value = "客户姓名", required = false)
     @Column(name = "client_name")
     private String clientName;
-    @ApiModelProperty(value = "厂区图片", required = false)
-    @Column(name = "factory_picture")
-    private String factoryPicture;
     @ApiModelProperty(value = "营业执照", required = false)
     @Column(name = "business_license")
     private String businessLicense;
@@ -43,33 +40,49 @@ public class AuditForm implements Serializable {
     @ApiModelProperty(value = "医疗器械许可证", required = false)
     @Column(name = "medical_dev_license")
     private String medicalDevLicense;
-    @ApiModelProperty(value = "资质证明", required = false)
-    @Column(name = "certification")
-    private String certification;
-    @ApiModelProperty(value = "产能现状及需求信息", required = false)
-    @Column(name = "capcity_demand")
-    private String capcityDemand;
-    @ApiModelProperty(value = "熔喷布需求信息", required = false)
-    @Column(name = "melt_blown_demand")
-    private String meltBlownDemand;
-    @ApiModelProperty(value = "经办人姓名", required = false)
-    @Column(name = "operator")
-    private String operator;
-    @ApiModelProperty(value = "经办人电话", required = false)
-    @Column(name = "operator_phone")
-    private String operatorPhone;
-    @ApiModelProperty(value = "申购函图片", required = false)
-    @Column(name = "apply_for_picture")
-    private String applyForPicture;
     @ApiModelProperty(value = "0 未审核 1 通过 2 驳回", required = false)
     @Column(name = "status")
     private Integer status;
+    @ApiModelProperty(value = "申购函url", required = false)
+    @Column(name = "letter_url")
+    private String letterUrl;
     @ApiModelProperty(value = "更新时间", required = false)
     @Column(name = "updatetime")
     private Date updatetime;
     @ApiModelProperty(value = "创建时间", required = false)
     @Column(name = "createtime")
     private Date createTime;
+
+    @Transient
+    private String[] businessArray;
+    @Transient
+    private String[] prodOperArray;
+    @Transient
+    private String[] medicalDevArray;
+
+    public String[] getBusinessArray() {
+        return businessArray;
+    }
+
+    public void setBusinessArray(String[] businessArray) {
+        this.businessArray = businessArray;
+    }
+
+    public String[] getProdOperArray() {
+        return prodOperArray;
+    }
+
+    public void setProdOperArray(String[] prodOperArray) {
+        this.prodOperArray = prodOperArray;
+    }
+
+    public String[] getMedicalDevArray() {
+        return medicalDevArray;
+    }
+
+    public void setMedicalDevArray(String[] medicalDevArray) {
+        this.medicalDevArray = medicalDevArray;
+    }
 
     public Integer getId() {
         return id;
@@ -103,14 +116,6 @@ public class AuditForm implements Serializable {
         this.clientName = clientName;
     }
 
-    public String getFactoryPicture() {
-        return factoryPicture;
-    }
-
-    public void setFactoryPicture(String factoryPicture) {
-        this.factoryPicture = factoryPicture;
-    }
-
     public String getBusinessLicense() {
         return businessLicense;
     }
@@ -123,6 +128,14 @@ public class AuditForm implements Serializable {
         return prodOperLicence;
     }
 
+    public String getLetterUrl() {
+        return letterUrl;
+    }
+
+    public void setLetterUrl(String letterUrl) {
+        this.letterUrl = letterUrl;
+    }
+
     public void setProdOperLicence(String prodOperLicence) {
         this.prodOperLicence = prodOperLicence;
     }
@@ -133,54 +146,6 @@ public class AuditForm implements Serializable {
 
     public void setMedicalDevLicense(String medicalDevLicense) {
         this.medicalDevLicense = medicalDevLicense;
-    }
-
-    public String getCertification() {
-        return certification;
-    }
-
-    public void setCertification(String certification) {
-        this.certification = certification;
-    }
-
-    public String getCapcityDemand() {
-        return capcityDemand;
-    }
-
-    public void setCapcityDemand(String capcityDemand) {
-        this.capcityDemand = capcityDemand;
-    }
-
-    public String getMeltBlownDemand() {
-        return meltBlownDemand;
-    }
-
-    public void setMeltBlownDemand(String meltBlownDemand) {
-        this.meltBlownDemand = meltBlownDemand;
-    }
-
-    public String getOperator() {
-        return operator;
-    }
-
-    public void setOperator(String operator) {
-        this.operator = operator;
-    }
-
-    public String getOperatorPhone() {
-        return operatorPhone;
-    }
-
-    public void setOperatorPhone(String operatorPhone) {
-        this.operatorPhone = operatorPhone;
-    }
-
-    public String getApplyForPicture() {
-        return applyForPicture;
-    }
-
-    public void setApplyForPicture(String applyForPicture) {
-        this.applyForPicture = applyForPicture;
     }
 
     public Integer getStatus() {
