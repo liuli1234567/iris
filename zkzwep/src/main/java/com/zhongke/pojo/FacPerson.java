@@ -22,9 +22,6 @@ public class FacPerson implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-    @ApiModelProperty(value = "客户openid", required = false)
-    @Column(name = "openid")
-    private String openid;
     @ApiModelProperty(value = "姓名", required = false)
     @Column(name = "fac_name")
     private String facName;
@@ -44,14 +41,6 @@ public class FacPerson implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getOpenid() {
-        return openid;
-    }
-
-    public void setOpenid(String openid) {
-        this.openid = openid;
     }
 
     public String getFacName() {

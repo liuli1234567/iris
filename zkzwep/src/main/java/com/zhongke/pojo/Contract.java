@@ -22,9 +22,15 @@ public class Contract implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
+    @ApiModelProperty(value = "合同编号", required = false)
+    @Column(name = "contract_no")
+    private String contractNo;
     @ApiModelProperty(value = "客户openid", required = false)
     @Column(name = "client_openid")
     private String clientOpenid;
+    @ApiModelProperty(value = "客户姓名", required = false)
+    @Column(name = "client_name")
+    private String clientName;
     @ApiModelProperty(value = "客户手机号", required = false)
     @Column(name = "client_phone")
     private String clientPhone;
@@ -43,6 +49,22 @@ public class Contract implements Serializable {
     @ApiModelProperty(value = "创建时间", required = false)
     @Column(name = "createtime")
     private Date createTime;
+
+    public String getContractNo() {
+        return contractNo;
+    }
+
+    public void setContractNo(String contractNo) {
+        this.contractNo = contractNo;
+    }
+
+    public String getClientName() {
+        return clientName;
+    }
+
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
+    }
 
     public Integer getId() {
         return id;

@@ -27,15 +27,16 @@ public class ProductServiceImpl implements ProductService {
     private ProductMapper productMapper;
 
     /**
-     * @Description 产品入库
+     * @Description 添加产品
      * @author liuli
      * @date 2020/5/21 10:25
      * @param productName 产品名称
-     * @param stock_in  入库吨数
+     * @param stock_in  产品吨数
+     * @param userId  操作人id
      * @return void
      **/
     @Override
-    public void add(String productName, int stock_in) {
+    public void add(String productName, int stock_in,int userId) {
         Product p = new Product();
         p.setName(productName);
         Product produc = productMapper.selectOne(p);
@@ -49,6 +50,7 @@ public class ProductServiceImpl implements ProductService {
         }
         product.setInputTime(new Date());
         product.setUpdatetime(new Date());
+        product.setUserId(userId);
         productMapper.insertSelective(product);
     }
 
@@ -56,26 +58,27 @@ public class ProductServiceImpl implements ProductService {
      * @Description 产品出库
      * @author liuli
      * @date 2020/5/21 10:41
-     * @param productName 产品名称
+     * @param id 产品id
      * @param stock_out 出库吨数
+     * @param userId 操作人id
      * @return int
      **/
     @Override
-    public int out(String productName, int stock_out) {
+    public int update(int id, int stock_out,int userId) {
         Product p = new Product();
-        p.setName(productName);
-        Product produc = productMapper.selectOne(p);
-        if (produc != null) {
-            if (stock_out > produc.getStock()){
+        p.setId(id);
+        Product product = productMapper.selectByPrimaryKey(p);
+        System.out.println(1);
+        if (product != null) {
+            if (stock_out > product.getStock()){
                 return 3;
             }
-            Product product = new Product();
-            product.setName(productName);
-            product.setStock(produc.getStock()-stock_out);
-            product.setStockOut(produc.getStockOut()+stock_out); // 累加出库吨数
+            product.setStock(product.getStock()-stock_out);
+            product.setStockOut(product.getStockOut()+stock_out); // 累加出库吨数
             product.setInputTime(new Date());
             product.setUpdatetime(new Date());
-            productMapper.insertSelective(product);
+            product.setUserId(userId);
+            productMapper.updateByPrimaryKeySelective(product);
             return 1;
         }else {
             return 2;
@@ -100,6 +103,27 @@ public class ProductServiceImpl implements ProductService {
         PageHelper.startPage(page,size);
         List<Product> products = productMapper.findAll(name,inputStartTime,inputEndTime,outStartTime,outEndTime);
         return new PageInfo<Product>(products);
+    }
+
+    /**
+     * @Description 产品入库
+     * @author liuli
+     * @date 2020/5/25 15:08
+     * @param id 产品id
+     * @param stock_in 入库吨数
+     * @param userId 操作人id
+     * @return void
+     **/
+    @Override
+    public void in(int id, int stock_in, int userId) {
+        Product p = new Product();
+        p.setId(id);
+        Product product = productMapper.selectByPrimaryKey(p);
+        if (product != null) {
+            product.setStockIn(product.getStockIn()+stock_in);
+            product.setStock(product.getStock()+stock_in);
+            productMapper.updateByPrimaryKeySelective(product);
+        }
     }
 
     /**

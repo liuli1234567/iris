@@ -20,6 +20,12 @@ public interface AuditFormMapper extends Mapper<AuditForm> {
     List<AuditForm> findAll(@Param("nameOrPhone") String nameOrPhone, @Param("status") Integer status,
                             @Param("startTime") String startTime, @Param("endTime") String endTime);
 
-    AuditForm list();
-
+    /**
+     * @Description 根据用户openid查询用户信息
+     * @author liuli
+     * @date 2020/5/25 10:07
+     * @param openid
+     * @return com.zhongke.pojo.AuditForm
+     **/
+    AuditForm findByOpenid(String openid);
 }

@@ -29,7 +29,7 @@ public class UserController {
      * @Description 后台系统登录
      * @author liuli
      * @date 2020/5/21 17:41
-     * @param u 登录对象
+    // * @param u 登录对象
      * @return com.zhongke.entity.Result
      **/
     @PostMapping("/login")
@@ -42,7 +42,7 @@ public class UserController {
             user.setToken(token);
             return new Result(StatusCode.SUCCESS,"登录成功",user);
         }else {
-            return new Result(StatusCode.FALL,"登录失败");
+            return new Result(StatusCode.FALL,"登录失败，用户名或密码错误");
         }
     }
 
@@ -57,7 +57,10 @@ public class UserController {
      **/
     @GetMapping("/add")
     public Result add(@RequestParam String username,@RequestParam String password,@RequestParam int role){
-        userService.add(username,password,role);
+        int flag = userService.add(username, password, role);
+        if (-1 == flag){
+            return new Result(StatusCode.FALL,"注册失败，用户名已存在");
+        }
         return new Result(StatusCode.SUCCESS,"添加成功");
     }
 
@@ -85,7 +88,7 @@ public class UserController {
      * @param id
      * @return com.zhongke.entity.Result
      **/
-    @DeleteMapping("/deleteById")
+    @GetMapping("/deleteById")
     public Result delete(@RequestParam int id){
         userService.deleteById(id);
         return new Result(StatusCode.SUCCESS,"删除成功");
@@ -96,12 +99,10 @@ public class UserController {
      * @author liuli
      * @date 2020/5/21 18:03
      * @param user 用户对象
-     * @param id
      * @return com.zhongke.entity.Result
      **/
     @PutMapping("/updateById")
-    public Result update(@RequestBody User user,@RequestParam int id){
-        user.setId(id);
+    public Result update(@RequestBody User user){
         userService.updateById(user);
         return new Result(StatusCode.SUCCESS,"编辑成功");
     }

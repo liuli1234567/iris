@@ -37,12 +37,89 @@ public class Order implements Serializable {
     @ApiModelProperty(value = "0 未收款 1 已收款 -1 驳回 2 已确认", required = false)
     @Column(name = "status")
     private Integer status;
+    @ApiModelProperty(value = "0 未出货 1 已出货", required = false)
+    @Column(name = "is_out")
+    private Integer isOut;
+    @ApiModelProperty(value = "合同编号", required = false)
+    @Column(name = "contract_no")
+    private String contractNo;
+    @ApiModelProperty(value = "产品名称", required = false)
+    @Column(name = "product_name")
+    private String productName;
+    @ApiModelProperty(value = "产品吨数", required = false)
+    @Column(name = "product_number")
+    private Integer productNumber;
+    @ApiModelProperty(value = "联系人姓名", required = false)
+    @Column(name = "person_name")
+    private String personName;
+    @ApiModelProperty(value = "联系人电话", required = false)
+    @Column(name = "person_phone")
+    private String personPhone;
+    @ApiModelProperty(value = "自提地址", required = false)
+    @Column(name = "address")
+    private String address;
     @ApiModelProperty(value = "更新时间", required = false)
     @Column(name = "updatetime")
     private Date updatetime;
     @ApiModelProperty(value = "创建时间", required = false)
     @Column(name = "createtime")
     private Date createTime;
+
+    public String getContractNo() {
+        return contractNo;
+    }
+
+    public Integer getIsOut() {
+        return isOut;
+    }
+
+    public void setIsOut(Integer isOut) {
+        this.isOut = isOut;
+    }
+
+    public void setContractNo(String contractNo) {
+        this.contractNo = contractNo;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public Integer getProductNumber() {
+        return productNumber;
+    }
+
+    public void setProductNumber(Integer productNumber) {
+        this.productNumber = productNumber;
+    }
+
+    public String getPersonName() {
+        return personName;
+    }
+
+    public void setPersonName(String personName) {
+        this.personName = personName;
+    }
+
+    public String getPersonPhone() {
+        return personPhone;
+    }
+
+    public void setPersonPhone(String personPhone) {
+        this.personPhone = personPhone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public String getOrderNo() {
         return orderNo;

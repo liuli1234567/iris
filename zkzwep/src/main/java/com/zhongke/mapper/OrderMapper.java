@@ -19,4 +19,13 @@ public interface OrderMapper extends Mapper<Order> {
      * @return com.github.pagehelper.PageInfo<com.zhongke.pojo.Order>
      **/
     List<Order> findAll(@Param("nameOrPhone") String nameOrPhone, @Param("status") Integer status, @Param("startTime") String startTime, @Param("endTime") String endTime);
+
+    /**
+     * @Description 通过公众号用户openid查询订单列表
+     * @author liuli
+     * @date 2020/5/26 18:32
+     * @param openid
+     * @return java.util.List<com.zhongke.pojo.Order>
+     **/
+    List<Order> findByOpenid(String openid);
 }

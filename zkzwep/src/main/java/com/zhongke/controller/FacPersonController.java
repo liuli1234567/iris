@@ -9,6 +9,8 @@ import com.zhongke.service.FacPersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @ClassName FacPersonController
  * @Description
@@ -27,14 +29,13 @@ public class FacPersonController {
      * @Description 工厂人员信息录入
      * @author liuli
      * @date 2020/5/21 11:26
-     * @param openid 工厂人openid
      * @param name 姓名
      * @param phone 手机号
      * @return com.zhongke.entity.Result
      **/
-    @GetMapping("/fac_person_input")
-    public Result facPersonInput(@RequestParam String openid,@RequestParam String name,@RequestParam String phone){
-        facPersonService.add(openid,name,phone);
+    @GetMapping("/fac_add")
+    public Result fac_add(@RequestParam String name,@RequestParam String phone){
+        facPersonService.add(name,phone);
         return new Result(StatusCode.SUCCESS,"录入成功");
     }
 

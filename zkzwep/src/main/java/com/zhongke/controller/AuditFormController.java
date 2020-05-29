@@ -1,8 +1,7 @@
 package com.zhongke.controller;
 
 import com.github.pagehelper.PageInfo;
-import com.sun.org.apache.regexp.internal.RE;
-import com.zhongke.entity.DateUtil;
+import com.zhongke.entity.AuditFormPojo;
 import com.zhongke.entity.Result;
 import com.zhongke.entity.StatusCode;
 import com.zhongke.pojo.AuditForm;
@@ -10,10 +9,10 @@ import com.zhongke.service.AuditFormService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Base64;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName AuditFormController
@@ -33,20 +32,12 @@ public class AuditFormController {
      * @Description 公众号客户提交审核资料
      * @author liuli
      * @date 2020/5/22 16:00
-     * @param openid 用户openid
-     * @param phone 手机号
-     * @param name 姓名
-     * @param businessLicense 营业执照图片数组
-     * @param prodOperLicense 生产经营许可证图片数组
-     * @param medicalDevLicense 医疗器械许可证图片数组
-     * @param letter 申购函文件
+     * @param auditFormPojo 参数封装实体类
      * @return com.zhongke.entity.Result
      **/
-    @GetMapping("/add")
-    public Result findAll(@RequestParam String openid,@RequestParam String phone,@RequestParam String name,
-                          @RequestParam String[] businessLicense,@RequestParam String[] prodOperLicense,
-                          @RequestParam String[] medicalDevLicense,@RequestParam String letter){
-        auditFormService.add(openid,phone,name,businessLicense,prodOperLicense,medicalDevLicense,letter);
+    @PostMapping("/add")
+    public Result add(@RequestBody AuditFormPojo auditFormPojo){
+        auditFormService.add(auditFormPojo);
         return new Result(StatusCode.SUCCESS,"添加成功");
     }
 
@@ -79,6 +70,47 @@ public class AuditFormController {
             }
         }
         return new Result(StatusCode.SUCCESS,"查询成功",auditFormPageInfo);
+    }
+
+    /**
+     * @Description 公众号回显用户审核资料
+     * @author liuli
+     * @date 2020/5/26 15:53
+     * @param openid
+     * @return com.zhongke.entity.Result
+     **/
+    @GetMapping("/findByOpenid")
+    public Result findByOpenid(@RequestParam String openid){
+        AuditForm auditForm = auditFormService.findByOpenid(openid);
+        if (auditForm != null) {
+            List<Map<String, String>> businessList = new ArrayList<>();
+            String[] businessArray = auditForm.getBusinessLicense().split(",");
+            for (String s : businessArray) {
+                Map<String, String> businessMap = new HashMap<>();
+                businessMap.put("url",s);
+                businessList.add(businessMap);
+            }
+            auditForm.setBusinessList(businessList);
+            List<Map<String, String>> prodOperList = new ArrayList<>();
+            String[] prodOperArray = auditForm.getProdOperLicence().split(",");
+            for (String s : prodOperArray) {
+                Map<String, String> prodOperMap = new HashMap<>();
+                prodOperMap.put("url",s);
+                prodOperList.add(prodOperMap);
+            }
+            auditForm.setProdOperList(prodOperList);
+            List<Map<String, String>> medicalDevList = new ArrayList<>();
+            String[] medicalArray = auditForm.getMedicalDevLicense().split(",");
+            for (String s : medicalArray) {
+                Map<String, String> medicalDevMap = new HashMap<>();
+                medicalDevMap.put("url",s);
+                medicalDevList.add(medicalDevMap);
+            }
+            auditForm.setMedicalDevList(medicalDevList);
+            return new Result(StatusCode.SUCCESS,"查询成功",auditForm);
+        }else {
+            return new Result(StatusCode.SUCCESS,"查询成功",null);
+        }
     }
 
     /**

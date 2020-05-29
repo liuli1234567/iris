@@ -48,6 +48,7 @@ public class FileController {
                 e.printStackTrace();
             }
             path = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\word\\" + fileName;
+            System.out.println("path"+path);
             File directory = new File(path);
             if (!directory.exists()) {
                 directory.mkdirs();
@@ -59,7 +60,8 @@ public class FileController {
                 e.printStackTrace();
             }
             log.info("文件成功上传到指定目录下");
-            return new Result<>(StatusCode.SUCCESS,"文件上传成功");
+            System.out.println("https://zkzw8888.utools.club/word/"+fileName);
+            return new Result(StatusCode.SUCCESS,"文件上传成功","https://zkzw8888.utools.club/word/"+fileName);
         } else {
             return new Result(StatusCode.FALL,"文件不能为空！");
         }
@@ -70,7 +72,7 @@ public class FileController {
         // 下载本地文件
         String fileName = "熔喷布项目计划文档.docx"; // 文件的默认保存名
         // 读到流中
-        InputStream inStream = new FileInputStream(System.getProperty("user.dir") + "\\src\\main\\resources\\static\\word\\"+"熔喷布项目计划文档.docx");// 文件的存放路径
+        InputStream inStream = new FileInputStream(getProjectRootPath() + "static/word/"+"熔喷布项目计划文档.docx");// 文件的存放路径
         // 设置输出的格式
         response.reset();
         response.setContentType("bin");
@@ -91,6 +93,39 @@ public class FileController {
             e.printStackTrace();
         }
     }
+
+    /**
+     * @Description 获取项目打包后在服务器的项目路径
+     * @author liuli
+     * @date 2020/5/29 9:55
+     * @param
+     * @return java.lang.String
+     **/
+    public String getProjectRootPath(){
+        // 获取项目路径（兼容war服务和jar服务）
+        String rootPath = this.getClass().getResource("/").getPath();
+        String[] splits = rootPath.split("/");
+        int breakI = 0;
+        boolean isJarService = false;// 项目是否是打成jar包发布
+        for (int i = 0; i < splits.length; i++) {
+            if (splits[i].contains(".jar")){
+                breakI = i;
+                isJarService = true;
+                break;
+            }
+        }
+        String finalRootPath = "";
+        if (isJarService){
+            // 打成jar包后，获取的路径中会以file:XXX/XXX开头，所以去除切割后的第一个路径，i从1开始遍历
+            for (int i = 1; i < breakI; i++) {
+                finalRootPath += splits[i] + "/";
+            }
+        } else {
+            finalRootPath = rootPath;
+        }
+        return finalRootPath;
+    }
+
     @PostMapping(value = "/image_upload")
     public Result imageUpload(@RequestParam(required = false) MultipartFile file,
                          HttpServletRequest request) {
@@ -114,11 +149,12 @@ public class FileController {
                     // 自定义的文件名称
                     String trueFileName = DateUtil.getTime() + "." + type;
                     // 设置存放图片文件的路径
-                    path = System.getProperty("user.dir")+"\\src\\main\\resources\\static\\images\\" + trueFileName;
-                    File directory = new File(path);
+                    //path = System.getProperty("user.dir")+"\\src\\main\\resources\\static\\images\\" + trueFileName;
+                    path = getProjectRootPath()+"/static/images/" + trueFileName;
+                    /*File directory = new File(path);
                     if (!directory.exists()) {
                         directory.mkdirs();
-                    }
+                    }*/
                     log.info("存放图片文件的路径:{}",path);
                     // 转存文件到指定的路径
                     try {
@@ -141,10 +177,6 @@ public class FileController {
         }
     }
 
-    public static void main(String[] args) throws Exception {
-        String a = "token=234";
-        System.out.println(a.substring(5));
-    }
 
     // 生成token
     private static void createToken(){

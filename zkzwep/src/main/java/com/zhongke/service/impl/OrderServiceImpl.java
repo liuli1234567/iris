@@ -3,7 +3,10 @@ package com.zhongke.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zhongke.entity.DateUtil;
+import com.zhongke.entity.SendMessage;
+import com.zhongke.mapper.AccessTokenMapper;
 import com.zhongke.mapper.OrderMapper;
+import com.zhongke.pojo.AccessToken;
 import com.zhongke.pojo.Order;
 import com.zhongke.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +27,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired(required = false)
     private OrderMapper orderMapper;
+    @Autowired(required = false)
+    private AccessTokenMapper accessTokenMapper;
 
     /**
      * @Description 查询取货码
@@ -79,16 +84,24 @@ public class OrderServiceImpl implements OrderService {
      **/
     @Override
     public void financeUpdate(int status, int id) {
+        // 从数据库获取access_token
+        AccessToken token = new AccessToken();
+        token.setId(1);
+        AccessToken accessToken = accessTokenMapper.selectByPrimaryKey(token);
+
+        Order o = new Order();
+        o.setId(id);
         if (-1 == status){
             // todo 向公众号发送财务驳回订单通知
+            Order order = orderMapper.selectByPrimaryKey(o);
+            String openid = o.getOpenid();
+            SendMessage.sendOrderFalseMessage(accessToken.getAccessToken(), openid, "");
         }
         if (1 == status){
             // todo 向公众号发送财务已确认收款通知
         }
-        Order order = new Order();
-        order.setId(id);
-        order.setStatus(status);
-        orderMapper.updateByPrimaryKeySelective(order);
+        o.setStatus(status);
+        orderMapper.updateByPrimaryKeySelective(o);
     }
 
     /**
@@ -101,11 +114,96 @@ public class OrderServiceImpl implements OrderService {
      **/
     @Override
     public void customerUpdate(int status, int id) {
+        // 从数据库获取access_token
+        AccessToken token = new AccessToken();
+        token.setId(1);
+        AccessToken accessToken = accessTokenMapper.selectByPrimaryKey(token);
+
         Order order = new Order();
         order.setId(id);
         order.setStatus(status);
         order.setOrderNo(DateUtil.getTime());
         // todo 向公众号发送客服已确认订单通知
+        Order o = orderMapper.selectByPrimaryKey(order);
+        String openid = o.getOpenid();
+        SendMessage.sendOrderTrueMessage(accessToken.getAccessToken(), openid, "http://111.230.205.101/#/remittanceSuccess?id="+o.getId());
         orderMapper.updateByPrimaryKeySelective(order);
+    }
+
+    /**
+     * @Description 通过公众号用户openid查询订单列表
+     * @author liuli
+     * @date 2020/5/26 18:30
+     * @param openid
+     * @return java.util.List<com.zhongke.pojo.Order>
+     **/
+    @Override
+    public List<Order> findByOpenid(String openid) {
+        return orderMapper.findByOpenid(openid);
+    }
+
+    /**
+     * @Description 通过订单id查询订单信息
+     * @author liuli
+     * @date 2020/5/26 18:40
+     * @param id
+     * @return com.zhongke.pojo.Order
+     **/
+    @Override
+    public Order findById(int id) {
+        Order order = new Order();
+        order.setId(id);
+        return orderMapper.selectByPrimaryKey(order);
+    }
+
+    /**
+     * @Description 客服确认订单前提交合同资料
+     * @author liuli
+     * @date 2020/5/26 18:46
+     * @param orderId 订单id
+     * @param product_name 产品名称
+     * @param product_number 产品吨数
+     * @param person_name 联系人姓名
+     * @param person_phone 联系人电话
+     * @param address 自提地址
+     * @return void
+     **/
+    @Override
+    public void upload_data(int orderId, String product_name, int product_number, String person_name, String person_phone, String address) {
+        Order order = new Order();
+        order.setId(orderId);
+        order.setProductName(product_name);
+        order.setProductNumber(product_number);
+        order.setPersonName(person_name);
+        order.setPersonPhone(person_phone);
+        order.setAddress(address);
+    }
+
+    /**
+     * @Description 通过订单id查询订单是否已出货
+     * @author liuli
+     * @date 2020/5/26 19:08
+     * @param id
+     * @return boolean
+     **/
+    @Override
+    public int findOutById(int id) {
+        Order o = new Order();
+        o.setId(id);
+        Order order = orderMapper.selectByPrimaryKey(o);
+        if (order != null) {
+            if (0 == order.getIsOut()){
+                o.setStatus(1);
+                orderMapper.updateByPrimaryKeySelective(o);
+                return 0;
+            }
+            if (1 == order.getIsOut()){
+                return 1;
+            }else {
+                return -1;
+            }
+        }else {
+            return -1;
+        }
     }
 }

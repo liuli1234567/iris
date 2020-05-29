@@ -8,6 +8,8 @@ import com.zhongke.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @ClassName OrderController
  * @Description
@@ -57,6 +59,72 @@ public class OrderController {
                           @RequestParam int page,@RequestParam int size){
         PageInfo<Order> orders = orderService.findAll(nameOrPhone,status,startTime,endTime,page,size);
         return new Result(StatusCode.SUCCESS,"查询成功",orders);
+    }
+
+    /**
+     * @Description 通过公众号用户openid查询订单列表
+     * @author liuli
+     * @date 2020/5/26 18:30
+     * @param openid
+     * @return com.zhongke.entity.Result
+     **/
+    @GetMapping("/findByOpenid")
+    public Result findByOpenid(@RequestParam String openid){
+        List<Order> orders = orderService.findByOpenid(openid);
+        return new Result(StatusCode.SUCCESS,"查询成功",orders);
+    }
+
+    /**
+     * @Description 通过订单id查询订单信息
+     * @author liuli
+     * @date 2020/5/26 18:40
+     * @param id
+     * @return com.zhongke.entity.Result
+     **/
+    @GetMapping("/findById")
+    public Result findById(@RequestParam int id){
+        Order order = orderService.findById(id);
+        return new Result(StatusCode.SUCCESS,"查询成功",order);
+    }
+
+    /**
+     * @Description 通过订单id查询订单是否已出货
+     * @author liuli
+     * @date 2020/5/26 19:08
+     * @param id
+     * @return com.zhongke.entity.Result
+     **/
+    @GetMapping("/findOutById")
+    public Result findOutById(@RequestParam int id){
+        int flag = orderService.findOutById(id);
+        if (1 == flag){
+            return new Result(StatusCode.FALL,"此订单已取货，请勿重复取货");
+        }
+        if (0 == flag){
+            return new Result(StatusCode.SUCCESS,"取货成功");
+        }else {
+            return new Result(StatusCode.FALL,"系统错误，请联系管理员");
+        }
+    }
+
+    /**
+     * @Description 客服确认订单前提交合同资料
+     * @author liuli
+     * @date 2020/5/26 18:46
+     * @param orderId 订单id
+     * @param product_name 产品名称
+     * @param product_number 产品吨数
+     * @param person_name 联系人姓名
+     * @param person_phone 联系人电话
+     * @param address 自提地址
+     * @return com.zhongke.entity.Result
+     **/
+    @GetMapping("/upload_data")
+    public Result upload_data(@RequestParam int orderId,@RequestParam String product_name,@RequestParam int product_number,
+                              @RequestParam String person_name,@RequestParam String person_phone,
+                              @RequestParam String address){
+        orderService.upload_data(orderId,product_name,product_number,person_name,person_phone,address);
+        return new Result(StatusCode.SUCCESS,"添加成功");
     }
 
     /**

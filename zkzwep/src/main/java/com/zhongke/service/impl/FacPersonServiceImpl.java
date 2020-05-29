@@ -30,19 +30,18 @@ public class FacPersonServiceImpl implements FacPersonService {
      * @Description 工厂人员信息录入
      * @author liuli
      * @date 2020/5/21 11:26
-     * @param openid 工厂人openid
      * @param name 姓名
      * @param phone 手机号
      * @return void
      **/
     @Override
-    public void add(String openid, String name, String phone) {
+    public void add(String name, String phone) {
         FacPerson facPerson = new FacPerson();
-        facPerson.setOpenid(openid);
         facPerson.setFacName(name);
         facPerson.setPhone(phone);
         facPerson.setStatus(0);
         facPerson.setCreateTime(new Date());
+        facPersonMapper.insertSelective(facPerson);
     }
 
     /**

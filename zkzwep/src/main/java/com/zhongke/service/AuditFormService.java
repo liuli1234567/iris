@@ -1,6 +1,7 @@
 package com.zhongke.service;
 
 import com.github.pagehelper.PageInfo;
+import com.zhongke.entity.AuditFormPojo;
 import com.zhongke.pojo.AuditForm;
 
 public interface AuditFormService {
@@ -31,15 +32,18 @@ public interface AuditFormService {
     /**
      * @Description 公众号客户提交审核资料
      * @author liuli
-     * @date 2020/5/22 16:00
-     * @param openid 用户openid
-     * @param phone 手机号
-     * @param name 姓名
-     * @param businessLicense 营业执照图片数组
-     * @param prodOperLicense 生产经营许可证图片数组
-     * @param medicalDevLicense 医疗器械许可证图片数组
-     * @param letter 申购函文件
+     * @date 2020/5/26 14:49
+     * @param auditFormPojo 参数封装实体类
      * @return void
      **/
-    void add(String openid, String phone, String name, String[] businessLicense, String[] prodOperLicense, String[] medicalDevLicense, String letter);
+    void add(AuditFormPojo auditFormPojo);
+
+    /**
+     * @Description 公众号回显用户审核资料
+     * @author liuli
+     * @date 2020/5/26 15:54
+     * @param openid
+     * @return com.zhongke.pojo.AuditForm
+     **/
+    AuditForm findByOpenid(String openid);
 }

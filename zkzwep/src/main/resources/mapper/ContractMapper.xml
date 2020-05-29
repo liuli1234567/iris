@@ -1,11 +1,10 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.zhongke.mapper.AuditFormMapper">
+<mapper namespace="com.zhongke.mapper.ContractMapper">
 
-    <select id="findAll" resultType="com.zhongke.pojo.AuditForm">
-        select id,client_openid,client_phone,client_name,business_license,prod_oper_licence,
-        medical_dev_license,`status`,letter_url,updatetime,createtime from tb_audit_form
+    <select id="findAll" resultType="com.zhongke.pojo.Contract">
+        select id,client_openid,client_name,client_phone,contract_client,contract_all,`status`,updatetime,createtime from tb_contract
         <where>
             <if test="nameOrPhone != null and nameOrPhone != ''">
                 and (client_name = #{nameOrPhone} or client_phone = #{nameOrPhone})
@@ -21,11 +20,4 @@
             </if>
         </where>
     </select>
-
-    <select id="findByOpenid" parameterType="string" resultType="auditForm">
-        select id,client_openid,client_name,client_phone,client_name,business_license,prod_oper_licence,
-        medical_dev_license,`status`,letter_url,updatetime,createtime from
-        tb_audit_form where client_openid = #{openid} order by createtime desc limit 1
-    </select>
-
 </mapper>

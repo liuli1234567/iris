@@ -33,9 +33,9 @@ public interface UserService {
      * @param username 用户名
      * @param password 密码
      * @param role 角色
-     * @return void
+     * @return int
      **/
-    void add(String username, String password, int role);
+    int add(String username, String password, int role);
 
     /**
      * @Description 根据id删除用户

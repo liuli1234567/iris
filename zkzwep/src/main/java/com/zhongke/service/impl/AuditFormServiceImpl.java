@@ -2,9 +2,14 @@ package com.zhongke.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.zhongke.entity.AuditFormPojo;
 import com.zhongke.entity.DateUtil;
+import com.zhongke.entity.DomainName;
+import com.zhongke.entity.SendMessage;
+import com.zhongke.mapper.AccessTokenMapper;
 import com.zhongke.mapper.AuditFormMapper;
 import com.zhongke.mapper.OrderMapper;
+import com.zhongke.pojo.AccessToken;
 import com.zhongke.pojo.AuditForm;
 import com.zhongke.service.AuditFormService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +36,40 @@ public class AuditFormServiceImpl implements AuditFormService {
     private AuditFormMapper auditFormMapper;
     @Autowired(required = false)
     private OrderMapper orderMapper;
+    @Autowired(required = false)
+    private AccessTokenMapper accessTokenMapper;
+
+    /**
+     * @Description 获取项目打包后在服务器的项目路径
+     * @author liuli
+     * @date 2020/5/29 9:55
+     * @param
+     * @return java.lang.String
+     **/
+    public String getProjectRootPath(){
+        // 获取项目路径（兼容war服务和jar服务）
+        String rootPath = this.getClass().getResource("/").getPath();
+        String[] splits = rootPath.split("/");
+        int breakI = 0;
+        boolean isJarService = false;// 项目是否是打成jar包发布
+        for (int i = 0; i < splits.length; i++) {
+            if (splits[i].contains(".jar")){
+                breakI = i;
+                isJarService = true;
+                break;
+            }
+        }
+        String finalRootPath = "";
+        if (isJarService){
+            // 打成jar包后，获取的路径中会以file:XXX/XXX开头，所以去除切割后的第一个路径，i从1开始遍历
+            for (int i = 1; i < breakI; i++) {
+                finalRootPath += splits[i] + "/";
+            }
+        } else {
+            finalRootPath = rootPath;
+        }
+        return finalRootPath;
+    }
 
     /**
      * @Description 客户资料审核表列表查询
@@ -67,13 +106,24 @@ public class AuditFormServiceImpl implements AuditFormService {
      **/
     @Override
     public void update(int id, int status) {
+        // 从数据库获取access_token
+        AccessToken token = new AccessToken();
+        token.setId(1);
+        AccessToken accessToken = accessTokenMapper.selectByPrimaryKey(token);
+
         AuditForm auditForm = new AuditForm();
         auditForm.setId(id);
         if (1 == status){
             // todo 向公众号发送客户资料审核通过通知
+            AuditForm audit = auditFormMapper.selectByPrimaryKey(auditForm);
+            String clientOpenid = audit.getClientOpenid();
+            SendMessage.sendDataTrueMessage(accessToken.getAccessToken(),clientOpenid, "http://111.230.205.101/#/contractDownload");
         }
         if (2 == status){
             // todo 向公众号发送客户资料审核不通过通知
+            AuditForm audit = auditFormMapper.selectByPrimaryKey(auditForm);
+            String clientOpenid = audit.getClientOpenid();
+            SendMessage.sendDataFalseMessage(accessToken.getAccessToken(), clientOpenid, "");
         }
         auditForm.setStatus(status);
         auditFormMapper.updateByPrimaryKeySelective(auditForm);
@@ -82,94 +132,113 @@ public class AuditFormServiceImpl implements AuditFormService {
     /**
      * @Description 公众号客户提交审核资料
      * @author liuli
-     * @date 2020/5/22 16:00
-     * @param openid 用户openid
-     * @param phone 手机号
-     * @param name 姓名
-     * @param businessLicense 营业执照图片数组
-     * @param prodOperLicense 生产经营许可证图片数组
-     * @param medicalDevLicense 医疗器械许可证图片数组
-     * @param letter 申购函文件
+     * @date 2020/5/26 14:49
+     * @param auditFormPojo 参数封装实体类
      * @return void
      **/
     @Override
-    public void add(String openid, String phone, String name, String[] businessLicense, String[] prodOperLicense, String[] medicalDevLicense, String letter) {
+    public void add(AuditFormPojo auditFormPojo) {
         AuditForm auditForm = new AuditForm();
-        auditForm.setClientOpenid(openid);
-        auditForm.setClientPhone(phone);
-        auditForm.setClientName(name);
+        auditForm.setClientOpenid(auditFormPojo.getClientOpenid());
+        auditForm.setClientPhone(auditFormPojo.getClientPhone());
+        auditForm.setClientName(auditFormPojo.getClientName());
         auditForm.setStatus(0);
         auditForm.setUpdatetime(new Date());
         auditForm.setCreateTime(new Date());
         Base64.Decoder decoder = Base64.getDecoder();
         // 营业执照图片
-        for (String business : businessLicense) {
-            String s = business.split(",")[1];
-            byte[] bytes = decoder.decode(s);
-            FileOutputStream fos = null;
-            String path = null;
-            try {
-                path = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\images\\"+ DateUtil.getTime()+".jpg";
-                fos = new FileOutputStream(path);
-                fos.write(bytes);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (fos != null){
-                    try {
-                        fos.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+        for (String business : auditFormPojo.getBusinessList()) {
+            if (business.length() > 200){
+                String s = business.split(",")[1];
+                byte[] bytes = decoder.decode(s);
+                FileOutputStream fos = null;
+                String path = null;
+                try {
+                    path = getProjectRootPath() + "static/images/"+ DateUtil.getTime()+".jpg";
+                    fos = new FileOutputStream(path);
+                    fos.write(bytes);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    if (fos != null){
+                        try {
+                            fos.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
+                auditForm.setBusinessLicense((auditForm.getBusinessLicense()==null?"":auditForm.getBusinessLicense())+ DomainName.imagesDomainName +path.substring((System.getProperty("user.dir") + "\\src\\main\\resources\\static\\images\\").length())+",");
+            }else {
+                auditForm.setBusinessLicense((auditForm.getBusinessLicense()==null?"":auditForm.getBusinessLicense())+business+",");
             }
-            auditForm.setBusinessLicense(path);
         }
         // 生产经营许可证图片
-        for (String prod : prodOperLicense) {
-            String s = prod.split(",")[1];
-            byte[] bytes = decoder.decode(s);
-            FileOutputStream fos = null;
-            String path = null;
-            try {
-                path = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\images\\"+ DateUtil.getTime()+".jpg";
-                fos = new FileOutputStream(path);
-                fos.write(bytes);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (fos != null){
-                    try {
-                        fos.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+        for (String prod : auditFormPojo.getProdOperList()) {
+            if (prod.length() > 200){
+                String s = prod.split(",")[1];
+                byte[] bytes = decoder.decode(s);
+                FileOutputStream fos = null;
+                String path = null;
+                try {
+                    path = getProjectRootPath() + "static/images/"+ DateUtil.getTime()+".jpg";
+                    fos = new FileOutputStream(path);
+                    fos.write(bytes);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    if (fos != null){
+                        try {
+                            fos.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
+                auditForm.setProdOperLicence((auditForm.getProdOperLicence()==null?"":auditForm.getProdOperLicence())+DomainName.imagesDomainName+path.substring((System.getProperty("user.dir") + "\\src\\main\\resources\\static\\images\\").length())+",");
+            }else {
+                auditForm.setProdOperLicence((auditForm.getProdOperLicence()==null?"":auditForm.getProdOperLicence())+prod+",");
             }
-            auditForm.setProdOperLicence(path);
         }
         // 医疗器械许可证图片
-        for (String medical : medicalDevLicense) {
-            String s = medical.split(",")[1];
-            byte[] bytes = decoder.decode(s);
-            FileOutputStream fos = null;
-            String path = null;
-            try {
-                path = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\images\\"+ DateUtil.getTime()+".jpg";
-                fos = new FileOutputStream(path);
-                fos.write(bytes);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (fos != null){
-                    try {
-                        fos.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+        for (String medical : auditFormPojo.getMedicalDevList()) {
+            if (medical.length() > 200){
+                String s = medical.split(",")[1];
+                byte[] bytes = decoder.decode(s);
+                FileOutputStream fos = null;
+                String path = null;
+                try {
+                    path = getProjectRootPath() + "static/images/"+ DateUtil.getTime()+".jpg";
+                    fos = new FileOutputStream(path);
+                    fos.write(bytes);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    if (fos != null){
+                        try {
+                            fos.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
+                auditForm.setMedicalDevLicense((auditForm.getMedicalDevLicense()==null?"":auditForm.getMedicalDevLicense())+DomainName.imagesDomainName+path.substring((System.getProperty("user.dir") + "\\src\\main\\resources\\static\\images\\").length())+",");
+            }else {
+                auditForm.setMedicalDevLicense((auditForm.getMedicalDevLicense()==null?"":auditForm.getMedicalDevLicense())+medical+",");
             }
-            auditForm.setProdOperLicence(path);
         }
+        auditFormMapper.insertSelective(auditForm);
+    }
+
+    /**
+     * @Description 公众号回显用户审核资料
+     * @author liuli
+     * @date 2020/5/26 15:54
+     * @param openid
+     * @return com.zhongke.pojo.AuditForm
+     **/
+    @Override
+    public AuditForm findByOpenid(String openid) {
+        return auditFormMapper.findByOpenid(openid);
     }
 }

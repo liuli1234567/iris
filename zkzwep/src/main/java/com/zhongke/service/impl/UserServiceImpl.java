@@ -60,17 +60,22 @@ public class UserServiceImpl implements UserService {
      * @param username 用户名
      * @param password 密码
      * @param role 角色
-     * @return void
+     * @return int
      **/
     @Override
-    public void add(String username, String password, int role) {
+    public int add(String username, String password, int role) {
         User user = new User();
         user.setUsername(username);
+        User use = userMapper.findUserByName(username);
+        if (use != null) {
+            return -1;
+        }
         user.setPassword(new BCryptPasswordEncoder().encode(password));
         user.setRole(role);
         user.setUpdatetime(new Date());
         user.setCreateTime(new Date());
         userMapper.insertSelective(user);
+        return 0;
     }
 
     /**

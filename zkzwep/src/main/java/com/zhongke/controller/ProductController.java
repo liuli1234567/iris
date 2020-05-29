@@ -1,15 +1,12 @@
 package com.zhongke.controller;
 
 import com.github.pagehelper.PageInfo;
-import com.sun.org.apache.regexp.internal.RE;
 import com.zhongke.entity.Result;
 import com.zhongke.entity.StatusCode;
 import com.zhongke.pojo.Product;
 import com.zhongke.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * @ClassName ProductController
@@ -26,16 +23,17 @@ public class ProductController {
     private ProductService productService;
 
     /**
-     * @Description 产品入库
+     * @Description 添加产品
      * @author liuli
      * @date 2020/5/21 10:24
      * @param productName 产品名称
-     * @param stock_in  入库吨数
+     * @param stock_in  产品吨数
+     * @param userId 操作人id
      * @return com.zhongke.entity.Result
      **/
-    @GetMapping("/product_input")
-    public Result productInput(@RequestParam String productName,@RequestParam int stock_in){
-        productService.add(productName,stock_in);
+    @GetMapping("/product_add")
+    public Result product_add(@RequestParam String productName,@RequestParam int stock_in,@RequestParam int userId){
+        productService.add(productName,stock_in,userId);
         return new Result(StatusCode.SUCCESS,"入库成功");
     }
 
@@ -43,13 +41,14 @@ public class ProductController {
      * @Description 产品出库
      * @author liuli
      * @date 2020/5/21 10:40
-     * @param productName 产品名称
+     * @param id 产品id
      * @param stock_out 出库吨数
+     * @param userId 操作人id
      * @return com.zhongke.entity.Result
      **/
-    @GetMapping("/product_out")
-    public Result product_out(@RequestParam String productName,@RequestParam int stock_out){
-        int flag = productService.out(productName, stock_out);
+    @GetMapping("/product_update")
+    public Result product_update(@RequestParam int id,@RequestParam int stock_out,@RequestParam int userId){
+        int flag = productService.update(id, stock_out,userId);
         if (1 == flag){
             return new Result(StatusCode.SUCCESS,"出库成功");
         }
@@ -58,6 +57,21 @@ public class ProductController {
         }else {
             return new Result(StatusCode.SUCCESS,"出库失败，库存不足！");
         }
+    }
+
+    /**
+     * @Description 产品入库
+     * @author liuli
+     * @date 2020/5/21 10:24
+     * @param id 产品id
+     * @param stock_in  入库吨数
+     * @param userId 操作人id
+     * @return com.zhongke.entity.Result
+     **/
+    @GetMapping("/product_in")
+    public Result product_in(@RequestParam int id ,@RequestParam int stock_in,@RequestParam int userId){
+        productService.in(id,stock_in,userId);
+        return new Result(StatusCode.SUCCESS,"入库成功");
     }
 
     /**

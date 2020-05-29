@@ -8,12 +8,11 @@ public interface FacPersonService {
      * @Description 工厂人员信息录入
      * @author liuli
      * @date 2020/5/21 11:26
-     * @param openid 工厂人openid
      * @param name 姓名
      * @param phone 手机号
      * @return void
      **/
-    void add(String openid, String name, String phone);
+    void add(String name, String phone);
 
     /**
      * @Description 工厂人员列表查询

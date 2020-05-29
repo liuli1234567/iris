@@ -1,11 +1,14 @@
 package com.zhongke.pojo;
 
+import com.sun.javafx.collections.MappingChange;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName AuditForm
@@ -59,6 +62,37 @@ public class AuditForm implements Serializable {
     private String[] prodOperArray;
     @Transient
     private String[] medicalDevArray;
+
+    @Transient
+    private List<Map<String,String>> businessList;
+    @Transient
+    private List<Map<String,String>> prodOperList;
+    @Transient
+    private List<Map<String,String>> medicalDevList;
+
+    public List<Map<String, String>> getBusinessList() {
+        return businessList;
+    }
+
+    public void setBusinessList(List<Map<String, String>> businessList) {
+        this.businessList = businessList;
+    }
+
+    public List<Map<String, String>> getProdOperList() {
+        return prodOperList;
+    }
+
+    public void setProdOperList(List<Map<String, String>> prodOperList) {
+        this.prodOperList = prodOperList;
+    }
+
+    public List<Map<String, String>> getMedicalDevList() {
+        return medicalDevList;
+    }
+
+    public void setMedicalDevList(List<Map<String, String>> medicalDevList) {
+        this.medicalDevList = medicalDevList;
+    }
 
     public String[] getBusinessArray() {
         return businessArray;

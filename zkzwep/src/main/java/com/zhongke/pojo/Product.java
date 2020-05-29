@@ -40,9 +40,20 @@ public class Product implements Serializable {
     @ApiModelProperty(value = "结存", required = false)
     @Column(name = "stock")
     private Integer stock;
+    @ApiModelProperty(value = "操作人id", required = false)
+    @Column(name = "user_id")
+    private Integer userId;
     @ApiModelProperty(value = "更新时间", required = false)
     @Column(name = "updatetime")
     private Date updatetime;
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 
     public Integer getId() {
         return id;

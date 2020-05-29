@@ -3,6 +3,8 @@ package com.zhongke.service;
 import com.github.pagehelper.PageInfo;
 import com.zhongke.pojo.Order;
 
+import java.util.List;
+
 public interface OrderService {
     /**
      * @Description 查询取货码
@@ -46,4 +48,45 @@ public interface OrderService {
      * @return void
      **/
     void customerUpdate(int status, int id);
+
+    /**
+     * @Description 通过公众号用户openid查询订单列表
+     * @author liuli
+     * @date 2020/5/26 18:30
+     * @param openid
+     * @return java.util.List<com.zhongke.pojo.Order>
+     **/
+    List<Order> findByOpenid(String openid);
+
+    /**
+     * @Description 通过订单id查询订单信息
+     * @author liuli
+     * @date 2020/5/26 18:40
+     * @param id
+     * @return com.zhongke.pojo.Order
+     **/
+    Order findById(int id);
+
+    /**
+     * @Description 客服确认订单前提交合同资料
+     * @author liuli
+     * @date 2020/5/26 18:46
+     * @param orderId 订单id
+     * @param product_name 产品名称
+     * @param product_number 产品吨数
+     * @param person_name 联系人姓名
+     * @param person_phone 联系人电话
+     * @param address 自提地址
+     * @return void
+     **/
+    void upload_data(int orderId, String product_name, int product_number, String person_name, String person_phone, String address);
+
+    /**
+     * @Description 通过订单id查询订单是否已出货
+     * @author liuli
+     * @date 2020/5/26 19:08
+     * @param id
+     * @return boolean
+     **/
+    int findOutById(int id);
 }

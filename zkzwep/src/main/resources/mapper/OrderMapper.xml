@@ -21,4 +21,9 @@
         </where>
     </select>
 
+    <select id="findByOpenid" parameterType="string" resultType="order">
+        select id,openid,name,phone,order_no,`status`,contract_no,product_name,product_number,person_name,
+        person_phone,address,updatetime,createtime from tb_order where openid = #{openid}
+    </select>
+
 </mapper>

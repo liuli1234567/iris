@@ -30,6 +30,6 @@ public class BaseExceptionHandler {
     public Result error(Exception e){
         e.printStackTrace();
         logger.error(e.getMessage());
-        return new Result(-1,"系统忙，请稍后再试: ");
+        return new Result(-1,"系统忙，请稍后再试: ",e.getMessage());
     }
 }
