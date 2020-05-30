@@ -35,6 +35,8 @@ import java.util.List;
 @Service
 public class ContractServiceImpl implements ContractService {
 
+    @Autowired
+    private SendMessage sendMessage;
     @Autowired(required = false)
     private ContractMapper contractMapper;
     @Autowired(required = false)
@@ -228,7 +230,7 @@ public class ContractServiceImpl implements ContractService {
                 // todo 通知公众号此合同驳回
                 Contract cont = contractMapper.selectByPrimaryKey(con);
                 String clientOpenid = cont.getClientOpenid();
-                SendMessage.sendContractFalseMessage(accessToken.getAccessToken(), clientOpenid, "");
+                sendMessage.sendContractFalseMessage(accessToken.getAccessToken(), clientOpenid);
                 return 1;
             }else if (1 == status){
                 if (contract.getContractAll() != null){
@@ -238,7 +240,7 @@ public class ContractServiceImpl implements ContractService {
                     // todo 通知公众号此合同通过
                     Contract cont = contractMapper.selectByPrimaryKey(con);
                     String clientOpenid = cont.getClientOpenid();
-                    SendMessage.sendContractTrueMessage(accessToken.getAccessToken(),  clientOpenid, "");
+                    sendMessage.sendContractTrueMessage(accessToken.getAccessToken(), clientOpenid);
                     // 合同审核通过后生成订单
                     Order order = new Order();
                     order.setOpenid(clientOpenid);

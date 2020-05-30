@@ -13,6 +13,7 @@ import com.zhongke.pojo.AccessToken;
 import com.zhongke.pojo.AuditForm;
 import com.zhongke.service.AuditFormService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -32,10 +33,11 @@ import java.util.List;
 @Service
 public class AuditFormServiceImpl implements AuditFormService {
 
+    @Value("${html.server.ip}")
+    private String htmlServerIp;
+
     @Autowired(required = false)
     private AuditFormMapper auditFormMapper;
-    @Autowired(required = false)
-    private OrderMapper orderMapper;
     @Autowired(required = false)
     private AccessTokenMapper accessTokenMapper;
 
@@ -117,13 +119,13 @@ public class AuditFormServiceImpl implements AuditFormService {
             // todo 向公众号发送客户资料审核通过通知
             AuditForm audit = auditFormMapper.selectByPrimaryKey(auditForm);
             String clientOpenid = audit.getClientOpenid();
-            SendMessage.sendDataTrueMessage(accessToken.getAccessToken(),clientOpenid, "http://111.230.205.101/#/contractDownload");
+            new SendMessage().sendDataTrueMessage(accessToken.getAccessToken(),clientOpenid, htmlServerIp+"/#/contractDownload");
         }
         if (2 == status){
             // todo 向公众号发送客户资料审核不通过通知
             AuditForm audit = auditFormMapper.selectByPrimaryKey(auditForm);
             String clientOpenid = audit.getClientOpenid();
-            SendMessage.sendDataFalseMessage(accessToken.getAccessToken(), clientOpenid, "");
+            new SendMessage().sendDataFalseMessage(accessToken.getAccessToken(), clientOpenid);
         }
         auditForm.setStatus(status);
         auditFormMapper.updateByPrimaryKeySelective(auditForm);
@@ -168,7 +170,7 @@ public class AuditFormServiceImpl implements AuditFormService {
                         }
                     }
                 }
-                auditForm.setBusinessLicense((auditForm.getBusinessLicense()==null?"":auditForm.getBusinessLicense())+ DomainName.imagesDomainName +path.substring((System.getProperty("user.dir") + "\\src\\main\\resources\\static\\images\\").length())+",");
+                auditForm.setBusinessLicense((auditForm.getBusinessLicense()==null?"":auditForm.getBusinessLicense())+ DomainName.imagesDomainName +path.substring((getProjectRootPath() + "static/images/").length())+",");
             }else {
                 auditForm.setBusinessLicense((auditForm.getBusinessLicense()==null?"":auditForm.getBusinessLicense())+business+",");
             }
@@ -195,7 +197,7 @@ public class AuditFormServiceImpl implements AuditFormService {
                         }
                     }
                 }
-                auditForm.setProdOperLicence((auditForm.getProdOperLicence()==null?"":auditForm.getProdOperLicence())+DomainName.imagesDomainName+path.substring((System.getProperty("user.dir") + "\\src\\main\\resources\\static\\images\\").length())+",");
+                auditForm.setProdOperLicence((auditForm.getProdOperLicence()==null?"":auditForm.getProdOperLicence())+DomainName.imagesDomainName+path.substring((getProjectRootPath() + "static/images/").length())+",");
             }else {
                 auditForm.setProdOperLicence((auditForm.getProdOperLicence()==null?"":auditForm.getProdOperLicence())+prod+",");
             }
@@ -222,11 +224,32 @@ public class AuditFormServiceImpl implements AuditFormService {
                         }
                     }
                 }
-                auditForm.setMedicalDevLicense((auditForm.getMedicalDevLicense()==null?"":auditForm.getMedicalDevLicense())+DomainName.imagesDomainName+path.substring((System.getProperty("user.dir") + "\\src\\main\\resources\\static\\images\\").length())+",");
+                auditForm.setMedicalDevLicense((auditForm.getMedicalDevLicense()==null?"":auditForm.getMedicalDevLicense())+DomainName.imagesDomainName+path.substring((getProjectRootPath() + "static/images/").length())+",");
             }else {
                 auditForm.setMedicalDevLicense((auditForm.getMedicalDevLicense()==null?"":auditForm.getMedicalDevLicense())+medical+",");
             }
         }
+        // 申购函文件
+        String s = auditFormPojo.getLetter().split(",")[1];
+        byte[] bytes = decoder.decode(s);
+        FileOutputStream fos = null;
+        String path = null;
+        try {
+            path = getProjectRootPath() + "static/word/"+ DateUtil.getTime()+".docx";
+            fos = new FileOutputStream(path);
+            fos.write(bytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fos != null){
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        auditForm.setLetterUrl(DomainName.wordDomainName+path.substring((getProjectRootPath() + "static/word/").length()));
         auditFormMapper.insertSelective(auditForm);
     }
 

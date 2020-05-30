@@ -8,6 +8,6 @@ package com.zhongke.entity;
  * @Version 1.0
  **/
 public class DomainName {
-    public static final String imagesDomainName = "http://111.230.205.101/images/"; // 图片存放路径
-    public static final String wordDomainName = "http://111.230.205.101/word/"; // word文件存放路径
+    public static final String imagesDomainName = "http://111.230.205.101:8080/images/"; // 图片存放路径
+    public static final String wordDomainName = "http://111.230.205.101:8080/word/"; // word文件存放路径
 }

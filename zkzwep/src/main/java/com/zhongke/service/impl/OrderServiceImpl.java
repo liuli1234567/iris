@@ -10,6 +10,7 @@ import com.zhongke.pojo.AccessToken;
 import com.zhongke.pojo.Order;
 import com.zhongke.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -25,6 +26,11 @@ import java.util.List;
 @Service
 public class OrderServiceImpl implements OrderService {
 
+    @Value("${html.server.ip}")
+    private String htmlServerIp;
+
+    @Autowired
+    private SendMessage sendMessage;
     @Autowired(required = false)
     private OrderMapper orderMapper;
     @Autowired(required = false)
@@ -95,7 +101,7 @@ public class OrderServiceImpl implements OrderService {
             // todo 向公众号发送财务驳回订单通知
             Order order = orderMapper.selectByPrimaryKey(o);
             String openid = o.getOpenid();
-            SendMessage.sendOrderFalseMessage(accessToken.getAccessToken(), openid, "");
+            sendMessage.sendOrderFalseMessage(accessToken.getAccessToken(), openid);
         }
         if (1 == status){
             // todo 向公众号发送财务已确认收款通知
@@ -126,7 +132,7 @@ public class OrderServiceImpl implements OrderService {
         // todo 向公众号发送客服已确认订单通知
         Order o = orderMapper.selectByPrimaryKey(order);
         String openid = o.getOpenid();
-        SendMessage.sendOrderTrueMessage(accessToken.getAccessToken(), openid, "http://111.230.205.101/#/remittanceSuccess?id="+o.getId());
+        sendMessage.sendOrderTrueMessage(accessToken.getAccessToken(), openid, htmlServerIp+"/#/remittanceSuccess?id="+o.getId());
         orderMapper.updateByPrimaryKeySelective(order);
     }
 

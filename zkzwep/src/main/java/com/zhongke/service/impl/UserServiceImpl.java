@@ -8,6 +8,7 @@ import com.zhongke.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -101,6 +102,9 @@ public class UserServiceImpl implements UserService {
      **/
     @Override
     public void updateById(User user) {
+        if (!StringUtils.isEmpty(user.getPassword())){
+            user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        }
         userMapper.updateByPrimaryKeySelective(user);
     }
 

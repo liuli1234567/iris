@@ -2,11 +2,8 @@ package com.zhongke.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 /**
@@ -26,7 +23,7 @@ public class JWTConfig extends WebMvcConfigurerAdapter {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(jwtInterceptor).
                 addPathPatterns("/**").
-                excludePathPatterns("/**/login/**","/word/**","/images/**","/auditForm/add","/auditForm/findByOpenid",
+                excludePathPatterns("/**/login/**","/**/get_openid","/word/**","/images/**","/auditForm/add","/auditForm/findByOpenid",
                         "/contract/public_add","/contract/public_download","/order/pickup_code_query","/order/findByOpenid",
                         "/order/findById","/order/findOutById","/classpath:/static/");
     }
