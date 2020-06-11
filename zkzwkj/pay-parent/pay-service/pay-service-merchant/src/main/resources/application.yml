@@ -1,0 +1,41 @@
+server:
+  port: 18081
+spring:
+  application:
+    name: merchant
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://10.1.1.7/zkzwkj_facepay?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    username: root
+    password: 123456
+  rabbitmq:
+    host: localhost
+    port: 5672
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:7001/eureka
+  instance:
+    prefer-ip-address: true
+feign:
+  hystrix:
+    enabled: true
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath:mapper/*Mapper.xml
+  type-aliases-package: com.zkzwkj.merchant.pojo
+mq:
+  pay:
+    exchange:
+      weixinorder: exchange.weixin.order # 微信支付mq通知订单
+      alipayorder: exchange.alipay.order
+      alirefundorder: exchange.alirefund.order # 退款订单mq通知
+    queue:
+      weixinorder: queue.weixin.order
+      alipayorder: queue.alipay.order
+      alirefundorder: queue.alirefund.order
+    routing:
+      weixinkey: queue.weixin.order
+      alipaykey: queue.alipay.order
+      alirefundkey: queue.alirefund.order
